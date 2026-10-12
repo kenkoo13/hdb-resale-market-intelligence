@@ -69,6 +69,13 @@ For Ridge, remaining lease and the time index enter as **spline bases** so non-l
 - Ridge: α ∈ {0.1, 1, 10}.
 - HGB: `max_leaf_nodes` ∈ {31, 127} × `min_samples_leaf` ∈ {20, 100}, learning rate 0.1, up to 1,000 iterations with early stopping on an internal 10% random split of the training data. Seed 42.
 
+**Addendum (added while implementing, before any model was trained; DEC-020):**
+- The Ridge grid also includes `time_extrapolation` ∈ {`constant`, `linear`}. This decides how the time spline behaves *beyond* the training months: hold the last price level flat, or continue the final trend.
+  - It matters because validation and test lie entirely outside the training period.
+  - It is selected on validation like the other hyperparameters.
+- Ridge one-hot encoding groups categories with fewer than 5 training rows into an "infrequent" level (`min_frequency=5`), so ultra-rare categories cannot get noisy individual coefficients.
+- The grid therefore has 12 Ridge and 8 HGB configurations, 20 in total.
+
 ## 5. Leakage controls (pre-specified)
 
 - **Forbidden as features:**
