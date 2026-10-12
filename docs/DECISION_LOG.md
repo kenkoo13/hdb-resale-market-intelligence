@@ -156,3 +156,48 @@ Owner: "Project" unless stated otherwise.
 - **Decision:** The pipeline never deletes raw snapshots, and old ones in `data/raw/` can be removed by hand. The row-count gate compares only against the most recent snapshot older than the one being processed.
 - **Reason:** Automatic deletion of data is risky and not needed. Each snapshot is about 24 MB.
 - **Revision criteria:** Disk usage becomes a problem.
+
+### DEC-015 — Medians as headline statistics; 24-month recent window for current comparisons
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Headline prices are medians with 25th–75th percentiles, always shown with transaction counts. Comparisons of the "current market" use the 24 full months ending at the last full month (pre-registered in HYPOTHESIS_REGISTER §1). Segments with fewer than 30 sales are labelled `low_sample`.
+- **Reason:** Prices are right-skewed. Measured skewness is 0.98 for the full period and 0.92 for the recent window, and the mean exceeds the median by SGD 27k–31k, so the mean overstates a typical transaction. A 24-month window balances recency, because prices rose about 58% for comparable flats since 2017, against sample size: 50,902 rows, and every town has at least 35 4-ROOM sales.
+- **Alternatives:** Means (sensitive to the expensive tail); a 12-month window (more current, but thinner cells; 1-ROOM would have fewer than 10 sales); the whole period (mixes very different price levels).
+- **Trade-offs:** A 24-month median still contains some price drift: the mix-adjusted index rose about 4% from 2024-10 (151.6) to 2026-09 (157.5). Within-window comparisons are of segments, not points in time, and the hedonic models absorb the drift with month fixed effects.
+- **Validation:** `tests/test_analytics.py::test_segment_summary_values_and_low_sample_flag`.
+- **Revision criteria:** The market moves fast enough that 24 months straddles materially different regimes. In that case shorten the window.
+
+### DEC-016 — Hedonic regression with month fixed effects and building-clustered errors (M1/M2)
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Use log-price OLS with month, town, flat type and flat model fixed effects plus floor area, storey midpoint and remaining lease (M1). M2 replaces storey and lease with bands. Standard errors are clustered by building (block + street).
+  - The known rank deficiency (flat type MULTI-GENERATION ≡ flat model "Multi Generation") is left in place. It does not affect the tested terms, which were verified to be uniquely estimable by a rank check. The aliased level is marked `separately_identified = False` in the flat-model effects table.
+- **Reason:** This is the standard, interpretable way to compare like-for-like properties. Log price gives percentage effects. Clustering reflects that sales in the same building share unobserved location and quality.
+- **Alternatives:**
+  - Separate models per flat type: fewer assumptions, but more estimates and smaller samples.
+  - Mixed models with building random effects: more complex and harder to explain.
+  - Dropping flat model to remove the aliasing: rejected because it would change the pre-registered specification.
+- **Evidence:** Synthetic tests recover known coefficients inside their CIs (`test_hedonic_recovers_known_coefficients`). On the real data, results are stable across 4 specifications.
+- **Trade-offs:** Effects are averages across towns and types. Interactions (for example, whether the storey premium differs by town) are not modelled.
+- **Revision criteria:** Evidence of strong effect heterogeneity is needed for the BI audience, in which case add interactions as an exploratory extension.
+
+### DEC-017 — Mix-adjusted price change measured with a hedonic time-dummy index
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Mix-adjusted price change = the change in the mean of exp(month coefficients) from M1 fitted on the full period, with 2017 = 100. It is published monthly as `price_index_monthly.csv`, alongside the raw median index.
+- **Reason:** It separates "prices of comparable flats changed" from "a different mix of flats was sold". This is the core requirement of brief §7.
+- **Alternatives:**
+  - Stratified median (a fixed-weight average of cell medians): simpler, but thin cells make it noisy, and it only controls for the stratifying variables.
+  - Repeat-sales index: not possible, because there is no unit identifier.
+- **Trade-offs:** It assumes constant characteristic premiums over time. Month coefficients for low-volume months (2020-04 and 2020-05) are less precise.
+- **Validation:** `test_month_index_recovers_market_trend`, `test_period_change_matches_definition_and_truth`.
+- **Revision criteria:** Premiums shift substantially over time. In that case use a chained or rolling-window index.
+
+### DEC-018 — Static figure design conventions
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Figures are matplotlib PNGs that follow these conventions:
+  - a validated categorical palette, with no more than 3 coloured series and direct labels;
+  - one y-axis per chart, so raw and adjusted values go in separate panels;
+  - titles phrased as the question answered, subtitles giving population, period and n;
+  - a source and licence note on every figure;
+  - the partial month drawn hatched, never as a normal bar.
+- **Reason:** Readability for a business audience and honest presentation (brief §4.3). The licence requires attribution.
+- **Validation:** Each figure was rendered and inspected, which caught and fixed three label collisions.
+- **Revision criteria:** None expected.

@@ -1,0 +1,9 @@
+hypothesis,specification,estimate_pct,ci_low_pct,ci_high_pct,n
+H1,M1 full period,8.02108,7.80196,8.24064,241557
+H1,M1 excl. retained duplicates,7.76244,7.48282,8.04278,50851
+H1,M2 binned (implied slope),7.64253,,,50902
+H2,M1 full period,10.5086,10.2691,10.7485,241557
+H2,M1 excl. retained duplicates,10.6265,10.3328,10.921,50851
+H2,M2 binned (implied slope),10.8038,,,50902
+H3,M1 full period,8.53172,8.15896,8.90576,241557
+H3,M1 excl. retained duplicates,9.27254,8.87314,9.6734,50851

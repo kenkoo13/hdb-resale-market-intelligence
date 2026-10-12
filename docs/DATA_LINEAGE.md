@@ -26,4 +26,21 @@ data/raw/<snapshot_id>/manifest.json           retrieval time, publisher metadat
 | Clean | raw CSV (text) | clean parquet, quarantine CSV | `src/transformation/clean.py` | Deterministic. Reprocessing the same snapshot gives identical output. |
 | DQ report | raw + clean result | `outputs/data_quality/` | `src/validation/quality_report.py` | Written in the same atomic publish step as the processed files |
 
-*Phases 2–4 extend this with analytical tables, model outputs and Power BI tables.*
+## Analysis layer (Phase 2)
+
+```
+data/processed/transactions_clean.parquet
+   │  src/analytics/common.py::analysis_ready      drop partial month; add building, log_price
+   │  windows: full period / recent 24 months / latest 12 months
+   ├─ src/analytics/descriptive.py   ──► outputs/tables/monthly_market.csv, annual_by_flat_type.csv,
+   │                                     mix_over_time.csv, price_distribution_summary.csv, recent_by_*.csv
+   ├─ src/analytics/hedonic.py (M1/M2, clustered SE)
+   │     ├─► outputs/tables/hedonic_key_coefficients.csv, *_effects_adjusted_recent.csv
+   │     └─► outputs/tables/price_index_monthly.csv   (raw vs mix-adjusted index)
+   ├─ src/analytics/hypotheses.py (H1–H5, Holm) ──► hypothesis_results.csv, hypothesis_robustness.csv,
+   │                                                h5_composition.csv, analysis_results.json
+   └─ src/reporting/figures.py      ──► outputs/figures/01–09_*.png
+```
+Orchestrated by `python -m src.analytics.run_analysis`. Every output is regenerated from the processed table, and nothing is edited by hand.
+
+*Phases 3–4 extend this with model outputs and Power BI tables.*

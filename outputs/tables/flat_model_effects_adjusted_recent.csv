@@ -1,0 +1,21 @@
+level,pct_vs_reference,ci_low,ci_high,n_recent,separately_identified
+3Gen,-11.9401,-15.2819,-8.46639,39,True
+Standard,-4.70304,-6.97173,-2.37904,1218,True
+Improved,-1.97711,-3.66683,-0.257753,12112,True
+Model A,1.72349,0.15707,3.31441,20326,True
+Premium Apartment,3.02144,1.23248,4.84201,4915,True
+Model A2,3.36033,1.43042,5.32696,515,True
+New Generation,4.18091,2.3293,6.06602,5665,True
+Adjoined flat,4.77737,1.11342,8.57408,82,True
+Apartment,7.39992,4.97084,9.88522,1577,True
+Simplified,8.78762,6.81313,10.7986,1908,True
+Model A-Maisonette,11.0986,5.42579,17.0766,81,True
+Premium Maisonette,12.3657,6.71152,18.3196,8,True
+Maisonette,12.9856,10.3168,15.719,1209,True
+Premium Apartment Loft,15.9307,12.69,19.2646,30,True
+DBSS,18.2938,15.9425,20.6928,689,True
+Multi Generation,21.6364,16.2235,27.3015,11,False
+Type S2,22.921,16.7164,29.4554,32,True
+Type S1,23.5747,18.9497,28.3796,82,True
+Improved-Maisonette,27.0661,15.2889,40.0463,4,True
+Terrace,78.7352,67.9182,90.2489,23,True

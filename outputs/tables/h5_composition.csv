@@ -1,0 +1,2 @@
+hypothesis,base_period,comparison_period,raw_median_base,raw_median_comparison,raw_change_pct,raw_ci_low,raw_ci_high,mix_adjusted_change_pct,adj_ci_low,adj_ci_high,difference_pp,cis_overlap,n_base,n_comparison,status
+H5,2017-01 to 2017-12,2025-10 to 2026-09,410000,630000,53.6585,52.9126,54.3902,57.4022,56.8366,57.9678,-3.74363,False,20362,24658,Material composition effect

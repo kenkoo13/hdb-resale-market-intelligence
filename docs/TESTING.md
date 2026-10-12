@@ -20,6 +20,7 @@ Unit tests use **synthetic data only** (`tests/fixtures/`, see its README) and n
 | Lease parsing | `test_parsers.py::test_parse_remaining_lease_*` (all 3 observed formats plus invalid forms) | Implemented |
 | Deduplication logic | `test_clean.py::test_genuine_duplicate_kept_and_annotated`, `test_2017_artefact_keeps_first_copy` | Implemented |
 | Feature-engineering formulas | `test_clean.py::test_derived_fields` (price/sqm, lease months, derived lease, storey midpoint) | Phase 1 fields done; model features in Phase 3 |
+| Analysis methods (Phase 2) | `test_analytics.py` (16): the hedonic model recovers known synthetic coefficients inside their CIs; % conversion; the month index recovers a known trend; the delta-method period change matches its definition and covers the truth; reference-level handling; segment statistics (median, quartile, low-sample flag); ε²; the decision rule matches the register for all 5 outcome types; band edges | Implemented |
 | Prevention of target leakage | — | Phase 3 |
 | Chronological split behaviour | — | Phase 3 |
 | Model metric calculations | — | Phase 3 |
@@ -33,6 +34,7 @@ Unit tests use **synthetic data only** (`tests/fixtures/`, see its README) and n
 | Date | Environment | Command | Result |
 |---|---|---|---|
 | 2026-10-12 | Windows 11, Python 3.14.4, `requirements-lock.txt` | `python -m pytest -q` | **64 passed**, 0 failed, 0 skipped (parsers 25, clean 19, schema 8, ingestion 8, pipeline 4) |
+| 2026-10-12 (Phase 2) | same | `python -m pytest -q` | **80 passed**, 0 failed, 0 skipped (adds analytics 16) |
 
 ### Mutation check (do the tests detect real defects?)
 On 2026-10-12 two deliberate defects were introduced into `clean.py`: the artefact year was changed to 2018, and the partial-month comparison was changed from `>=` to `>`. Result: **7 tests failed**, as intended. The code was then restored and all 64 tests passed again.

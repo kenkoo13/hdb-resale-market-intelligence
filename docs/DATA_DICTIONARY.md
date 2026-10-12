@@ -56,4 +56,24 @@ The raw text of every quarantined row, unchanged, plus `source_row_number` and `
 - `data/raw/<snapshot>/manifest.json`: snapshot ID, dataset ID, retrieval time (UTC and SGT), the publisher's metadata (last updated, declared coverage, declared columns and types), CSV header, row count, byte size, SHA-256.
 - `data/processed/run_info.json`: the snapshot that was processed, counts, month coverage, partial months, processing time.
 
-*Analytical and Power BI tables are added to this dictionary in Phases 2–4.*
+## 5. Analysis outputs (`outputs/tables/`, Phase 2)
+
+Common columns in segment tables: `transactions`, `median_price`, `p25_price`, `p75_price`, `iqr_price`, `mean_price`, `median_price_per_sqm`, `median_floor_area_sqm`, `median_remaining_lease_years`, and `low_sample` (n < 30). Definitions are in METRIC_DICTIONARY §2.
+
+| File | Grain | Population |
+|---|---|---|
+| `monthly_market.csv` | month | All clean rows; `is_partial_month` flags the incomplete month |
+| `annual_by_flat_type.csv` | year × flat type | Analysis-ready |
+| `mix_over_time.csv` | year | Analysis-ready; flat-type shares (`share_pct_*`), median area, median lease, % of sales on storey midpoint ≥ 13 |
+| `price_distribution_summary.csv` | population | Full period and recent window; mean, median, skewness, p10/p90 |
+| `recent_by_{flat_type,town,storey_range,flat_model,lease_band}.csv` | segment | Recent window |
+| `recent_4room_by_town.csv` | town | Recent window, 4 ROOM |
+| `recent_by_town_flat_type.csv` | town × flat type | Recent window, sorted with low-sample cells first |
+| `recent_by_floor_area_band_flat_type.csv` | flat type × area band | Recent window |
+| `price_index_monthly.csv` | month | `raw_median_index` and `mix_adjusted_index` (2017 = 100) |
+| `hedonic_key_coefficients.csv` | model × term | Per-unit % effects for area, storey and lease |
+| `{town,flat_model,storey_band,lease_band}_effects_adjusted_recent.csv` | level | % vs reference level, 95% CI |
+| `hypothesis_results.csv`, `hypothesis_robustness.csv`, `h5_composition.csv` | hypothesis | See HYPOTHESIS_REGISTER §3 |
+| `analysis_results.json` | run | Windows, row counts, results, diagnostics, snapshot id |
+
+*Model and Power BI tables are added in Phases 3–4.*

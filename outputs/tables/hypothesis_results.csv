@@ -1,0 +1,5 @@
+hypothesis,contrast,method,population,n,estimate_pct,ci_low_pct,ci_high_pct,p_raw,effect_size_metric,practical_threshold,p_holm,status,robust,effect_size
+H1,+10 floors,"Hedonic OLS M1, building-clustered SE",recent window,50902,7.76622,7.48452,8.04866,0,% price difference,2,0,Supported,True,
+H2,+10 years remaining lease,"Hedonic OLS M1, building-clustered SE",recent window,50902,10.6254,10.3311,10.9204,0,% price difference,2,0,Supported,True,
+H3,+10 sqm floor area,"Hedonic OLS M1, building-clustered SE",recent window,50902,9.26958,8.86999,9.67063,0,% price difference,2,0,Supported,True,
+H4,4-ROOM price distribution across towns,Kruskal-Wallis; effect size epsilon-squared,"recent window, 4 ROOM",22175,,,,0,epsilon-squared,0.06,0,Supported,,0.423407

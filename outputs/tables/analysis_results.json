@@ -1,0 +1,232 @@
+{
+  "snapshot_id": "20261012T010041Z",
+  "windows": {
+    "full_period": "2017-01 to 2026-09",
+    "recent_window": "2024-10 to 2026-09",
+    "latest_12_months": "2025-10 to 2026-09"
+  },
+  "rows": {
+    "analysis_ready": 241557,
+    "recent_window": 50902,
+    "latest_12_months": 24658
+  },
+  "hypotheses": [
+    {
+      "hypothesis": "H1",
+      "contrast": "+10 floors",
+      "method": "Hedonic OLS M1, building-clustered SE",
+      "population": "recent window",
+      "n": 50902,
+      "estimate_pct": 7.766221994299216,
+      "ci_low_pct": 7.484518701988972,
+      "ci_high_pct": 8.048663595212938,
+      "p_raw": 0.0,
+      "effect_size_metric": "% price difference",
+      "practical_threshold": 2.0,
+      "p_holm": 0.0,
+      "status": "Supported",
+      "robust": true,
+      "effect_size": null
+    },
+    {
+      "hypothesis": "H2",
+      "contrast": "+10 years remaining lease",
+      "method": "Hedonic OLS M1, building-clustered SE",
+      "population": "recent window",
+      "n": 50902,
+      "estimate_pct": 10.625354758054572,
+      "ci_low_pct": 10.331135316234906,
+      "ci_high_pct": 10.920358793268448,
+      "p_raw": 0.0,
+      "effect_size_metric": "% price difference",
+      "practical_threshold": 2.0,
+      "p_holm": 0.0,
+      "status": "Supported",
+      "robust": true,
+      "effect_size": null
+    },
+    {
+      "hypothesis": "H3",
+      "contrast": "+10 sqm floor area",
+      "method": "Hedonic OLS M1, building-clustered SE",
+      "population": "recent window",
+      "n": 50902,
+      "estimate_pct": 9.269576686655432,
+      "ci_low_pct": 8.869993820099973,
+      "ci_high_pct": 9.670626132399905,
+      "p_raw": 0.0,
+      "effect_size_metric": "% price difference",
+      "practical_threshold": 2.0,
+      "p_holm": 0.0,
+      "status": "Supported",
+      "robust": true,
+      "effect_size": null
+    },
+    {
+      "hypothesis": "H4",
+      "contrast": "4-ROOM price distribution across towns",
+      "method": "Kruskal-Wallis; effect size epsilon-squared",
+      "population": "recent window, 4 ROOM",
+      "n": 22175,
+      "estimate_pct": null,
+      "ci_low_pct": null,
+      "ci_high_pct": null,
+      "p_raw": 0.0,
+      "effect_size_metric": "epsilon-squared",
+      "practical_threshold": 0.06,
+      "p_holm": 0.0,
+      "status": "Supported",
+      "robust": null,
+      "effect_size": 0.4234067325131322
+    }
+  ],
+  "robustness": [
+    {
+      "hypothesis": "H1",
+      "specification": "M1 full period",
+      "estimate_pct": 8.02108079802278,
+      "ci_low_pct": 7.801962551026128,
+      "ci_high_pct": 8.240644424723385,
+      "n": 241557
+    },
+    {
+      "hypothesis": "H1",
+      "specification": "M1 excl. retained duplicates",
+      "estimate_pct": 7.7624376154532255,
+      "ci_low_pct": 7.482824257383834,
+      "ci_high_pct": 8.0427783793249,
+      "n": 50851
+    },
+    {
+      "hypothesis": "H1",
+      "specification": "M2 binned (implied slope)",
+      "estimate_pct": 7.642531249184101,
+      "ci_low_pct": NaN,
+      "ci_high_pct": NaN,
+      "n": 50902
+    },
+    {
+      "hypothesis": "H2",
+      "specification": "M1 full period",
+      "estimate_pct": 10.508560318327104,
+      "ci_low_pct": 10.269138227720472,
+      "ci_high_pct": 10.748502254634829,
+      "n": 241557
+    },
+    {
+      "hypothesis": "H2",
+      "specification": "M1 excl. retained duplicates",
+      "estimate_pct": 10.626481346599368,
+      "ci_low_pct": 10.3327738167939,
+      "ci_high_pct": 10.920970730337084,
+      "n": 50851
+    },
+    {
+      "hypothesis": "H2",
+      "specification": "M2 binned (implied slope)",
+      "estimate_pct": 10.80382982068993,
+      "ci_low_pct": NaN,
+      "ci_high_pct": NaN,
+      "n": 50902
+    },
+    {
+      "hypothesis": "H3",
+      "specification": "M1 full period",
+      "estimate_pct": 8.531717742830407,
+      "ci_low_pct": 8.158961528174574,
+      "ci_high_pct": 8.905758614749972,
+      "n": 241557
+    },
+    {
+      "hypothesis": "H3",
+      "specification": "M1 excl. retained duplicates",
+      "estimate_pct": 9.272537995323084,
+      "ci_low_pct": 8.873142184178032,
+      "ci_high_pct": 9.673398970518331,
+      "n": 50851
+    }
+  ],
+  "h4_details": {
+    "kruskal_H": 9388.620886746194,
+    "towns_tested": 26,
+    "towns_excluded_lt30": [],
+    "median_ratio_max_min": 2.2325581395348837,
+    "highest_median_town": "CENTRAL AREA",
+    "lowest_median_town": "JURONG WEST",
+    "highest_median": 1200000.0,
+    "lowest_median": 537500.0,
+    "adjusted_town_effect_range_pct": 60.54073660640081
+  },
+  "h5": {
+    "hypothesis": "H5",
+    "base_period": "2017-01 to 2017-12",
+    "comparison_period": "2025-10 to 2026-09",
+    "raw_median_base": 410000.0,
+    "raw_median_comparison": 630000.0,
+    "raw_change_pct": 53.65853658536586,
+    "raw_ci_low": 52.9126213592233,
+    "raw_ci_high": 54.390243902439025,
+    "mix_adjusted_change_pct": 57.40216820455988,
+    "adj_ci_low": 56.836555588595374,
+    "adj_ci_high": 57.96778082052438,
+    "difference_pp": -3.7436316191940193,
+    "cis_overlap": false,
+    "n_base": 20362,
+    "n_comparison": 24658,
+    "status": "Material composition effect"
+  },
+  "diagnostics": {
+    "m1_recent": {
+      "n": 50902,
+      "n_clusters": 9197,
+      "r2": 0.9163111564769374,
+      "resid_skew": 0.2662156836570846,
+      "resid_kurtosis_excess": 1.0220137040854649,
+      "resid_sd_by_fitted_decile": [
+        0.0885,
+        0.0948,
+        0.0807,
+        0.0726,
+        0.0834,
+        0.087,
+        0.0873,
+        0.0898,
+        0.0903,
+        0.1003
+      ],
+      "vif": {
+        "floor_area_sqm_num": 24.268166435608702,
+        "storey_mid": 1.2656552860970522,
+        "remaining_lease_years": 2.984731158627296
+      },
+      "design_columns": 78,
+      "design_rank": 77
+    },
+    "m1_full": {
+      "n": 241557,
+      "n_clusters": 9754,
+      "r2": 0.9191514232171296,
+      "resid_skew": 0.23297987238122786,
+      "resid_kurtosis_excess": 1.3440827426836055,
+      "resid_sd_by_fitted_decile": [
+        0.1047,
+        0.1016,
+        0.1021,
+        0.1012,
+        0.1029,
+        0.0999,
+        0.0967,
+        0.0977,
+        0.0949,
+        0.0937
+      ],
+      "vif": {
+        "floor_area_sqm_num": 21.731770800649855,
+        "storey_mid": 1.2597461763294129,
+        "remaining_lease_years": 3.0746639186549727
+      },
+      "design_columns": 171,
+      "design_rank": 170
+    }
+  }
+}

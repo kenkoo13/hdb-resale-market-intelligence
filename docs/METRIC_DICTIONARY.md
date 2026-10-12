@@ -45,4 +45,38 @@ Types: **D** descriptive, **I** inferential, **P** predictive.
 - **Formula:** The number of retained clean rows sharing all 11 normalised source fields.
 - **Use:** Annotation and sensitivity analysis (DEC-013).
 
-*Business metrics, statistical measures, model metrics and DAX measures are added in Phases 2–4.*
+## 2. Business metrics (Phase 2, Python: `src/analytics/descriptive.py`)
+
+All of these are computed on analysis-ready rows: clean rows, excluding the partial month, unless the table states otherwise. Each one is reported with `transactions`, the count of rows in the group.
+
+| Metric | Definition / formula | Type | Notes |
+|---|---|---|---|
+| Transactions | Count of rows in the group | D | Registered resales; the partial month is shown flagged in `monthly_market.csv` |
+| Median price | 50th percentile of `resale_price_sgd` (pandas `median`) | D | The headline "typical price" (DEC-015) |
+| P25 / P75 price, IQR | 25th / 75th percentiles (pandas `quantile`, linear interpolation); IQR = P75 − P25 | D | The middle 50% of prices. Shows spread, not error. |
+| Mean price | Arithmetic mean | D | Reported for comparison only. Skewed upward. |
+| Median price per sqm | Median of row-level `price_per_sqm_sgd`, **not** median price ÷ median area | D | Compare within a flat type |
+| Low sample | `transactions < 30` | D | A threshold where medians become unstable. It is a conventional rule of thumb, not a derived cut-off. |
+| Skewness | Fisher–Pearson coefficient (`scipy.stats.skew`) | D | > 0 means a long right tail |
+| Floor area band | Left-closed bands: <50, 50–69, 70–89, 90–109, 110–129, 130–149, 150+ sqm | D | |
+| Remaining lease band | `floor(years/5)×5` to +4, for example `70-74` | D | |
+| Flat-type share | Transactions of a type ÷ all transactions in the year × 100 | D | `mix_over_time.csv` |
+
+## 3. Statistical measures (Phase 2, Python: `src/analytics/hedonic.py`, `hypotheses.py`)
+
+| Measure | Formula | Type | Interpretation and limits |
+|---|---|---|---|
+| Hedonic coefficient β | OLS on `log(price)`; see DEC-016 | I | The average log-price difference per unit, holding the other model terms fixed. An association, not a causal effect. |
+| % effect for a contrast Δ | `100 × (exp(β·Δ) − 1)`; CI by transforming the β CI | I | For example, Δ = 10 floors |
+| Cluster-robust SE | Sandwich estimator clustered by building | I | Allows correlation within buildings and unequal variance |
+| One-sided p (H1–H3) | `1 − Φ(β / SE)` | I | Direction pre-specified as positive |
+| Holm-adjusted p | Holm–Bonferroni step-down across H1–H4 | I | Controls the family-wise error rate at 5% |
+| Kruskal–Wallis H | Rank-based test of several groups (`scipy.stats.kruskal`) | I | Assumes independence, which is violated within buildings, so the p-value is optimistic |
+| ε² (epsilon-squared) | `H / (n − 1)` | I | The share of rank variation explained by the groups. 0.01 / 0.06 / 0.14 are conventional small / medium / large benchmarks. |
+| Mix-adjusted index | `100 × exp(γ_m) / mean_{m∈2017} exp(γ_m)`, where γ_m are the M1 month coefficients (full period) | I | Price level of comparable flats (DEC-017) |
+| Mix-adjusted period change | `L_comp / L_base − 1`, with `L_P = mean_{m∈P} exp(γ_m)`; 95% CI by the delta method | I | Formula and gradient documented in `hedonic.period_change` |
+| Raw median change | `median(prices in comp) / median(prices in base) − 1`; 95% CI from a percentile bootstrap (1,000 resamples, seed 42) | D/I | Mixes price change with composition change |
+| Composition effect | Raw change − mix-adjusted change (percentage points) | D | Negative means the raw median understates price growth for comparable flats |
+| VIF | `1 / (1 − R²_j)` from regressing predictor j on all other columns | Diagnostic | Values above 10 signal high collinearity |
+
+*Model evaluation metrics (Phase 3) and DAX measures (Phase 4) are added later.*

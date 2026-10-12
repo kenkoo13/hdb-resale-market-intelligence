@@ -4,6 +4,15 @@ All notable changes to this project. Entries record work that was actually compl
 
 ## [Unreleased]
 
+### Added — Phase 2 (2026-10-12)
+- Pre-registered hypotheses H1–H5 (committed before execution in `f56b053`).
+- `src/analytics/`: shared windows (`common.py`), descriptive statistics (`descriptive.py`), hedonic models M1/M2 with building-clustered errors and a mix-adjusted index (`hedonic.py`), hypothesis execution with Holm correction (`hypotheses.py`), and the orchestrator (`run_analysis.py`).
+- `src/reporting/figures.py`: 9 figures in `outputs/figures/`.
+- 21 CSV result tables plus `analysis_results.json` in `outputs/tables/`.
+- 16 analytics tests (80 total), including recovery of known synthetic coefficients.
+- Decisions DEC-015 to DEC-018. Hypothesis register results, metric dictionary §2–3, lineage, dictionary, testing and reproducibility updates.
+- README "Findings so far".
+
 ### Added — Phase 1 (2026-10-12)
 - `src/ingestion/datagov_client.py`: full-snapshot download through the data.gov.sg initiate/poll API, with retries, timeouts, a manifest (SHA-256, row count, publisher metadata) and atomic snapshot folders.
 - `src/validation/schema.py`: source schema contract and blocking gates (header, zero rows, row-count drop).
