@@ -76,4 +76,18 @@ Common columns in segment tables: `transactions`, `median_price`, `p25_price`, `
 | `hypothesis_results.csv`, `hypothesis_robustness.csv`, `h5_composition.csv` | hypothesis | See HYPOTHESIS_REGISTER §3 |
 | `analysis_results.json` | run | Windows, row counts, results, diagnostics, snapshot id |
 
-*Model and Power BI tables are added in Phases 3–4.*
+## 6. Model outputs (`outputs/model_metrics/`, Phase 3)
+
+| File | Grain | Key columns |
+|---|---|---|
+| `validation_scores.csv` | configuration | family, config, n, mae, rmse, r2, medae, mdape_pct, bias_median_pct, fit_seconds, n_iter |
+| `train_scores.csv` | configuration | In-sample metrics, used for the over-fitting check |
+| `test_scores.csv` | model × mode | mode (`static` / `monthly refit`), family, config, metrics, selected |
+| `test_errors_by_month.csv` | test month | horizon_months, MAE static / monthly refit / B2, bias, interval coverage |
+| `test_segment_errors_{static,monthly_refit}.csv` | segment level | segment, level, metrics, median_actual, reliability |
+| `permutation_importance.csv` | feature | mae_increase_sgd, std |
+| `model_results.json` | run | Split, unseen categories, selected config, conformal quantiles and coverage |
+
+`data/processed/model_test_predictions.parquet` (git-ignored) has one row per test transaction: attributes, `actual`, `predicted` (static), `predicted_rolling` / `predicted_monthly_refit`, all family predictions, interval bounds (**not for publication**, DEC-023), `price_quintile` and `horizon_months`.
+
+*Power BI tables are added in Phase 4.*

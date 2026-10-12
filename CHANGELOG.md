@@ -4,6 +4,17 @@ All notable changes to this project. Entries record work that was actually compl
 
 ## [Unreleased]
 
+### Added — Phase 3 (2026-10-12)
+- Model design pre-specified in MODEL_CARD §1–6 before any training (`dc67c89`, addendum `0ff236e`).
+- `src/modelling/`: feature sets with a leakage guard (`features.py`), the chronological split (`splits.py`), baselines B0/B1/B2 and the Ridge and HistGradientBoosting pipelines (`models.py`), metrics, segment errors and conformal intervals (`evaluate.py`), and the orchestrator with static and monthly-refit evaluation (`run_modelling.py`).
+- `src/reporting/model_figures.py`: figures 10–14, which can be regenerated without retraining.
+- The model card with full results; DEC-019 to DEC-024; 22 modelling tests (102 total).
+
+### Fixed — Phase 3
+- Figure 13 attached labels to the wrong bars (bars split across two plotting calls). It is now one call with shared positions, and was re-checked visually.
+- Monthly-refit interval arrays lost their row index (found in the smoke run).
+- `TargetEncoder(shuffle, random_state)` is deprecated in scikit-learn 1.9; replaced with a seeded `KFold`.
+
 ### Added — Phase 2 (2026-10-12)
 - Pre-registered hypotheses H1–H5 (committed before execution in `f56b053`).
 - `src/analytics/`: shared windows (`common.py`), descriptive statistics (`descriptive.py`), hedonic models M1/M2 with building-clustered errors and a mix-adjusted index (`hedonic.py`), hypothesis execution with Holm correction (`hypotheses.py`), and the orchestrator (`run_analysis.py`).

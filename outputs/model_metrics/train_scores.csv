@@ -1,0 +1,21 @@
+config_id,config,n,mae,rmse,r2,medae,mdape_pct,bias_median_pct
+0,"L-A alpha=0.1, time_extrapolation=constant",190655,38200.9,53683.3,0.906769,28340.9,6.127,0.388734
+1,"L-A alpha=0.1, time_extrapolation=linear",190655,38200.9,53683.3,0.906769,28340.9,6.127,0.388734
+2,"L-A alpha=1.0, time_extrapolation=constant",190655,38204.4,53680.1,0.90678,28344.7,6.12869,0.387234
+3,"L-A alpha=1.0, time_extrapolation=linear",190655,38204.4,53680.1,0.90678,28344.7,6.12869,0.387234
+4,"L-A alpha=10.0, time_extrapolation=constant",190655,38229.6,53656.4,0.906862,28374.5,6.1364,0.39317
+5,"L-A alpha=10.0, time_extrapolation=linear",190655,38229.6,53656.4,0.906862,28374.5,6.1364,0.39317
+6,"G-A max_leaf_nodes=31, min_samples_leaf=20",190655,20835.6,28970.9,0.972848,15216,3.2506,0.0856281
+7,"G-A max_leaf_nodes=31, min_samples_leaf=100",190655,21160.2,29597.1,0.971661,15298.6,3.27396,0.0730344
+8,"G-A max_leaf_nodes=127, min_samples_leaf=20",190655,17433.4,24297.9,0.980901,12707.2,2.70844,0.04114
+9,"G-A max_leaf_nodes=127, min_samples_leaf=100",190655,18290.9,25613.2,0.978777,13257.1,2.81873,0.04348
+10,"L-B alpha=0.1, time_extrapolation=constant",190655,36521.1,51781,0.913259,26906.9,5.833,0.389932
+11,"L-B alpha=0.1, time_extrapolation=linear",190655,36521.1,51781,0.913259,26906.9,5.833,0.389932
+12,"L-B alpha=1.0, time_extrapolation=constant",190655,36524,51778.1,0.913269,26907.2,5.83221,0.390637
+13,"L-B alpha=1.0, time_extrapolation=linear",190655,36524,51778.1,0.913269,26907.2,5.83221,0.390637
+14,"L-B alpha=10.0, time_extrapolation=constant",190655,36547,51748.2,0.913369,26946.9,5.8375,0.396027
+15,"L-B alpha=10.0, time_extrapolation=linear",190655,36547,51748.2,0.913369,26946.9,5.8375,0.396027
+16,"G-B max_leaf_nodes=31, min_samples_leaf=20",190655,18148.2,24975.6,0.97982,13510.7,2.87879,-0.0176471
+17,"G-B max_leaf_nodes=31, min_samples_leaf=100",190655,18305.3,25338.5,0.97923,13510.3,2.88006,0.0166063
+18,"G-B max_leaf_nodes=127, min_samples_leaf=20",190655,15669.9,21610,0.984892,11617.6,2.47562,-0.0166447
+19,"G-B max_leaf_nodes=127, min_samples_leaf=100",190655,15832.6,21842.6,0.984566,11749.5,2.50102,-0.0158075

@@ -1,0 +1,69 @@
+{
+  "snapshot_id": "20261012T010041Z",
+  "sample_fraction": null,
+  "split": {
+    "train": {
+      "start": "2017-01",
+      "end": "2024-09",
+      "rows": 190655,
+      "months": 93
+    },
+    "validation": {
+      "start": "2024-10",
+      "end": "2025-09",
+      "rows": 26244,
+      "months": 12
+    },
+    "test": {
+      "start": "2025-10",
+      "end": "2026-09",
+      "rows": 24658,
+      "months": 12
+    }
+  },
+  "unseen_categories": {
+    "town": {
+      "validation_rows": 0,
+      "test_rows_vs_train_val": 0,
+      "validation_levels": []
+    },
+    "flat_type": {
+      "validation_rows": 0,
+      "test_rows_vs_train_val": 0,
+      "validation_levels": []
+    },
+    "flat_model": {
+      "validation_rows": 0,
+      "test_rows_vs_train_val": 0,
+      "validation_levels": []
+    },
+    "street_name": {
+      "validation_rows": 538,
+      "test_rows_vs_train_val": 139,
+      "validation_levels": [
+        "ALKAFF CRES",
+        "BT BATOK ST 41",
+        "NORTHSHORE DR",
+        "TAMPINES NTH DR 1",
+        "YISHUN ST 42",
+        "YISHUN ST 44"
+      ]
+    }
+  },
+  "selected_config": "G-B max_leaf_nodes=31, min_samples_leaf=20",
+  "best_per_family": {
+    "G-A": "G-A max_leaf_nodes=31, min_samples_leaf=20",
+    "G-B": "G-B max_leaf_nodes=31, min_samples_leaf=20",
+    "L-A": "L-A alpha=10.0, time_extrapolation=linear",
+    "L-B": "L-B alpha=10.0, time_extrapolation=linear"
+  },
+  "conformal_80": {
+    "q_low_log": -0.030655305029719145,
+    "q_high_log": 0.08773979952190665,
+    "multiplier_low": 0.9698098040304306,
+    "multiplier_high": 1.091704023159707,
+    "coverage_test_static": 0.6490794062778814,
+    "coverage_test_monthly_refit": 0.7092627139265147
+  },
+  "runtime_seconds": 254
+}

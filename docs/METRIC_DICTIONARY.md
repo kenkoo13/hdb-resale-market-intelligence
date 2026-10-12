@@ -79,4 +79,26 @@ All of these are computed on analysis-ready rows: clean rows, excluding the part
 | Composition effect | Raw change − mix-adjusted change (percentage points) | D | Negative means the raw median understates price growth for comparable flats |
 | VIF | `1 / (1 − R²_j)` from regressing predictor j on all other columns | Diagnostic | Values above 10 signal high collinearity |
 
-*Model evaluation metrics (Phase 3) and DAX measures (Phase 4) are added later.*
+## 4. Model evaluation metrics (Phase 3, Python: `src/modelling/evaluate.py`)
+
+These are all *predictive* (type P) and are computed on held-out rows. y is the actual price and ŷ the estimate, both in SGD.
+
+| Metric | Formula | Unit | Interpretation and limits |
+|---|---|---|---|
+| **MAE** (primary) | `mean(|y − ŷ|)` | SGD | Average dollar miss. Robust, interpretable. |
+| RMSE | `sqrt(mean((y − ŷ)²))` | SGD | Penalises large misses more. RMSE much greater than MAE means occasional big errors. |
+| R² | `1 − Σ(y − ŷ)² / Σ(y − ȳ)²` | — | Share of price variance explained. Can be negative when a model is worse than predicting the mean. |
+| MedAE | `median(|y − ŷ|)` | SGD | The typical miss for a "middle" transaction |
+| MdAPE | `100 × median(|y − ŷ| / y)` | % | The typical miss as a share of price. This is how buyers think about error. |
+| Median bias | `100 × median((ŷ − y) / y)` | % | > 0 means the model tends to over-estimate. Shows drift when the market moves after training. |
+| 80% interval | `[ŷ·exp(q₁₀), ŷ·exp(q₉₀)]`, where q are the 10th and 90th percentiles of `log(y) − log(ŷ)` on the **validation** set (split conformal) | SGD | Intended to contain 80% of actual prices. **Valid only if test errors look like validation errors.** Coverage is measured on test. |
+| Coverage | Share of test rows with `low ≤ y ≤ high` | % | Compared against the nominal 80% |
+| Permutation importance | Increase in test MAE when one feature's values are shuffled (5 repeats, 5,000-row test sample) | SGD | How much the model *relies* on a feature. It is not a causal effect, and correlated features share importance. |
+| Reliability label | `n < 30` test rows in a segment → "less reliable" | — | Same threshold as the descriptive tables |
+
+**Baselines:**
+- **B0:** the training median.
+- **B1:** the town × flat-type training median (falling back to flat type, then global; a segment needs n ≥ 30).
+- **B2:** the same as B1, using only the last 12 training months.
+
+*DAX measures (Phase 4) are added later.*

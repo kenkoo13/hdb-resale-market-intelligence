@@ -30,6 +30,9 @@ Optional: copy `config/project_config.example.yaml` to `config/project_config.ya
 | Reprocess the latest snapshot without downloading | `.venv/Scripts/python -m src.pipeline --skip-download` | Same outputs. For the same snapshot the data content is identical; only the processing timestamp in `run_info.json` changes. |
 | Reprocess a specific snapshot | `.venv/Scripts/python -m src.pipeline --snapshot 20261012T010041Z` | — |
 | Analysis: descriptive stats, hypotheses, figures | `.venv/Scripts/python -m src.analytics.run_analysis` | `outputs/tables/*.csv`, `analysis_results.json`, `outputs/figures/*.png`. Took 2.5–5 minutes across runs on the test machine (12 logical CPUs, 7.8 GB RAM), mostly the full-period hedonic fit and VIF. Peak memory was not measured. |
+| Modelling: train, select, evaluate | `.venv/Scripts/python -m src.modelling.run_modelling` | `outputs/model_metrics/*`, figures 10–14, `data/processed/model_test_predictions.parquet`, `outputs/models/selected_model.joblib`. About 4–5 minutes. Deterministic given seed 42. |
+| Quick smoke run of modelling | `.venv/Scripts/python -m src.modelling.run_modelling --sample 0.05` | Writes to `outputs/model_metrics/smoke/` (git-ignored); no figures or model file |
+| Rebuild model figures only | `.venv/Scripts/python -m src.reporting.model_figures` | Figures 10–14 from saved outputs |
 | Tests | `.venv/Scripts/python -m pytest -q` | All pass (see TESTING.md) |
 
 Exit codes: `0` success; `1` snapshot not found; `2` ingestion failure or a blocking validation gate failed (the previous outputs are left untouched).
@@ -45,4 +48,6 @@ A later snapshot will contain more months, and its counts will differ. Your snap
 
 The analysis is deterministic for a given snapshot. The only randomness is the H5 bootstrap, which uses seed 42 from config.
 
-*Modelling and BI steps are added in Phases 3–4.*
+**Run order:** `src.pipeline` → `src.analytics.run_analysis` → `src.modelling.run_modelling`.
+
+*BI steps are added in Phase 4.*

@@ -1,0 +1,10 @@
+mode,family,config,n,mae,rmse,r2,medae,mdape_pct,bias_median_pct,selected
+static,B0,B0,24658,206703,275499,-0.635176,150000,25.8573,-22.2222,
+static,B1,B1,24658,160130,200347,0.135248,132000,21.4385,-21.2963,
+static,B2,B2,24658,84509.4,128658,0.643387,54056,8.78378,-0.148148,
+static,G-A,"G-A max_leaf_nodes=31, min_samples_leaf=20",24658,30438,43487,0.959258,21975.4,3.53947,0.806064,False
+static,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,27578.3,39436.5,0.966494,20036.1,3.24321,0.754633,True
+static,L-A,"L-A alpha=10.0, time_extrapolation=linear",24658,48635.9,68109.2,0.900061,35525,5.86748,-1.68299,False
+static,L-B,"L-B alpha=10.0, time_extrapolation=linear",24658,46280.4,65265.4,0.908232,33621.2,5.51519,-1.06107,False
+monthly refit,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,25387,36040.2,0.972017,18554,2.98368,0.0401915,True
+monthly refit,B2,B2,24658,84093,127199,0.651429,54294,8.8,0.427974,

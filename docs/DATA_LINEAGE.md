@@ -43,4 +43,19 @@ data/processed/transactions_clean.parquet
 ```
 Orchestrated by `python -m src.analytics.run_analysis`. Every output is regenerated from the processed table, and nothing is edited by hand.
 
-*Phases 3–4 extend this with model outputs and Power BI tables.*
+## Modelling layer (Phase 3)
+
+```
+data/processed/transactions_clean.parquet
+   │  analysis_ready → add_time_index → make_split (train / validation / test by month)
+   │  src/modelling/features.py (feature sets A/B, leakage guard)
+   │  src/modelling/models.py (B0/B1/B2, Ridge, HistGradientBoosting pipelines)
+   ├─► outputs/model_metrics/validation_scores.csv, train_scores.csv   (selection evidence)
+   ├─► outputs/model_metrics/test_scores.csv, test_errors_by_month.csv,
+   │   test_segment_errors_{static,monthly_refit}.csv, permutation_importance.csv, model_results.json
+   ├─► data/processed/model_test_predictions.parquet   (row-level test predictions, git-ignored)
+   ├─► outputs/models/selected_model.joblib            (git-ignored)
+   └─► outputs/figures/10–14_*.png                     (src/reporting/model_figures.py)
+```
+
+*Phase 4 extends this with Power BI tables.*

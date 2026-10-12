@@ -1,6 +1,6 @@
 # HDB Resale Market Intelligence & Price Prediction
 
-> **Project status: in progress (Phases 0–2 of 6 complete: source verified, data-quality pipeline, exploratory analysis and pre-registered hypothesis tests).** Modelling (Phase 3) and Power BI (Phase 4) are not yet built. This README is rewritten as each phase completes.
+> **Project status: in progress (Phases 0–3 of 6 complete: source verified, data-quality pipeline, exploratory analysis, pre-registered hypothesis tests, price model).** The Power BI report (Phase 4) is not yet built. This README is rewritten as each phase completes.
 
 An end-to-end data analytics capstone that turns Singapore HDB resale transaction records into explainable price intelligence. It covers market trends, fair comparisons between flats, the evidence on which characteristics are associated with price differences, and an honestly evaluated price-estimation model, all delivered through a reproducible Python/SQL pipeline and a Power BI report.
 
@@ -25,3 +25,23 @@ All findings describe **associations in observational data**, not causes. Full e
 ![Storey: raw vs adjusted](outputs/figures/07_storey_raw_vs_adjusted.png)
 
 More figures are in [outputs/figures](outputs/figures). The data-quality results are in [docs/DATA_QUALITY.md](docs/DATA_QUALITY.md).
+
+## Price estimation model (Phase 3)
+
+The model estimates the **typical registered price of comparable flats**. It is not a valuation. The design, including the chronological split, candidate models, metrics and selection rule, was [committed before training](docs/MODEL_CARD.md). It was evaluated **once** on a held-out final year (Oct 2025 – Sep 2026, 24,658 sales) that played no part in any modelling choice.
+
+| Model | Test MAE (SGD) | Typical % error |
+|---|---:|---:|
+| Baseline: town × flat-type median over the past 12 months | 84,509 | 8.8% |
+| Ridge regression (+ street) | 46,280 | 5.5% |
+| **Gradient boosting (+ street), trained once** | **27,578** | **3.2%** |
+| Gradient boosting (+ street), retrained monthly | 25,387 | 3.0% |
+
+- Accuracy fades when the model isn't retrained: MAE is about 40% higher 12 months after training. Retraining monthly keeps the typical error near 3%.
+- Estimates are least reliable for rare flat types and models (1 ROOM, MULTI-GENERATION, Terrace), for mature central towns (Marine Parade at 5.5%), for streets with no past sales, and at the price extremes. The model over-estimates the cheapest flats and under-estimates the dearest.
+- **80% prediction intervals failed their coverage check** (65% actual coverage), so they are deliberately **not** published.
+
+See the [model card](docs/MODEL_CARD.md) for full results, limitations and prohibited uses.
+
+![Model comparison](outputs/figures/10_model_comparison_test_mae.png)
+![Accuracy over time](outputs/figures/11_error_by_month_static_vs_refit.png)

@@ -201,3 +201,53 @@ Owner: "Project" unless stated otherwise.
 - **Reason:** Readability for a business audience and honest presentation (brief §4.3). The licence requires attribution.
 - **Validation:** Each figure was rendered and inspected, which caught and fixed three label collisions.
 - **Revision criteria:** None expected.
+
+### DEC-019 — Chronological 12/12-month validation and test blocks; static and monthly-refit evaluation
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted (pre-specified in MODEL_CARD §3, commit `dc67c89`)
+- **Decision:** Train on 2017-01 to L−24, validate on the next 12 months, and test on the last 12 full months. The test year is evaluated twice: *static* (trained once, predicting 1–12 months ahead) and *monthly refit* (retrained before each test month). Selection uses validation only.
+- **Reason:** Prices trend strongly (Phase 2: +57% for comparable flats since 2017), so random splits would let the model "see the future" and overstate accuracy. Two modes show both decay with horizon and deployment-realistic accuracy.
+- **Alternatives:** A random K-fold split (rejected: leaks the time trend); a single expanding-window backtest across many years (more evidence, but higher cost and complexity; the monthly refit over 12 test months covers the deployment question).
+- **Trade-offs:** The test covers one year (2025-10 to 2026-09), so performance in a different market regime may differ.
+- **Validation:** `tests/test_modelling.py::test_split_is_chronological_and_disjoint`.
+- **Revision criteria:** The market regime changes sharply. In that case add multi-year rolling backtests.
+
+### DEC-020 — Ridge time-spline extrapolation chosen on validation
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted (added before training, commit `0ff236e`)
+- **Decision:** The Ridge grid includes `time_extrapolation` ∈ {constant, linear}.
+- **Reason:** Validation and test months lie beyond the training period, so the model must decide what happens after the last training month. Neither option is obviously right.
+- **Evidence (synthetic check, not real data):** with a truly linear synthetic trend, `linear` extrapolation still produced about 2× the MAE of `constant` at a 1–12-month horizon. The spline's end slope is estimated from few, noisy months. This is a caution, and validation decides on the real data.
+- **Revision criteria:** The validation results.
+
+### DEC-021 — Additional baseline B2 (segment median over the last 12 months), added after the smoke run
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Add B2, the town × flat-type median over the last 12 training months (with the same fallbacks as B1), to all comparisons and to the monthly-refit evaluation. B0 and B1 remain as pre-specified.
+- **Reason:** The 5% smoke run showed that B1, the median over *all* training years, predicts years-old price levels into the test period. Beating it says little. B2 is the realistic comparator: "what similar flats in this town sold for in the past year".
+- **Transparency:** B2 was added *after* seeing smoke-run output on a 5% sample, which included test months. It is a comparator only and is never eligible for selection, so it cannot bias model choice. No other design element was changed after the smoke run, including the selection rule, grids, interval method and metrics.
+- **Validation:** `test_segment_baseline_fallbacks_and_recent_window`.
+
+### DEC-022 — Log-price target with exp back-transform; MAE primary
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted (pre-specified MODEL_CARD §2, §6)
+- **Decision:** Models fit `log(price)`. Predictions are `exp(prediction)`, an estimate of the conditional median. The primary metric is MAE in SGD, with RMSE, R², MedAE and MdAPE also reported.
+- **Reason:** Price errors scale with price level, and logs stabilise this. The median-type back-transform pairs naturally with MAE. MAE is directly interpretable as dollars of typical error and is robust to rare extreme prices.
+- **Alternatives:** Raw-price target with squared error (dominated by expensive flats); a smearing correction to estimate the mean (unnecessary for an MAE objective).
+- **Trade-offs:** Predictions are slightly below the conditional mean, so mean signed error can be negative even when median bias is about zero.
+
+### DEC-023 — Prediction intervals withheld from the BI layer
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted (applies the rule pre-specified in MODEL_CARD §6)
+- **Decision:** Do not publish the 80% split-conformal intervals. Show the empirical test error distribution and segment MdAPE instead.
+- **Evidence:** Test coverage was 64.9% static and 70.9% monthly refit, against the nominal 80%. Static coverage decays from 74% to 58% over 12 months, because validation residuals (a rising market) differ from test residuals (a flat market).
+- **Alternatives:** Publish with a warning (rejected: users would read an interval as a guarantee); recalibrate on test (rejected: that uses test data to tune); an adaptive or rolling conformal method (a future option, which would need its own validation).
+- **Revision criteria:** An interval method shows ≥ 78% coverage in a held-out backtest across more than one market regime.
+
+### DEC-024 — Selected model: gradient boosting with street target encoding (G-B)
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Use HistGradientBoosting on log price with feature set A plus street target encoding (31 leaves, min leaf 20, learning rate 0.1, up to 1,000 iterations, seed 42). It is evaluated both trained once and retrained monthly, and monthly retraining is recommended for any use.
+- **Reason:**
+  - Lowest validation MAE (28,958), more than 1% better than any simpler family. The next best simpler family, G-A, was 30,904.
+  - Confirmed on the test year: static MAE 27,578, monthly refit 25,387, against the realistic baseline B2 at 84,509.
+- **Alternatives:**
+  - Ridge (L-B): more interpretable, but 60% higher MAE.
+  - Larger grids or other libraries (LightGBM, XGBoost): extra dependencies and complexity for an uncertain gain, not justified for this project's purpose.
+- **Trade-offs:** Less transparent than a linear model. Explanation relies on permutation importance and segment errors, plus the Phase 2 hedonic model for interpretable effects. The model cannot extrapolate time trends.
+- **Validation:** MODEL_CARD §7, `tests/test_modelling.py`.
+- **Revision criteria:** Monthly-refit MAE on new data rises materially above about 28k, or a simpler model comes within 1% on validation.
