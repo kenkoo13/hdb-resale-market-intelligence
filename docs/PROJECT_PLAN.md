@@ -1,6 +1,6 @@
 # Project Plan — HDB Resale Market Intelligence & Price Prediction
 
-Status: **Phase 0 complete** (2026-10-12). Later phases are planned here and their status is tracked in the table at the end.
+Status: **Phases 0–1 complete** (2026-10-12). Later phases are planned here and their status is tracked in the table at the end.
 
 ## 1. Business question
 
@@ -118,7 +118,7 @@ The last successful outputs are only replaced after all validation gates pass (D
 | Phase | Deliverables | Acceptance criteria | Status |
 |-------|-------------|---------------------|--------|
 | 0 Inspect & plan | This plan, decision log, docs skeleton, licence/attribution, `.gitignore` | Source verified live. Environment recorded. Decisions logged. | Done |
-| 1 Ingestion & DQ | `src/ingestion`, `src/validation`, `src/transformation`, quarantine, DQ report, unit tests | The pipeline runs end to end from the API. DATA_QUALITY.md reports actual counts. Tests pass. | Planned |
+| 1 Ingestion & DQ | `src/ingestion`, `src/validation`, `src/transformation`, quarantine, DQ report, unit tests | The pipeline runs end to end from the API. DATA_QUALITY.md reports actual counts. Tests pass. | Done (2026-10-12) |
 | 2 EDA & hypotheses | Descriptive tables and figures, mix-adjusted view, hypothesis tests with effect sizes | The register is complete with actual results. Exploratory work is labelled. | Planned |
 | 3 Modelling | Baseline, linear, and tree model. Chronological train/validation/test split plus rolling backtest. Segment errors. Model card. | Test set used once. Leakage tests pass. Metrics recorded with dates and sample sizes. | Planned |
 | 4 BI | Curated tables, data model, DAX measures with validation values, report or build guide | DAX expected values match Python/SQL. No fake PBIX. | Planned |
