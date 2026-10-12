@@ -1,0 +1,43 @@
+table town_effects_adjusted
+	lineageTag: 0b37cfad-32c1-5395-9074-2573513232fe
+
+	/// Adjusted price difference vs Ang Mo Kio (model M1, recent window).
+	measure 'Town Effect vs Ang Mo Kio' = MAX ( town_effects_adjusted[pct_vs_reference] ) / 100
+		formatString: 0.0%
+		displayFolder: Evidence
+		lineageTag: 116e3fc1-4893-5466-88e0-5729db1cbac0
+
+	column level
+		dataType: string
+		lineageTag: e7ae017d-42c0-5ea3-9a03-141619f5658d
+		summarizeBy: none
+		sourceColumn: level
+
+	column pct_vs_reference
+		dataType: double
+		lineageTag: 11f09e48-76ae-50ec-8a30-f53a1c38d9ee
+		summarizeBy: none
+		sourceColumn: pct_vs_reference
+
+	column ci_low
+		dataType: double
+		lineageTag: b416b7cd-fbd1-5789-bce5-130a17168ddb
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		lineageTag: fdf448fc-bcf6-517a-9c4a-349b57cd7324
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	partition town_effects_adjusted = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "town_effects_adjusted.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}}, "en-US")
+				in
+				    Typed
+

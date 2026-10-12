@@ -58,4 +58,20 @@ data/processed/transactions_clean.parquet
    └─► outputs/figures/10–14_*.png                     (src/reporting/model_figures.py)
 ```
 
-*Phase 4 extends this with Power BI tables.*
+## BI layer (Phase 4)
+
+```
+data/processed/transactions_clean.parquet ──► SQLite (in memory)
+   │  sql/01_fact_and_dimensions.sql  → fact_transactions, dim_month, dim_town, dim_flat_type, dim_storey_range, dim_flat_model
+   │  sql/02_aggregates.sql           → agg_monthly, agg_town_flat_type_latest12 ──► cross-check vs pandas (must match exactly)
+   ├─► data/curated/*.csv  (star schema)
+outputs/tables + outputs/model_metrics ──► data/curated/ result tables (price index, hypotheses, effects, model comparison...)
+selected model refit on all full months ──► data/curated/indicative_profiles.csv   (src/modelling/profiles.py)
+   │
+   ▼  src/reporting/build_pbip.py
+powerbi/HDB Resale Market.pbip
+   ├─ .SemanticModel (TMDL): Power Query imports each CSV via parameter CuratedFolder; 37 DAX measures
+   └─ .Report (PBIR): 5 pages, 44 visuals
+   │
+   ▼  validation: validate_tmdl.ps1 (TMDL parse) · Desktop refresh · query_model.ps1 (DAX vs dax_expected_values.csv)
+```

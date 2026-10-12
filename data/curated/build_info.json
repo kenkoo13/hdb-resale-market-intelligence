@@ -1,0 +1,10 @@
+{
+  "snapshot_id": "20261012T010041Z",
+  "sql_cross_check": {
+    "monthly_rows_checked": 118,
+    "town_flat_type_cells_checked": 127,
+    "result": "match"
+  },
+  "fact_rows": 242307,
+  "profiles": 288
+}

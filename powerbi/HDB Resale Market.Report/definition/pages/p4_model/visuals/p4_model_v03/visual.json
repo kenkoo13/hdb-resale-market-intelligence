@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p4_model_v03",
+  "position": {
+    "x": 500,
+    "y": 55,
+    "z": 3,
+    "height": 100,
+    "width": 230,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_comparison"
+                    }
+                  },
+                  "Property": "Selected Model MAE (Monthly Refit)"
+                }
+              },
+              "queryRef": "model_comparison.Selected Model MAE (Monthly Refit)",
+              "nativeQueryRef": "Selected Model MAE (Monthly Refit)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'MAE if retrained monthly'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

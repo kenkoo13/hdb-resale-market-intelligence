@@ -1,0 +1,19 @@
+table dim_flat_model
+	lineageTag: 8ca85e82-6e13-59aa-959c-d2318559a649
+
+	column flat_model
+		dataType: string
+		lineageTag: 0db2672b-5571-50f0-960a-11247a0d3389
+		summarizeBy: none
+		sourceColumn: flat_model
+
+	partition dim_flat_model = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "dim_flat_model.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"flat_model", type text}}, "en-US")
+				in
+				    Typed
+

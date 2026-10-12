@@ -1,0 +1,37 @@
+table model_feature_importance
+	lineageTag: 1046e9be-7db9-5e00-9ad3-6250f89c1c50
+
+	/// Permutation importance (SGD).
+	measure 'MAE Increase When Shuffled' = MAX ( model_feature_importance[mae_increase_sgd] )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: 17b6d7ea-23ac-5043-ad27-c3bb82a71e9f
+
+	column feature
+		dataType: string
+		lineageTag: 8471aad8-18aa-5a79-9f7f-e41b6d7122fa
+		summarizeBy: none
+		sourceColumn: feature
+
+	column mae_increase_sgd
+		dataType: double
+		lineageTag: 94354a83-4a38-56c8-9b52-bccf6f19df30
+		summarizeBy: none
+		sourceColumn: mae_increase_sgd
+
+	column std
+		dataType: double
+		lineageTag: f1bf9e64-12a7-55a1-9282-a703ca403340
+		summarizeBy: none
+		sourceColumn: std
+
+	partition model_feature_importance = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "model_feature_importance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"feature", type text}, {"mae_increase_sgd", type number}, {"std", type number}}, "en-US")
+				in
+				    Typed
+

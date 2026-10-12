@@ -1,0 +1,162 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p2_compare_v04",
+  "position": {
+    "x": 20,
+    "y": 120,
+    "z": 4,
+    "height": 520,
+    "width": 640,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_town"
+                    }
+                  },
+                  "Property": "town"
+                }
+              },
+              "queryRef": "dim_town.town",
+              "nativeQueryRef": "town"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Transactions Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Transactions Latest 12M",
+              "nativeQueryRef": "Transactions Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price Latest 12M",
+              "nativeQueryRef": "Median Price Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "P25 Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.P25 Price Latest 12M",
+              "nativeQueryRef": "P25 Price Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "P75 Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.P75 Price Latest 12M",
+              "nativeQueryRef": "P75 Price Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price per sqm Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price per sqm Latest 12M",
+              "nativeQueryRef": "Median Price per sqm Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Sample Size Flag Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Sample Size Flag Latest 12M",
+              "nativeQueryRef": "Sample Size Flag Latest 12M"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_transactions"
+                  }
+                },
+                "Property": "Median Price Latest 12M"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'By town, latest 12 full months (P25-P75 = middle half of prices)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

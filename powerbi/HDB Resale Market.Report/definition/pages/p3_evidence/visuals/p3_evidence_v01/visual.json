@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p3_evidence_v01",
+  "position": {
+    "x": 20,
+    "y": 55,
+    "z": 1,
+    "height": 220,
+    "width": 760,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "hypothesis"
+                }
+              },
+              "queryRef": "hypothesis_results.hypothesis",
+              "nativeQueryRef": "hypothesis"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "plain_english"
+                }
+              },
+              "queryRef": "hypothesis_results.plain_english",
+              "nativeQueryRef": "plain_english"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "contrast"
+                }
+              },
+              "queryRef": "hypothesis_results.contrast",
+              "nativeQueryRef": "contrast"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "estimate_pct"
+                }
+              },
+              "queryRef": "hypothesis_results.estimate_pct",
+              "nativeQueryRef": "estimate_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "ci_low_pct"
+                }
+              },
+              "queryRef": "hypothesis_results.ci_low_pct",
+              "nativeQueryRef": "ci_low_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "ci_high_pct"
+                }
+              },
+              "queryRef": "hypothesis_results.ci_high_pct",
+              "nativeQueryRef": "ci_high_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hypothesis_results"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "hypothesis_results.status",
+              "nativeQueryRef": "status"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pre-registered hypotheses (estimate % per stated contrast; H5 in percentage points)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

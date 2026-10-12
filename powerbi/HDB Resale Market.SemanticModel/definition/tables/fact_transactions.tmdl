@@ -1,0 +1,205 @@
+table fact_transactions
+	lineageTag: 2df117c6-01f8-556f-af3c-f4380d216be6
+
+	/// Number of registered resale transactions in the current filter context (includes the partial month).
+	measure Transactions = COUNTROWS ( fact_transactions )
+		formatString: #,0
+		displayFolder: Market
+		lineageTag: 05445583-6336-5498-bc69-18f728739e6a
+
+	/// Transactions excluding the still-accumulating latest month (DEC-008).
+	measure 'Transactions (Full Months)' = CALCULATE ( [Transactions], dim_month[is_partial_month] = 0 )
+		formatString: #,0
+		displayFolder: Market
+		lineageTag: b7e41272-52d3-541c-a334-197455845447
+
+	/// Median registered resale price (SGD).
+	measure 'Median Price' = MEDIAN ( fact_transactions[resale_price] )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: f0f1a750-9706-5c67-aa46-e12b15526f5f
+
+	/// Median price excluding the partial month; used for trends.
+	measure 'Median Price (Full Months)' = CALCULATE ( [Median Price], dim_month[is_partial_month] = 0 )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: f8b55fb9-b477-5cc2-b9a7-9aac4fb6ef60
+
+	/// Arithmetic mean price; shown for comparison only (skewed upward).
+	measure 'Mean Price' = AVERAGE ( fact_transactions[resale_price] )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: 4a268484-b121-55ad-910e-a4cfb1618fbe
+
+	/// 25th percentile price (linear interpolation, same as pandas quantile).
+	measure 'P25 Price' = PERCENTILE.INC ( fact_transactions[resale_price], 0.25 )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: 29a6dcf8-ff99-56cb-a115-dc85fb7cca89
+
+	/// 75th percentile price.
+	measure 'P75 Price' = PERCENTILE.INC ( fact_transactions[resale_price], 0.75 )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: bfb75715-775b-564b-8371-9cb6250b666c
+
+	/// Median of row-level price per square metre (SGD/sqm).
+	measure 'Median Price per sqm' = MEDIAN ( fact_transactions[price_per_sqm] )
+		formatString: \$#,0
+		displayFolder: Market
+		lineageTag: c6b168c4-b63c-535a-a499-4fb3cd7d52d7
+
+	/// Median floor area (sqm).
+	measure 'Median Floor Area' = MEDIAN ( fact_transactions[floor_area_sqm] )
+		formatString: #,0
+		displayFolder: Market
+		lineageTag: ea85df2c-7e31-5cf5-a1b4-80b8ff5529f4
+
+	/// Transactions in the 12 full months ending at the last full month.
+	measure 'Transactions Latest 12M' = CALCULATE ( [Transactions], dim_month[is_latest_12m] = 1 )
+		formatString: #,0
+		displayFolder: Latest 12 months
+		lineageTag: b86a222d-d5d8-55e2-a663-985303e0934b
+
+	/// Median price over the latest 12 full months.
+	measure 'Median Price Latest 12M' = CALCULATE ( [Median Price], dim_month[is_latest_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: a2e2e43e-74e9-5a9a-8d0a-a036f2aed1ac
+
+	/// Median price over the 12 months before the latest 12.
+	measure 'Median Price Prior 12M' = CALCULATE ( [Median Price], dim_month[is_prior_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: 90cfd665-28ad-5bda-a037-414ae5a68366
+
+	/// Change in median price, latest 12 vs prior 12 full months. Raw median: includes changes in the mix of flats sold.
+	measure 'Median Price YoY %' = VAR cur = [Median Price Latest 12M] VAR prev = [Median Price Prior 12M] RETURN IF ( NOT ISBLANK ( cur ) && NOT ISBLANK ( prev ), DIVIDE ( cur, prev ) - 1 )
+		formatString: 0.0%
+		displayFolder: Latest 12 months
+		lineageTag: 8e6db0c9-a47d-53c9-b170-aad0783dede5
+
+	/// 25th percentile.
+	measure 'P25 Price Latest 12M' = CALCULATE ( [P25 Price], dim_month[is_latest_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: 8ccf36e2-0794-5cb9-89d7-5a75321d7b5c
+
+	/// 75th percentile.
+	measure 'P75 Price Latest 12M' = CALCULATE ( [P75 Price], dim_month[is_latest_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: 8ec3d505-938f-55a0-b96f-b0994a7b80d9
+
+	/// Mean price.
+	measure 'Mean Price Latest 12M' = CALCULATE ( [Mean Price], dim_month[is_latest_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: 169ec063-5e5b-5cac-a730-84a31fee5ba0
+
+	/// Median SGD per sqm.
+	measure 'Median Price per sqm Latest 12M' = CALCULATE ( [Median Price per sqm], dim_month[is_latest_12m] = 1 )
+		formatString: \$#,0
+		displayFolder: Latest 12 months
+		lineageTag: 98d8c110-f9e6-5e92-ae16-db9209d7f252
+
+	/// Warns when a comparison rests on fewer than 30 sales.
+	measure 'Sample Size Flag Latest 12M' = IF ( [Transactions Latest 12M] < 30, "Low sample (n<30)", "OK" )
+		displayFolder: Latest 12 months
+		lineageTag: 8b1adb73-5e39-52c6-9119-70a618444cdb
+
+	column txn_id
+		dataType: int64
+		lineageTag: 6bb97ae2-ab77-58ac-b9d3-34b930b7124b
+		summarizeBy: none
+		sourceColumn: txn_id
+
+	column month
+		dataType: dateTime
+		formatString: yyyy-mm
+		lineageTag: 32bd46c5-1de3-544c-8f20-f83ac23445bf
+		summarizeBy: none
+		sourceColumn: month
+
+	column town
+		dataType: string
+		lineageTag: ff831195-60a6-5d65-a50e-076e50f8b893
+		summarizeBy: none
+		sourceColumn: town
+
+	column flat_type
+		dataType: string
+		lineageTag: 69b6d9fc-d8e4-5bd5-8ea9-b34d0fac9fdf
+		summarizeBy: none
+		sourceColumn: flat_type
+
+	column flat_model
+		dataType: string
+		lineageTag: 93f84c71-cf1c-56b8-ab0a-0f95dcb17211
+		summarizeBy: none
+		sourceColumn: flat_model
+
+	column storey_range
+		dataType: string
+		lineageTag: f396b8b3-8fca-5e6a-8b63-aa55beb800a5
+		summarizeBy: none
+		sourceColumn: storey_range
+
+	column storey_mid
+		dataType: double
+		lineageTag: 902d41f6-6c4f-50c1-bd52-5d3e9eece3be
+		summarizeBy: none
+		sourceColumn: storey_mid
+
+	column floor_area_sqm
+		dataType: double
+		lineageTag: e8582f4a-3326-546a-a117-64a8ef1ba396
+		summarizeBy: none
+		sourceColumn: floor_area_sqm
+
+	column floor_area_band
+		dataType: string
+		lineageTag: 992a9fa3-c925-548c-9b41-254ca6ada893
+		summarizeBy: none
+		sourceColumn: floor_area_band
+
+	column remaining_lease_years
+		dataType: double
+		lineageTag: df705a03-8da3-5096-9927-250f65d9a1a6
+		summarizeBy: none
+		sourceColumn: remaining_lease_years
+
+	column lease_band
+		dataType: string
+		lineageTag: 42faa109-aa66-5f55-b9b5-73656bff0186
+		summarizeBy: none
+		sourceColumn: lease_band
+
+	column lease_commence_year
+		dataType: double
+		lineageTag: edd65913-8efb-5399-b28c-b3079b8cd4e9
+		summarizeBy: none
+		sourceColumn: lease_commence_year
+
+	column resale_price
+		dataType: double
+		lineageTag: 5eeb12fa-7b0e-58af-80a1-572913500f12
+		summarizeBy: none
+		sourceColumn: resale_price
+
+	column price_per_sqm
+		dataType: double
+		lineageTag: 07945140-3552-5a08-a002-1fdde366d7ed
+		summarizeBy: none
+		sourceColumn: price_per_sqm
+
+	partition fact_transactions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "fact_transactions.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"txn_id", Int64.Type}, {"month", type date}, {"town", type text}, {"flat_type", type text}, {"flat_model", type text}, {"storey_range", type text}, {"storey_mid", type number}, {"floor_area_sqm", type number}, {"floor_area_band", type text}, {"remaining_lease_years", type number}, {"lease_band", type text}, {"lease_commence_year", type number}, {"resale_price", type number}, {"price_per_sqm", type number}}, "en-US")
+				in
+				    Typed
+

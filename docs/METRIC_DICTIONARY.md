@@ -101,4 +101,13 @@ These are all *predictive* (type P) and are computed on held-out rows. y is the 
 - **B1:** the town × flat-type training median (falling back to flat type, then global; a segment needs n ≥ 30).
 - **B2:** the same as B1, using only the last 12 training months.
 
-*DAX measures (Phase 4) are added later.*
+## 5. DAX measures (Phase 4, Power BI)
+
+The full catalogue of 37 measures, with formula, format, filter-context notes and validation results, is in [BI_BUILD_GUIDE.md §4](BI_BUILD_GUIDE.md#4-dax-measures). It is generated from `src/reporting/build_pbip.py`, the single source of truth.
+
+DAX measures reproduce, and do not redefine, the Python metrics:
+- `Median Price` = §2 median price;
+- `P25 Price` / `P75 Price` = §2 (`PERCENTILE.INC` = pandas linear quantile);
+- the *Latest 12M* measures use the same window as the Python latest 12 months.
+
+13 measure values were verified equal to the Python results on 2026-10-12. Model and evidence measures display pre-computed Python values; they are not recalculated in DAX.

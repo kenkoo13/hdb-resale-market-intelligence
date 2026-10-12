@@ -1,0 +1,27 @@
+table dim_storey_range
+	lineageTag: d7c5e6aa-b5ed-5181-bda1-4dd2889fb9ee
+
+	column storey_range
+		dataType: string
+		lineageTag: a1f1a1b5-7a24-5b48-9eee-8a481e939faf
+		summarizeBy: none
+		sourceColumn: storey_range
+		sortByColumn: storey_order
+
+	column storey_order
+		dataType: int64
+		lineageTag: c479ef32-538d-5b1c-a566-18af2f4e13f2
+		summarizeBy: none
+		sourceColumn: storey_order
+		isHidden
+
+	partition dim_storey_range = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "dim_storey_range.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"storey_range", type text}, {"storey_order", Int64.Type}}, "en-US")
+				in
+				    Typed
+

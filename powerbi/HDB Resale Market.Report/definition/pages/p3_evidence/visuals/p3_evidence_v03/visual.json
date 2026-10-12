@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p3_evidence_v03",
+  "position": {
+    "x": 20,
+    "y": 285,
+    "z": 3,
+    "height": 355,
+    "width": 400,
+    "tabOrder": 3
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "storey_effects_adjusted"
+                    }
+                  },
+                  "Property": "level"
+                }
+              },
+              "queryRef": "storey_effects_adjusted.level",
+              "nativeQueryRef": "level"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "storey_effects_adjusted"
+                    }
+                  },
+                  "Property": "Storey Premium vs Lowest Band"
+                }
+              },
+              "queryRef": "storey_effects_adjusted.Storey Premium vs Lowest Band",
+              "nativeQueryRef": "Storey Premium vs Lowest Band"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Adjusted storey premium vs floors 01-03'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

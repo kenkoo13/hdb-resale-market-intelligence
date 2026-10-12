@@ -1,0 +1,83 @@
+table refresh_info
+	lineageTag: 9c93af2f-4cd9-5c71-98fb-a12b0782e1fc
+
+	/// Coverage and refresh timestamp for report headers.
+	measure 'Data Coverage Text' = "Data: " & SELECTEDVALUE ( refresh_info[first_month] ) & " to " & SELECTEDVALUE ( refresh_info[last_full_month] ) & " (full months). Partial month excluded from trends: " & SELECTEDVALUE ( refresh_info[partial_month] ) & ". Retrieved " & SELECTEDVALUE ( refresh_info[retrieved_at_local] ) & " SGT."
+		displayFolder: Context
+		lineageTag: 0424b584-8ccf-5027-a8ce-078a4b5a60cb
+
+	/// Data licence attribution (Singapore Open Data Licence v1.0).
+	measure 'Attribution Text' = SELECTEDVALUE ( refresh_info[attribution] )
+		displayFolder: Context
+		lineageTag: b4652669-455a-5732-8a5e-4ce147e6df0e
+
+	column snapshot_id
+		dataType: string
+		lineageTag: ddaa4ad7-97ae-5a8f-818d-3ebebb52b5e1
+		summarizeBy: none
+		sourceColumn: snapshot_id
+
+	column dataset_id
+		dataType: string
+		lineageTag: a37c7336-c33c-5239-afed-b4e2b3476240
+		summarizeBy: none
+		sourceColumn: dataset_id
+
+	column retrieved_at_local
+		dataType: string
+		lineageTag: 6d392b34-855e-508c-8879-5dc5a6bc8557
+		summarizeBy: none
+		sourceColumn: retrieved_at_local
+
+	column source_last_updated_at
+		dataType: string
+		lineageTag: af215250-75cb-5f4e-b7ec-001ab92f6bf5
+		summarizeBy: none
+		sourceColumn: source_last_updated_at
+
+	column first_month
+		dataType: string
+		lineageTag: 7b5394bb-a5c6-5e28-b55d-7536e793f8e0
+		summarizeBy: none
+		sourceColumn: first_month
+
+	column last_full_month
+		dataType: string
+		lineageTag: 20bd242e-dafe-5d28-87b2-b7b4d10fe5c6
+		summarizeBy: none
+		sourceColumn: last_full_month
+
+	column partial_month
+		dataType: string
+		lineageTag: d4f54d29-4c1e-5094-aff8-6e17ba254a2d
+		summarizeBy: none
+		sourceColumn: partial_month
+
+	column clean_rows
+		dataType: int64
+		lineageTag: e6bc5472-c2f0-5179-807a-39d7dcd221ee
+		summarizeBy: none
+		sourceColumn: clean_rows
+
+	column quarantined_rows
+		dataType: int64
+		lineageTag: bc1fdfe1-8ac2-517d-84cf-398c66b8938d
+		summarizeBy: none
+		sourceColumn: quarantined_rows
+
+	column attribution
+		dataType: string
+		lineageTag: 5ffeae29-9f61-5b66-ba9b-43816faeee50
+		summarizeBy: none
+		sourceColumn: attribution
+
+	partition refresh_info = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "refresh_info.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"snapshot_id", type text}, {"dataset_id", type text}, {"retrieved_at_local", type text}, {"source_last_updated_at", type text}, {"first_month", type text}, {"last_full_month", type text}, {"partial_month", type text}, {"clean_rows", Int64.Type}, {"quarantined_rows", Int64.Type}, {"attribution", type text}}, "en-US")
+				in
+				    Typed
+

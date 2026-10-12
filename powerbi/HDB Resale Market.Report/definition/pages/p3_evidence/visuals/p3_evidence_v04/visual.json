@@ -1,0 +1,78 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p3_evidence_v04",
+  "position": {
+    "x": 430,
+    "y": 285,
+    "z": 4,
+    "height": 355,
+    "width": 400,
+    "tabOrder": 4
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "lease_effects_adjusted"
+                    }
+                  },
+                  "Property": "level"
+                }
+              },
+              "queryRef": "lease_effects_adjusted.level",
+              "nativeQueryRef": "level"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "lease_effects_adjusted"
+                    }
+                  },
+                  "Property": "Lease Premium vs Shortest Band"
+                }
+              },
+              "queryRef": "lease_effects_adjusted.Lease Premium vs Shortest Band",
+              "nativeQueryRef": "Lease Premium vs Shortest Band"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Adjusted lease premium vs 35-39 years left'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

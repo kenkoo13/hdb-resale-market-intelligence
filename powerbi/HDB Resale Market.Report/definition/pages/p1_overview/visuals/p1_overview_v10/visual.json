@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p1_overview_v10",
+  "position": {
+    "x": 650,
+    "y": 410,
+    "z": 10,
+    "height": 230,
+    "width": 610,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_flat_type"
+                    }
+                  },
+                  "Property": "flat_type"
+                }
+              },
+              "queryRef": "dim_flat_type.flat_type",
+              "nativeQueryRef": "flat_type"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Transactions Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Transactions Latest 12M",
+              "nativeQueryRef": "Transactions Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price Latest 12M",
+              "nativeQueryRef": "Median Price Latest 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price Prior 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price Prior 12M",
+              "nativeQueryRef": "Median Price Prior 12M"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price YoY %"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price YoY %",
+              "nativeQueryRef": "Median Price YoY %"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Latest vs prior 12 months by flat type (raw medians include mix changes)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

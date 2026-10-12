@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p3_evidence_v05",
+  "position": {
+    "x": 840,
+    "y": 285,
+    "z": 5,
+    "height": 355,
+    "width": 420,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "town_effects_adjusted"
+                    }
+                  },
+                  "Property": "level"
+                }
+              },
+              "queryRef": "town_effects_adjusted.level",
+              "nativeQueryRef": "level"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "town_effects_adjusted"
+                    }
+                  },
+                  "Property": "Town Effect vs Ang Mo Kio"
+                }
+              },
+              "queryRef": "town_effects_adjusted.Town Effect vs Ang Mo Kio",
+              "nativeQueryRef": "Town Effect vs Ang Mo Kio"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "town_effects_adjusted"
+                  }
+                },
+                "Property": "Town Effect vs Ang Mo Kio"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Adjusted town effect vs Ang Mo Kio (like-for-like)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

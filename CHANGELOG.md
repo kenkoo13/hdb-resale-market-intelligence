@@ -4,6 +4,20 @@ All notable changes to this project. Entries record work that was actually compl
 
 ## [Unreleased]
 
+### Added — Phase 4 (2026-10-12)
+- `sql/01_fact_and_dimensions.sql`, `sql/02_aggregates.sql`: SQLite star schema and window-function medians.
+- `src/reporting/build_bi_tables.py`: curated Power BI tables, with an exact SQL-vs-pandas cross-check, DAX expected values and refresh metadata.
+- `src/modelling/profiles.py`: 288 pre-computed indicative profile estimates with typical-error and reliability labels.
+- `src/reporting/build_pbip.py`: generated Power BI Project with a TMDL semantic model (17 tables, 9 relationships, 37 documented DAX measures) and a PBIR report (5 pages, 44 visuals).
+- `powerbi/tools/validate_tmdl.ps1` (Power BI's own TMDL parser) and `query_model.ps1` (DAX vs Python through the Desktop engine).
+- Verified in Power BI Desktop 2.158: the project opens, refresh succeeds, and 67/67 engine checks pass.
+- `docs/BI_BUILD_GUIDE.md`; DEC-025 to DEC-028; 9 BI tests (111 total).
+
+### Fixed — Phase 4
+- The SQL cross-check tolerance was too loose (`np.allclose` relative 1e-5 let a SGD 1 difference pass). It is now an absolute 1e-6.
+- TMDL measure descriptions now use `///` comments; Power BI's parser rejected a `description:` property.
+- SQLite connections are closed (ResourceWarning).
+
 ### Added — Phase 3 (2026-10-12)
 - Model design pre-specified in MODEL_CARD §1–6 before any training (`dc67c89`, addendum `0ff236e`).
 - `src/modelling/`: feature sets with a leakage guard (`features.py`), the chronological split (`splits.py`), baselines B0/B1/B2 and the Ridge and HistGradientBoosting pipelines (`models.py`), metrics, segment errors and conformal intervals (`evaluate.py`), and the orchestrator with static and monthly-refit evaluation (`run_modelling.py`).

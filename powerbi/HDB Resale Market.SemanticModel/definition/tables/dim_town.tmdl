@@ -1,0 +1,19 @@
+table dim_town
+	lineageTag: b76709bf-e3a8-5891-a2fb-99272a215f14
+
+	column town
+		dataType: string
+		lineageTag: 6f1a06ae-c4c8-5fa0-b58f-19ca608debae
+		summarizeBy: none
+		sourceColumn: town
+
+	partition dim_town = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "dim_town.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"town", type text}}, "en-US")
+				in
+				    Typed
+

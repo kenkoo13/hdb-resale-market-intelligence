@@ -1,0 +1,121 @@
+table model_comparison
+	lineageTag: bd5145ff-1fd9-5cce-929c-a7305f7c2915
+
+	/// Mean absolute error on the test year (SGD).
+	measure 'Test MAE' = MAX ( model_comparison[mae] )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: 1e66a3f8-01eb-528f-8d2f-c0bb71939eb1
+
+	/// Test MAE of the selected model trained once before the test year.
+	measure 'Selected Model MAE (Static)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Selected: gradient boosting (trained once)" )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: a9770d38-be57-532c-ab24-4d3686e3c443
+
+	/// Test MAE when retrained before each month.
+	measure 'Selected Model MAE (Monthly Refit)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Selected: gradient boosting (retrained monthly)" )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: f75944be-c0db-5825-9b80-99c5a1f40217
+
+	/// Median absolute % error.
+	measure 'Selected Model Typical % Error' = CALCULATE ( MAX ( model_comparison[mdape_pct] ), model_comparison[model_label] = "Selected: gradient boosting (trained once)" ) / 100
+		formatString: 0.0%
+		displayFolder: Model
+		lineageTag: c8f65e71-6cd8-5e2e-a6aa-93ebace49ef3
+
+	/// R-squared on the test year.
+	measure 'Selected Model R2' = CALCULATE ( MAX ( model_comparison[r2] ), model_comparison[model_label] = "Selected: gradient boosting (trained once)" )
+		formatString: 0.000
+		displayFolder: Model
+		lineageTag: 943ce78d-6853-5466-aac6-0479d4dd07a0
+
+	/// Realistic baseline MAE.
+	measure 'Baseline B2 MAE' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Baseline B2: town x type median, last 12 months" )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: 36d3fed4-1486-5ac3-a6d0-03e84b79c716
+
+	/// Share of baseline error removed by the selected model.
+	measure 'Error Reduction vs Baseline' = DIVIDE ( [Baseline B2 MAE] - [Selected Model MAE (Static)], [Baseline B2 MAE] )
+		formatString: 0.0%
+		displayFolder: Model
+		lineageTag: 451929f7-5ce4-514e-9fa4-0483d1283900
+
+	column model_label
+		dataType: string
+		lineageTag: 830db206-8ac7-5614-ba59-a183569d56f6
+		summarizeBy: none
+		sourceColumn: model_label
+
+	column mode
+		dataType: string
+		lineageTag: 6405c5b8-e8d1-583e-a36d-5f0061aaa734
+		summarizeBy: none
+		sourceColumn: mode
+
+	column family
+		dataType: string
+		lineageTag: f46eeaf6-fccc-5892-9d83-442fdec2e5ee
+		summarizeBy: none
+		sourceColumn: family
+
+	column config
+		dataType: string
+		lineageTag: ef536861-d819-520a-8170-c59a1c365698
+		summarizeBy: none
+		sourceColumn: config
+
+	column n
+		dataType: int64
+		lineageTag: 48612f10-aa33-5a8f-b206-427e4b4e745f
+		summarizeBy: none
+		sourceColumn: n
+
+	column mae
+		dataType: double
+		lineageTag: 6d0ce944-3772-573f-ab3a-7f8a5d2dfba2
+		summarizeBy: none
+		sourceColumn: mae
+
+	column rmse
+		dataType: double
+		lineageTag: a8372ada-3297-52cf-9f41-edf4dc52839c
+		summarizeBy: none
+		sourceColumn: rmse
+
+	column r2
+		dataType: double
+		lineageTag: c6ab9a6d-4d8a-5611-9951-168e211103b3
+		summarizeBy: none
+		sourceColumn: r2
+
+	column medae
+		dataType: double
+		lineageTag: 8f70591d-0008-5457-8a0e-afbe47369bed
+		summarizeBy: none
+		sourceColumn: medae
+
+	column mdape_pct
+		dataType: double
+		lineageTag: 06adb360-70f9-58e3-9490-8735d326ad19
+		summarizeBy: none
+		sourceColumn: mdape_pct
+
+	column bias_median_pct
+		dataType: double
+		lineageTag: 6c583bce-dbf4-5137-94c1-13bb3288cf51
+		summarizeBy: none
+		sourceColumn: bias_median_pct
+
+	partition model_comparison = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "model_comparison.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"model_label", type text}, {"mode", type text}, {"family", type text}, {"config", type text}, {"n", Int64.Type}, {"mae", type number}, {"rmse", type number}, {"r2", type number}, {"medae", type number}, {"mdape_pct", type number}, {"bias_median_pct", type number}}, "en-US")
+				in
+				    Typed
+

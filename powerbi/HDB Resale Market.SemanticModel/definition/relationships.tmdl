@@ -1,0 +1,35 @@
+relationship 22aac118-2c8e-52cc-91b1-c7e43a51a78a
+	fromColumn: fact_transactions.month
+	toColumn: dim_month.month
+
+relationship ef381edc-4fce-5298-9433-8ea79899310c
+	fromColumn: fact_transactions.town
+	toColumn: dim_town.town
+
+relationship ed0147c9-07eb-5d16-b2ff-0305b5a93770
+	fromColumn: fact_transactions.flat_type
+	toColumn: dim_flat_type.flat_type
+
+relationship 6be2fa4e-2ce0-5f97-a7b8-9ebedb00d8b6
+	fromColumn: fact_transactions.storey_range
+	toColumn: dim_storey_range.storey_range
+
+relationship f254a765-9437-51cc-b492-db41b5aa7b5f
+	fromColumn: fact_transactions.flat_model
+	toColumn: dim_flat_model.flat_model
+
+relationship 09cce4ac-2c87-5ec3-917e-dac9061af44c
+	fromColumn: price_index_monthly.month
+	toColumn: dim_month.month
+
+relationship 463c01b1-e480-5449-b407-4f3fe9453dfc
+	fromColumn: model_errors_by_month.month
+	toColumn: dim_month.month
+
+relationship a07809f5-8346-5fb1-b8ec-c6bc70c8eb00
+	fromColumn: indicative_profiles.town
+	toColumn: dim_town.town
+
+relationship 4d137ad0-52b8-59ad-ac73-f0d0ba773dd4
+	fromColumn: indicative_profiles.flat_type
+	toColumn: dim_flat_type.flat_type

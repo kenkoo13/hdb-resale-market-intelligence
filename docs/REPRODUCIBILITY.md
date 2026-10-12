@@ -48,6 +48,9 @@ A later snapshot will contain more months, and its counts will differ. Your snap
 
 The analysis is deterministic for a given snapshot. The only randomness is the H5 bootstrap, which uses seed 42 from config.
 
-**Run order:** `src.pipeline` → `src.analytics.run_analysis` → `src.modelling.run_modelling`.
+| Build Power BI tables | `.venv/Scripts/python -m src.reporting.build_bi_tables` | `data/curated/*.csv` (SQL star schema cross-checked against pandas; profiles; DAX expected values). About 20 s. |
+| Generate the Power BI project | `.venv/Scripts/python -m src.reporting.build_pbip` | `powerbi/HDB Resale Market.pbip` + `.SemanticModel` + `.Report`, with `CuratedFolder` set to this machine's path |
+| Validate TMDL offline (Windows + Power BI Desktop) | `powershell -ExecutionPolicy Bypass -File powerbi/tools/validate_tmdl.ps1` | `TMDL OK: ...` |
+| Validate DAX in Desktop (after opening and refreshing) | `powershell -ExecutionPolicy Bypass -File powerbi/tools/query_model.ps1` | `ALL CHECKS PASSED`; writes `data/curated/dax_validation_results.csv` |
 
-*BI steps are added in Phase 4.*
+**Run order:** `src.pipeline` → `src.analytics.run_analysis` → `src.modelling.run_modelling` → `src.reporting.build_bi_tables` → `src.reporting.build_pbip` → open the `.pbip` in Power BI Desktop and click Refresh. See BI_BUILD_GUIDE §2.

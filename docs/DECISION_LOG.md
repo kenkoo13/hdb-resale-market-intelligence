@@ -251,3 +251,46 @@ Owner: "Project" unless stated otherwise.
 - **Trade-offs:** Less transparent than a linear model. Explanation relies on permutation importance and segment errors, plus the Phase 2 hedonic model for interpretable effects. The model cannot extrapolate time trends.
 - **Validation:** MODEL_CARD §7, `tests/test_modelling.py`.
 - **Revision criteria:** Monthly-refit MAE on new data rises materially above about 28k, or a simpler model comes within 1% on validation.
+
+### DEC-025 — Power BI delivered as a generated PBIP (TMDL + PBIR) validated against Desktop's own engine
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Generate a Power BI Project from Python (`src/reporting/build_pbip.py`) instead of hand-building a `.pbix`. Validate it in three ways:
+  - Power BI's own TMDL serializer;
+  - opening it in Power BI Desktop 2.158 and refreshing through its local engine;
+  - DAX queries over ADOMD.NET compared with Python expected values.
+- **Reason:** A `.pbix` is a binary that cannot be produced reliably by code, and faking one is prohibited by the brief. PBIP is Microsoft's text format for source control, so the model and report become reviewable, diffable and reproducible.
+- **Alternatives:** Hand-build in Desktop (not reproducible; manual drift); a manual build guide only (the fallback; less useful); third-party PBIX generators (unofficial).
+- **Evidence:** TMDL parse OK; the project opened; refresh succeeded; 13/13 DAX values, 37/37 measures and 17/17 row counts passed (BI_BUILD_GUIDE §1).
+- **Trade-offs:**
+  - Visual rendering cannot be machine-verified and needs a person to review it (BI_BUILD_GUIDE §8).
+  - Report JSON follows published schemas, but a future Desktop version may upgrade or reject older schema versions.
+  - The CSV folder path is an absolute Power Query parameter.
+- **Revision criteria:** Desktop rejects the format, in which case use the manual fallback in BI_BUILD_GUIDE §10.
+
+### DEC-026 — Indicative estimates as pre-computed typical profiles, not live inference
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** Page 5 shows 288 pre-computed estimates: 96 town × flat-type segments, each with at least 30 sales in the latest 12 months, × 3 storey levels. Profile attributes are segment medians or modes. Each estimate carries a typical error (the larger of the town and flat-type monthly-refit MdAPE), a reliability label and the segment's actual median.
+- **Reason:** Power BI Desktop (free) cannot run the Python model on slicer changes. The brief forbids implying live inference.
+- **Alternatives:** Python visuals in Power BI (would need a Python runtime in Desktop and still not use the trained model reproducibly); exporting the model to ONNX or DAX (impractical for gradient boosting); omitting the page (loses a useful, honest illustration).
+- **Evidence:** Profile estimates vs segment medians: median −0.2%; low / middle / high storey −5.2% / +0.5% / +3.9%. The extremes (+31% to +34%, Central Area 4-ROOM with a premium modal model) are labelled less reliable.
+- **Trade-offs:** The profiles are typical flats, not the user's flat. Modal attributes can be unrepresentative in mixed segments.
+- **Revision criteria:** A supported way to run inference in the free tier appears, or users need custom profiles. In that case, publish a small Python CLI instead.
+
+### DEC-027 — Explicit DAX measures only; windows from SQL-computed month flags
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:**
+  - Every column has `summarizeBy: none`, and all numbers in visuals come from 37 named, documented measures.
+  - The "latest 12 months" and "prior 12 months" windows are flags in `dim_month`, computed in SQL relative to the last *full* month. Auto date/time is disabled.
+- **Reason:**
+  - Implicit sums of prices would be meaningless.
+  - Time-intelligence functions relative to the last date would include the partial month (DEC-008).
+  - Flags keep one definition of each window across Python, SQL and DAX.
+- **Validation:** The DAX values for the latest-12 and prior-12 medians, YoY, P25/P75 and counts equal the Python values exactly.
+- **Revision criteria:** None expected.
+
+### DEC-028 — SQL (SQLite) builds the star schema and independently cross-checks pandas
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:** `sql/01_fact_and_dimensions.sql` builds the fact and dimension tables. `sql/02_aggregates.sql` computes monthly and town × type medians with window functions. `build_bi_tables` aborts unless they equal the pandas results exactly (absolute tolerance 1e-6 SGD).
+- **Reason:** It demonstrates SQL proficiency, and an independent implementation catches logic errors.
+- **Evidence:** 118 monthly rows and 127 town × type cells match. A unit test showed that the original `np.allclose` default tolerance (relative 1e-5) let a SGD 1 tamper pass; the tolerance was tightened.
+- **Trade-offs:** SQLite has no `MEDIAN()`, so the median is implemented with a documented `ROW_NUMBER` pattern. SQL band edges must stay in sync with Python, which a test enforces.

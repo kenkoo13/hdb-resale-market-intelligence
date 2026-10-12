@@ -1,0 +1,49 @@
+table lease_effects_adjusted
+	lineageTag: c4a2109e-314c-5a9c-b2a4-ba956fdb684d
+
+	/// Adjusted price difference vs the shortest remaining-lease band (model M2).
+	measure 'Lease Premium vs Shortest Band' = MAX ( lease_effects_adjusted[pct_vs_reference] ) / 100
+		formatString: 0.0%
+		displayFolder: Evidence
+		lineageTag: 549f159f-ffa0-5b56-8623-ec0b12842afb
+
+	column level
+		dataType: string
+		lineageTag: f5293b82-7d50-5570-a55d-436ce70e6ef1
+		summarizeBy: none
+		sourceColumn: level
+
+	column pct_vs_reference
+		dataType: double
+		lineageTag: ab6fa044-c91a-5d22-9c29-f1921b3d1a40
+		summarizeBy: none
+		sourceColumn: pct_vs_reference
+
+	column ci_low
+		dataType: double
+		lineageTag: e5b0ffb3-ad94-5f83-817f-fa95d5278bff
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		lineageTag: a4774b60-781b-5fa9-8914-143c8ab02bb3
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column mid
+		dataType: double
+		lineageTag: bbc536c4-d2c5-5edf-afbc-f17ed5060df3
+		summarizeBy: none
+		sourceColumn: mid
+
+	partition lease_effects_adjusted = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "lease_effects_adjusted.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", type number}}, "en-US")
+				in
+				    Typed
+

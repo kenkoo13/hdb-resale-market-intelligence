@@ -90,4 +90,22 @@ Common columns in segment tables: `transactions`, `median_price`, `p25_price`, `
 
 `data/processed/model_test_predictions.parquet` (git-ignored) has one row per test transaction: attributes, `actual`, `predicted` (static), `predicted_rolling` / `predicted_monthly_refit`, all family predictions, interval bounds (**not for publication**, DEC-023), `price_quintile` and `horizon_months`.
 
-*Power BI tables are added in Phase 4.*
+## 7. Power BI import tables (`data/curated/`, Phase 4)
+
+Built by `python -m src.reporting.build_bi_tables`. The star schema is defined in `sql/01_fact_and_dimensions.sql`.
+
+| Table | Grain | Columns | Committed |
+|---|---|---|---|
+| `fact_transactions` | transaction | txn_id (= source_row_number), month (date), town, flat_type, flat_model, storey_range, storey_mid, floor_area_sqm, floor_area_band, remaining_lease_years, lease_band, lease_commence_year, resale_price (SGD), price_per_sqm (SGD) | No (about 30 MB; regenerated) |
+| `dim_month` | month | month, year, quarter, month_label, is_partial_month, months_before_last_full, is_latest_12m, is_prior_12m, is_recent_24m (0/1) | Yes |
+| `dim_town`, `dim_flat_model` | category | name | Yes |
+| `dim_flat_type` | flat type | flat_type, flat_type_order (sort key) | Yes |
+| `dim_storey_range` | band | storey_range, storey_order (sort key) | Yes |
+| `price_index_monthly`, `hypothesis_results`, `*_effects_adjusted` | as in §5 | as in §5; hypothesis_results adds `plain_english` and an H5 row (estimate in percentage points) | Yes |
+| `model_comparison` | model × mode | model_label (plain English), mode, family, config, n, mae, rmse, r2, medae, mdape_pct, bias_median_pct | Yes |
+| `model_errors_by_month`, `model_segment_errors`, `model_feature_importance` | as in §6 | as in §6 | Yes |
+| `indicative_profiles` | town × flat type × storey variant | profile attributes, estimate_month, estimated_price(_rounded), typical_error_pct / _sgd, reliability, segment_sales_latest_12m, segment_median_price_latest_12m, storey_band_sales_in_segment, estimate_vs_segment_median_pct | Yes |
+| `refresh_info` | snapshot | snapshot_id, dataset_id, retrieved_at_local, source_last_updated_at, first_month, last_full_month, partial_month, clean_rows, quarantined_rows, attribution | Yes |
+| `sql_check_town_flat_type_latest12` | town × flat type | SQL-computed n and median (cross-check evidence) | Yes |
+| `dax_expected_values`, `dax_validation_results` | check | measure, filter_context, expected and actual values, pass | Yes |
+

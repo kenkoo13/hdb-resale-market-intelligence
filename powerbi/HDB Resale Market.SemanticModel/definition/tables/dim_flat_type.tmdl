@@ -1,0 +1,27 @@
+table dim_flat_type
+	lineageTag: f1ffa8c6-f23b-531a-b67b-563f233dc9ab
+
+	column flat_type
+		dataType: string
+		lineageTag: 7d55bfb0-596d-5787-82be-56fd9f970b50
+		summarizeBy: none
+		sourceColumn: flat_type
+		sortByColumn: flat_type_order
+
+	column flat_type_order
+		dataType: int64
+		lineageTag: 52b2f7f2-34e5-503c-baa4-db4db36e17ac
+		summarizeBy: none
+		sourceColumn: flat_type_order
+		isHidden
+
+	partition dim_flat_type = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "dim_flat_type.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"flat_type", type text}, {"flat_type_order", Int64.Type}}, "en-US")
+				in
+				    Typed
+

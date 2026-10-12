@@ -1,0 +1,49 @@
+table storey_effects_adjusted
+	lineageTag: d29f833c-053b-55ba-825c-bf90bd50b486
+
+	/// Adjusted price difference vs floors 01-03 (model M2, recent window).
+	measure 'Storey Premium vs Lowest Band' = MAX ( storey_effects_adjusted[pct_vs_reference] ) / 100
+		formatString: 0.0%
+		displayFolder: Evidence
+		lineageTag: eb08dbd0-109a-543b-9774-8acf3a7c95e8
+
+	column level
+		dataType: string
+		lineageTag: 4ad60593-e03f-556c-a8ea-b7582c85133b
+		summarizeBy: none
+		sourceColumn: level
+
+	column pct_vs_reference
+		dataType: double
+		lineageTag: 0f1d538b-1fac-5987-a4fa-091b799ee728
+		summarizeBy: none
+		sourceColumn: pct_vs_reference
+
+	column ci_low
+		dataType: double
+		lineageTag: 701bed5f-b51f-51b8-80b2-e12fe7fc27c8
+		summarizeBy: none
+		sourceColumn: ci_low
+
+	column ci_high
+		dataType: double
+		lineageTag: 4fd5cd51-d4fd-5865-8ad7-247879436d25
+		summarizeBy: none
+		sourceColumn: ci_high
+
+	column mid
+		dataType: int64
+		lineageTag: 4760e40e-4ae9-59a3-8531-823aec63d5b7
+		summarizeBy: none
+		sourceColumn: mid
+
+	partition storey_effects_adjusted = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "storey_effects_adjusted.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", Int64.Type}}, "en-US")
+				in
+				    Typed
+

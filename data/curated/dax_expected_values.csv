@@ -1,0 +1,14 @@
+measure,filter_context,expected_value
+Transactions,no filter,242307
+Transactions (Full Months),no filter,241557
+Median Price (Full Months),no filter,505000
+Median Price Latest 12M,no filter,630000
+Median Price Prior 12M,no filter,625000
+Median Price YoY %,no filter,0.008
+Transactions Latest 12M,no filter,24658
+Median Price Latest 12M,"town=BEDOK, flat_type=4 ROOM",593000
+P25 Price Latest 12M,"town=BEDOK, flat_type=4 ROOM",529500
+P75 Price Latest 12M,"town=BEDOK, flat_type=4 ROOM",815944
+Median Price per sqm Latest 12M,"town=BEDOK, flat_type=4 ROOM",6428.571429
+Transactions Latest 12M,"town=BEDOK, flat_type=4 ROOM",511
+Mean Price Latest 12M,no filter,661705.5664

@@ -1,0 +1,29 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["CuratedFolder", "fact_transactions", "dim_month", "dim_town", "dim_flat_type", "dim_storey_range", "dim_flat_model", "price_index_monthly", "hypothesis_results", "storey_effects_adjusted", "lease_effects_adjusted", "town_effects_adjusted", "model_comparison", "model_errors_by_month", "model_segment_errors", "model_feature_importance", "indicative_profiles", "refresh_info"]
+
+ref table fact_transactions
+ref table dim_month
+ref table dim_town
+ref table dim_flat_type
+ref table dim_storey_range
+ref table dim_flat_model
+ref table price_index_monthly
+ref table hypothesis_results
+ref table storey_effects_adjusted
+ref table lease_effects_adjusted
+ref table town_effects_adjusted
+ref table model_comparison
+ref table model_errors_by_month
+ref table model_segment_errors
+ref table model_feature_importance
+ref table indicative_profiles
+ref table refresh_info

@@ -1,0 +1,145 @@
+table indicative_profiles
+	lineageTag: 51f152c7-03ad-52a9-9770-6f0f407ba44c
+
+	/// Indicative estimate for a defined profile (pre-computed in Python; not live).
+	measure 'Profile Estimate' = MAX ( indicative_profiles[estimated_price_rounded] )
+		formatString: \$#,0
+		displayFolder: Estimates
+		lineageTag: 10bcdea9-851a-5ad6-a990-0d69d4fd3105
+
+	column town
+		dataType: string
+		lineageTag: 4fbaa11f-ab40-591c-9c90-96b74523083f
+		summarizeBy: none
+		sourceColumn: town
+
+	column flat_type
+		dataType: string
+		lineageTag: bb0d8b89-5de0-5591-a614-beb0339a00af
+		summarizeBy: none
+		sourceColumn: flat_type
+
+	column storey_variant
+		dataType: string
+		lineageTag: 2df49cdb-5aeb-54ea-bee0-6eadd6d9301b
+		summarizeBy: none
+		sourceColumn: storey_variant
+
+	column storey_range
+		dataType: string
+		lineageTag: e4ddf4ad-5243-5157-a83a-51c4b75e5e88
+		summarizeBy: none
+		sourceColumn: storey_range
+
+	column flat_model
+		dataType: string
+		lineageTag: af557f31-4c4f-59eb-a694-4444693dcee3
+		summarizeBy: none
+		sourceColumn: flat_model
+
+	column street_name
+		dataType: string
+		lineageTag: e6591956-88d7-56cf-babb-311178bf97a3
+		summarizeBy: none
+		sourceColumn: street_name
+
+	column floor_area_sqm
+		dataType: double
+		lineageTag: a20dc7ef-ac76-5282-9cfc-c1b05b9da197
+		summarizeBy: none
+		sourceColumn: floor_area_sqm
+
+	column remaining_lease_years
+		dataType: double
+		lineageTag: 3c9d0480-a1f2-5a68-8c49-2cecdd0cd3d1
+		summarizeBy: none
+		sourceColumn: remaining_lease_years
+
+	column lease_commence_year
+		dataType: int64
+		lineageTag: eef3c5b7-5e55-587a-a3b1-549b663cdb90
+		summarizeBy: none
+		sourceColumn: lease_commence_year
+
+	column estimate_month
+		dataType: string
+		lineageTag: f68bebcd-bf2b-5cb8-815f-dfb1b6b404d4
+		summarizeBy: none
+		sourceColumn: estimate_month
+
+	column estimated_price
+		dataType: double
+		lineageTag: b4106006-1d93-58fd-a38f-a0fb84fd778a
+		summarizeBy: none
+		sourceColumn: estimated_price
+
+	column estimated_price_rounded
+		dataType: double
+		lineageTag: 13cf30ff-e572-5511-b0d8-beaf20eec299
+		summarizeBy: none
+		sourceColumn: estimated_price_rounded
+
+	column typical_error_pct
+		dataType: double
+		lineageTag: f74bc512-0eb6-5fb4-93ca-527f971a1e88
+		summarizeBy: none
+		sourceColumn: typical_error_pct
+
+	column typical_error_sgd
+		dataType: int64
+		lineageTag: f52adf17-4ee2-51e1-a241-bd76a836bd62
+		summarizeBy: none
+		sourceColumn: typical_error_sgd
+
+	column reliability
+		dataType: string
+		lineageTag: 14592000-8b39-513c-a1bf-d5359e1d2ca8
+		summarizeBy: none
+		sourceColumn: reliability
+
+	column segment_sales_latest_12m
+		dataType: int64
+		lineageTag: 3e0c05fd-c1ec-5d03-adb7-bdd66f021756
+		summarizeBy: none
+		sourceColumn: segment_sales_latest_12m
+
+	column segment_median_price_latest_12m
+		dataType: double
+		lineageTag: 1f5a3e4d-22f0-5a59-a446-5d87b5d49b28
+		summarizeBy: none
+		sourceColumn: segment_median_price_latest_12m
+
+	column storey_band_sales_in_segment
+		dataType: int64
+		lineageTag: c9d3b065-5f2d-58a1-b662-9cf96e934e38
+		summarizeBy: none
+		sourceColumn: storey_band_sales_in_segment
+
+	column estimate_vs_segment_median_pct
+		dataType: double
+		lineageTag: 05dc1c7b-feb3-5bd0-b9a4-dbcc7828e909
+		summarizeBy: none
+		sourceColumn: estimate_vs_segment_median_pct
+
+	column town_test_mdape_pct
+		dataType: double
+		lineageTag: 6a2257e8-1e57-5f3e-bc89-23a321e6b88e
+		summarizeBy: none
+		sourceColumn: town_test_mdape_pct
+
+	column flat_type_test_mdape_pct
+		dataType: double
+		lineageTag: 33b76775-a143-58a2-b81b-040500dffdc6
+		summarizeBy: none
+		sourceColumn: flat_type_test_mdape_pct
+
+	partition indicative_profiles = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "indicative_profiles.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"town", type text}, {"flat_type", type text}, {"storey_variant", type text}, {"storey_range", type text}, {"flat_model", type text}, {"street_name", type text}, {"floor_area_sqm", type number}, {"remaining_lease_years", type number}, {"lease_commence_year", Int64.Type}, {"estimate_month", type text}, {"estimated_price", type number}, {"estimated_price_rounded", type number}, {"typical_error_pct", type number}, {"typical_error_sgd", Int64.Type}, {"reliability", type text}, {"segment_sales_latest_12m", Int64.Type}, {"segment_median_price_latest_12m", type number}, {"storey_band_sales_in_segment", Int64.Type}, {"estimate_vs_segment_median_pct", type number}, {"town_test_mdape_pct", type number}, {"flat_type_test_mdape_pct", type number}}, "en-US")
+				in
+				    Typed
+

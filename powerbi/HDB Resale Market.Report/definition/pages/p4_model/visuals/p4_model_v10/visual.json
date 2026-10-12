@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p4_model_v10",
+  "position": {
+    "x": 880,
+    "y": 415,
+    "z": 10,
+    "height": 225,
+    "width": 380,
+    "tabOrder": 10
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_feature_importance"
+                    }
+                  },
+                  "Property": "feature"
+                }
+              },
+              "queryRef": "model_feature_importance.feature",
+              "nativeQueryRef": "feature"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_feature_importance"
+                    }
+                  },
+                  "Property": "MAE Increase When Shuffled"
+                }
+              },
+              "queryRef": "model_feature_importance.MAE Increase When Shuffled",
+              "nativeQueryRef": "MAE Increase When Shuffled"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "model_feature_importance"
+                  }
+                },
+                "Property": "MAE Increase When Shuffled"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'What the model relies on (not causes)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

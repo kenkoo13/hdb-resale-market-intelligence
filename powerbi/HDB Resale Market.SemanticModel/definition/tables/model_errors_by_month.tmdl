@@ -1,0 +1,92 @@
+table model_errors_by_month
+	lineageTag: fe42cb2a-8a95-5d51-9b2d-bbaebedc10d8
+
+	/// Test MAE by month, model trained once.
+	measure 'MAE Trained Once' = MAX ( model_errors_by_month[mae_static] )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: d3b4bfa8-7d65-57d1-8940-96967bd47f8b
+
+	/// Test MAE by month, model retrained monthly.
+	measure 'MAE Retrained Monthly' = MAX ( model_errors_by_month[mae_monthly_refit] )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: ef3905b0-8307-57b3-a747-f82d00aac96d
+
+	/// Test MAE by month, baseline B2 (monthly refit).
+	measure 'MAE Baseline B2' = MAX ( model_errors_by_month[mae_B2_monthly_refit] )
+		formatString: \$#,0
+		displayFolder: Model
+		lineageTag: 75c2a96a-1ce9-57f0-b7e0-e60e4a63e18a
+
+	column month
+		dataType: dateTime
+		formatString: yyyy-mm
+		lineageTag: dfd85268-f0b1-503b-8a8d-4e2a87fb0dbf
+		summarizeBy: none
+		sourceColumn: month
+
+	column horizon_months
+		dataType: int64
+		lineageTag: 2722caf1-046d-59e8-9aa0-e433b6587c2a
+		summarizeBy: none
+		sourceColumn: horizon_months
+
+	column n
+		dataType: int64
+		lineageTag: ba79655a-ad33-55c1-94ec-3cb32a98cbc6
+		summarizeBy: none
+		sourceColumn: n
+
+	column mae_static
+		dataType: double
+		lineageTag: ff89d67a-9b71-585c-b4ac-bbb0b5050d29
+		summarizeBy: none
+		sourceColumn: mae_static
+
+	column mae_monthly_refit
+		dataType: double
+		lineageTag: 5647aaae-366b-525a-9db1-600bf4966ba4
+		summarizeBy: none
+		sourceColumn: mae_monthly_refit
+
+	column mae_B2_monthly_refit
+		dataType: double
+		lineageTag: beacc933-31dd-563b-9ca9-f7908d3e4776
+		summarizeBy: none
+		sourceColumn: mae_B2_monthly_refit
+
+	column bias_static_pct
+		dataType: double
+		lineageTag: f45237c1-d845-5e1c-9cf7-31df8d7fd40c
+		summarizeBy: none
+		sourceColumn: bias_static_pct
+
+	column bias_monthly_refit_pct
+		dataType: double
+		lineageTag: e11ef7ef-1efc-5b3d-b61e-5b712618c4a8
+		summarizeBy: none
+		sourceColumn: bias_monthly_refit_pct
+
+	column coverage80_static
+		dataType: double
+		lineageTag: c3c082de-68cb-5b4e-9ef0-40678247cb9e
+		summarizeBy: none
+		sourceColumn: coverage80_static
+
+	column coverage80_monthly_refit
+		dataType: double
+		lineageTag: bf4bda81-e6a8-5e2b-9aaa-0d13cf80f8ca
+		summarizeBy: none
+		sourceColumn: coverage80_monthly_refit
+
+	partition model_errors_by_month = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "model_errors_by_month.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month", type date}, {"horizon_months", Int64.Type}, {"n", Int64.Type}, {"mae_static", type number}, {"mae_monthly_refit", type number}, {"mae_B2_monthly_refit", type number}, {"bias_static_pct", type number}, {"bias_monthly_refit_pct", type number}, {"coverage80_static", type number}, {"coverage80_monthly_refit", type number}}, "en-US")
+				in
+				    Typed
+

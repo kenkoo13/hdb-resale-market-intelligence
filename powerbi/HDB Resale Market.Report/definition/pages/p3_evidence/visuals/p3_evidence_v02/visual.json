@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p3_evidence_v02",
+  "position": {
+    "x": 790,
+    "y": 55,
+    "z": 2,
+    "height": 220,
+    "width": 470,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "price_index_monthly"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "price_index_monthly.month",
+              "nativeQueryRef": "month"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "price_index_monthly"
+                    }
+                  },
+                  "Property": "Raw Median Index"
+                }
+              },
+              "queryRef": "price_index_monthly.Raw Median Index",
+              "nativeQueryRef": "Raw Median Index"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "price_index_monthly"
+                    }
+                  },
+                  "Property": "Mix-Adjusted Index"
+                }
+              },
+              "queryRef": "price_index_monthly.Mix-Adjusted Index",
+              "nativeQueryRef": "Mix-Adjusted Index"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Raw median vs mix-adjusted index (2017 = 100, all flats)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

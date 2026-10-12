@@ -1,0 +1,130 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p4_model_v09",
+  "position": {
+    "x": 230,
+    "y": 415,
+    "z": 9,
+    "height": 225,
+    "width": 640,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "level"
+                }
+              },
+              "queryRef": "model_segment_errors.level",
+              "nativeQueryRef": "level"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "n"
+                }
+              },
+              "queryRef": "model_segment_errors.n",
+              "nativeQueryRef": "n"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "mae"
+                }
+              },
+              "queryRef": "model_segment_errors.mae",
+              "nativeQueryRef": "mae"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "mdape_pct"
+                }
+              },
+              "queryRef": "model_segment_errors.mdape_pct",
+              "nativeQueryRef": "mdape_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "bias_median_pct"
+                }
+              },
+              "queryRef": "model_segment_errors.bias_median_pct",
+              "nativeQueryRef": "bias_median_pct"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "model_segment_errors"
+                    }
+                  },
+                  "Property": "reliability"
+                }
+              },
+              "queryRef": "model_segment_errors.reliability",
+              "nativeQueryRef": "reliability"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Errors by segment (mdape = typical % error; bias + = over-estimate)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

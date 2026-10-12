@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p1_overview_v09",
+  "position": {
+    "x": 20,
+    "y": 410,
+    "z": 9,
+    "height": 230,
+    "width": 620,
+    "tabOrder": 9
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_flat_type"
+                    }
+                  },
+                  "Property": "flat_type"
+                }
+              },
+              "queryRef": "dim_flat_type.flat_type",
+              "nativeQueryRef": "flat_type"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price Latest 12M",
+              "nativeQueryRef": "Median Price Latest 12M"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Transactions Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Transactions Latest 12M",
+              "nativeQueryRef": "Transactions Latest 12M"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Median price by flat type, latest 12 months (hover for n)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

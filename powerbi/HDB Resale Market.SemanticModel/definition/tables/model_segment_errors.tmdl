@@ -1,0 +1,79 @@
+table model_segment_errors
+	lineageTag: 74ed251d-8a1a-5137-bfd9-5914b272ddd1
+
+	column segment
+		dataType: string
+		lineageTag: 8e61b307-7068-5806-ba7a-c89fdb1a4a92
+		summarizeBy: none
+		sourceColumn: segment
+
+	column level
+		dataType: string
+		lineageTag: 52b04ed7-3963-51a4-9a57-7e458f720063
+		summarizeBy: none
+		sourceColumn: level
+
+	column n
+		dataType: int64
+		lineageTag: b64ef94d-b5a2-593c-b893-483c07404b43
+		summarizeBy: none
+		sourceColumn: n
+
+	column mae
+		dataType: double
+		lineageTag: 9ce54a0f-bd26-5a6e-999d-4c76c4621343
+		summarizeBy: none
+		sourceColumn: mae
+
+	column rmse
+		dataType: double
+		lineageTag: 9a52d608-2fdf-5c91-bda5-5ddbceb7c85a
+		summarizeBy: none
+		sourceColumn: rmse
+
+	column r2
+		dataType: double
+		lineageTag: b29889ed-34c9-5da0-8dbf-aaeeac1d3ae0
+		summarizeBy: none
+		sourceColumn: r2
+
+	column medae
+		dataType: double
+		lineageTag: 89b532a5-5ec0-5481-9bde-0f248eb4b283
+		summarizeBy: none
+		sourceColumn: medae
+
+	column mdape_pct
+		dataType: double
+		lineageTag: a6811ffb-7a3e-5834-9324-b1c993e0d40d
+		summarizeBy: none
+		sourceColumn: mdape_pct
+
+	column bias_median_pct
+		dataType: double
+		lineageTag: 7d56246b-6557-5e05-bfd3-05fe64b0f41b
+		summarizeBy: none
+		sourceColumn: bias_median_pct
+
+	column median_actual
+		dataType: double
+		lineageTag: 5dce3666-6569-5114-85d3-0f4b437fafd7
+		summarizeBy: none
+		sourceColumn: median_actual
+
+	column reliability
+		dataType: string
+		lineageTag: 9c8bbabe-630d-5b73-a8ff-f4ddb706a8fa
+		summarizeBy: none
+		sourceColumn: reliability
+
+	partition model_segment_errors = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "model_segment_errors.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"segment", type text}, {"level", type text}, {"n", Int64.Type}, {"mae", type number}, {"rmse", type number}, {"r2", type number}, {"medae", type number}, {"mdape_pct", type number}, {"bias_median_pct", type number}, {"median_actual", type number}, {"reliability", type text}}, "en-US")
+				in
+				    Typed
+

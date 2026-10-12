@@ -1,0 +1,96 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "p2_compare_v05",
+  "position": {
+    "x": 670,
+    "y": 120,
+    "z": 5,
+    "height": 255,
+    "width": 590,
+    "tabOrder": 5
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_storey_range"
+                    }
+                  },
+                  "Property": "storey_range"
+                }
+              },
+              "queryRef": "dim_storey_range.storey_range",
+              "nativeQueryRef": "storey_range"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Median Price Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Median Price Latest 12M",
+              "nativeQueryRef": "Median Price Latest 12M"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_transactions"
+                    }
+                  },
+                  "Property": "Transactions Latest 12M"
+                }
+              },
+              "queryRef": "fact_transactions.Transactions Latest 12M",
+              "nativeQueryRef": "Transactions Latest 12M"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Median price by storey range (raw; mixes towns - see Evidence page)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

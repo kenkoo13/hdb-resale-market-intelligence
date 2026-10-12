@@ -1,0 +1,109 @@
+table hypothesis_results
+	lineageTag: 1efb60a5-122e-5c89-956e-1fa16cc7c781
+
+	column hypothesis
+		dataType: string
+		lineageTag: b8013d71-486c-5b3e-8bb4-e378e2824c46
+		summarizeBy: none
+		sourceColumn: hypothesis
+
+	column contrast
+		dataType: string
+		lineageTag: c794fffa-1084-5a3b-b58a-6b96aee0b2bb
+		summarizeBy: none
+		sourceColumn: contrast
+
+	column method
+		dataType: string
+		lineageTag: eadc3a3d-e9a0-5bdb-abfd-839a4ced058c
+		summarizeBy: none
+		sourceColumn: method
+
+	column population
+		dataType: string
+		lineageTag: feb22eb0-44c8-59ca-9f93-6b1070943541
+		summarizeBy: none
+		sourceColumn: population
+
+	column n
+		dataType: int64
+		lineageTag: 6054a134-5891-532c-bb81-33b30874252d
+		summarizeBy: none
+		sourceColumn: n
+
+	column estimate_pct
+		dataType: double
+		lineageTag: 990ae039-8a66-5a39-9f0a-502f6040d54c
+		summarizeBy: none
+		sourceColumn: estimate_pct
+
+	column ci_low_pct
+		dataType: double
+		lineageTag: 33323ffe-5f5d-5ad7-846b-0ef1ac90cfb6
+		summarizeBy: none
+		sourceColumn: ci_low_pct
+
+	column ci_high_pct
+		dataType: double
+		lineageTag: 6bf4b43e-a135-5ac7-b751-fa1585578867
+		summarizeBy: none
+		sourceColumn: ci_high_pct
+
+	column p_raw
+		dataType: double
+		lineageTag: 1bd20d79-f13d-5959-a519-2220ea7b8b6e
+		summarizeBy: none
+		sourceColumn: p_raw
+
+	column effect_size_metric
+		dataType: string
+		lineageTag: ed02cd44-ae05-5892-b281-096991d95d43
+		summarizeBy: none
+		sourceColumn: effect_size_metric
+
+	column practical_threshold
+		dataType: double
+		lineageTag: a90ebf8c-49f5-561b-ac13-2fd5a31a3072
+		summarizeBy: none
+		sourceColumn: practical_threshold
+
+	column p_holm
+		dataType: double
+		lineageTag: 5fd92432-1373-5ba8-a1eb-ceca69d639a9
+		summarizeBy: none
+		sourceColumn: p_holm
+
+	column status
+		dataType: string
+		lineageTag: 50aee2a0-3b0a-5749-9e0b-dc1e1289b011
+		summarizeBy: none
+		sourceColumn: status
+
+	column robust
+		dataType: string
+		lineageTag: 4c0640d4-8fb8-5933-9155-c61f1a327af1
+		summarizeBy: none
+		sourceColumn: robust
+
+	column effect_size
+		dataType: double
+		lineageTag: fc0f2853-f88b-54f6-b3c6-328d6a314a0e
+		summarizeBy: none
+		sourceColumn: effect_size
+
+	column plain_english
+		dataType: string
+		lineageTag: 95251b7e-2e40-5a7d-86b0-01a47b555acb
+		summarizeBy: none
+		sourceColumn: plain_english
+
+	partition hypothesis_results = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(CuratedFolder & "hypothesis_results.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"hypothesis", type text}, {"contrast", type text}, {"method", type text}, {"population", type text}, {"n", Int64.Type}, {"estimate_pct", type number}, {"ci_low_pct", type number}, {"ci_high_pct", type number}, {"p_raw", type number}, {"effect_size_metric", type text}, {"practical_threshold", type number}, {"p_holm", type number}, {"status", type text}, {"robust", type text}, {"effect_size", type number}, {"plain_english", type text}}, "en-US")
+				in
+				    Typed
+
