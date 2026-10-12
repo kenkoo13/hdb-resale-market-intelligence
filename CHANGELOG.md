@@ -2,7 +2,16 @@
 
 All notable changes to this project. Entries record work that was actually completed.
 
-## [Unreleased]
+## [1.0.0] — 2026-10-12
+
+### Added — Phase 6
+- Final README (16 sections: business problem, architecture, findings, report, limitations, setup, testing, reproducibility, licences).
+- `docs/HANDOVER.md`: deliverables, data quality, findings, model results, Power BI status, documentation and test status, reproducibility, GitHub status, outstanding issues.
+- Repository-structure deviations recorded in PROJECT_PLAN §8.
+
+### Changed — Phase 6
+- Removed the empty `notebooks/` folder and redundant `.gitkeep` files.
+
 
 ### Added — Phase 5 (2026-10-12)
 - Clean-room verification: fresh clone + lock-file environment reproduced every committed output exactly from the same raw snapshot (only timing fields differ). Live refresh created a second snapshot and passed the gates (REPRODUCIBILITY.md).
