@@ -166,3 +166,10 @@ def test_generated_pbip_has_no_personal_path():
     expr = (PBIP_ROOT / f"{P.PROJECT}.SemanticModel" / "definition" / "expressions.tmdl").read_text(encoding="utf-8")
     assert str(Path.home()).lower() not in expr.lower()
     assert P.PLACEHOLDER_FOLDER in expr
+
+
+def test_bi_guide_measure_catalogue_matches_code():
+    """BI_BUILD_GUIDE §4 is generated from build_pbip.MEASURES; fail if it drifts (found stale in Phase 5)."""
+    guide = (REPO_ROOT / "docs" / "BI_BUILD_GUIDE.md").read_text(encoding="utf-8")
+    missing = [m.name for m in P.MEASURES if f"`{m.dax.replace('|', '¦')}`" not in guide]
+    assert not missing, f"BI guide catalogue out of date for: {missing}"

@@ -28,6 +28,7 @@ Unit tests use **synthetic data only** (`tests/fixtures/`, see its README) and n
 | Data output schemas | `test_pipeline.py::test_outputs_written_with_expected_schema` | Processed outputs done; curated BI outputs in Phase 4 |
 | Refresh failure handling | `test_ingestion.py` (retry, exhausted retries, 4xx, API error code, wrong dataset, poll timeout, download error; no partial snapshot left behind); `test_pipeline.py` (schema change and row-count collapse leave previous outputs byte-identical) | Implemented |
 | Idempotent refresh | `test_clean.py::test_idempotent`, `test_pipeline.py::test_reprocessing_same_snapshot_is_idempotent` | Implemented |
+| Documentation vs outputs (Phase 5) | `test_docs_consistency.py` (7): data-quality counts, H1–H5 figures, model MAE / typical error / interval coverage, and profile count are quoted exactly in README and docs; decision IDs sequential. Applies only while outputs come from the documented snapshot (otherwise skipped with a reason). Mutation-checked: changing two README figures made 2 tests fail. `test_bi.py::test_bi_guide_measure_catalogue_matches_code` keeps the DAX catalogue in sync. | Implemented |
 | Python/SQL vs Power BI consistency | `test_bi.py` (9): the SQL star schema reproduces Python band edges; month-window flags; **the SQL cross-check passes and detects a SGD 1 tamper**; the SQL median pattern handles even and odd groups; DAX expected values hand-checked; **every visual field exists in the generated model**; visuals fit the page; measure names unique and described. In Power BI itself: `powerbi/tools/query_model.ps1` (13 DAX values vs Python, 37 measures evaluate, 17 row counts), run 2026-10-12: **all passed** | Implemented |
 
 ## Recorded results
@@ -37,6 +38,8 @@ Unit tests use **synthetic data only** (`tests/fixtures/`, see its README) and n
 | 2026-10-12 | Windows 11, Python 3.14.4, `requirements-lock.txt` | `python -m pytest -q` | **64 passed**, 0 failed, 0 skipped (parsers 25, clean 19, schema 8, ingestion 8, pipeline 4) |
 | 2026-10-12 (Phase 2) | same | `python -m pytest -q` | **80 passed**, 0 failed, 0 skipped (adds analytics 16) |
 | 2026-10-12 (Phase 4) | same | `python -m pytest -q -W error::ResourceWarning` | **111 passed**, 0 failed, 0 skipped (adds 9 BI tests, including 2 PBIP consistency checks). The new tamper test **found a real bug**: the SQL cross-check used `np.allclose` with relative tolerance 1e-5, so a SGD 1 change passed. Fixed with an absolute 1e-6 tolerance. Unclosed SQLite connections (ResourceWarning) were also fixed. |
+| 2026-10-12 (Phase 4 wording) | same | `python -m pytest -q` | **113 passed** (adds the personal-path guard tests) |
+| 2026-10-12 (Phase 5) | same + clean-room clone | `python -m pytest -q` | **121 passed**, 0 failed, 0 skipped (adds 7 documentation-consistency tests and 1 catalogue-sync test). The clean-room clone of `0829184` passed 113/113. |
 | 2026-10-12 (Phase 4, Power BI) | Power BI Desktop 2.158 | `validate_tmdl.ps1`; `query_model.ps1` | TMDL OK; 67/67 engine checks passed |
 | 2026-10-12 (Phase 3) | same | `python -m pytest -q` | **102 passed**, 0 failed, 0 skipped (adds modelling 22). On first run 2 new tests failed because of **test** errors: a wrong hand-computed median, and an unrealistic 13–24-month horizon. Both were corrected and explained in the Phase 3 notes; the model code was unchanged. |
 

@@ -1,6 +1,6 @@
 # Project Plan — HDB Resale Market Intelligence & Price Prediction
 
-Status: **Phases 0–4 complete** (2026-10-12). Later phases are planned here and their status is tracked in the table at the end.
+Status: **Phases 0–5 complete** (2026-10-12). Later phases are planned here and their status is tracked in the table at the end.
 
 ## 1. Business question
 
@@ -122,7 +122,7 @@ The last successful outputs are only replaced after all validation gates pass (D
 | 2 EDA & hypotheses | Descriptive tables and figures, mix-adjusted view, hypothesis tests with effect sizes | The register is complete with actual results. Exploratory work is labelled. | Done (2026-10-12) |
 | 3 Modelling | Baseline, linear, and tree model. Chronological train/validation/test split plus rolling backtest. Segment errors. Model card. | Test set used once. Leakage tests pass. Metrics recorded with dates and sample sizes. | Done (2026-10-12) |
 | 4 BI | Curated tables, data model, DAX measures with validation values, report or build guide | DAX expected values match Python/SQL. No fake PBIX. | Done (2026-10-12) |
-| 5 E2E verification | Clean-environment rerun, test run, docs consistency review | Commands in REPRODUCIBILITY.md work as written. | Planned |
+| 5 E2E verification | Clean-environment rerun, test run, docs consistency review | Commands in REPRODUCIBILITY.md work as written. | Done (2026-10-12) |
 | 6 Portfolio readiness | README with real findings, screenshots of real work, handover | A hiring manager can assess the project without a walkthrough. | Planned |
 
 ## 7. Risks

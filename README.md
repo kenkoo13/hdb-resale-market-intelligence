@@ -1,6 +1,6 @@
 # HDB Resale Market Intelligence & Price Prediction
 
-> **Project status: in progress (Phases 0–4 of 6 complete: source verified, data-quality pipeline, exploratory analysis, pre-registered hypothesis tests, price model, Power BI report).** End-to-end verification and the final portfolio write-up (Phases 5–6) are pending.
+> **Project status: in progress (Phases 0–5 of 6 complete, including a clean-room reproduction check).** The final portfolio write-up (Phase 6) is pending.
 
 An end-to-end data analytics capstone that turns Singapore HDB resale transaction records into explainable price intelligence. It covers market trends, fair comparisons between flats, the evidence on which characteristics are associated with price differences, and an honestly evaluated price-estimation model, all delivered through a reproducible Python/SQL pipeline and a Power BI report.
 

@@ -4,6 +4,18 @@ All notable changes to this project. Entries record work that was actually compl
 
 ## [Unreleased]
 
+### Added — Phase 5 (2026-10-12)
+- Clean-room verification: fresh clone + lock-file environment reproduced every committed output exactly from the same raw snapshot (only timing fields differ). Live refresh created a second snapshot and passed the gates (REPRODUCIBILITY.md).
+- `tests/test_docs_consistency.py` (documentation figures vs outputs) and a DAX catalogue sync test: 121 tests.
+- DEC-031.
+
+### Fixed — Phase 5
+- The BI guide DAX catalogue showed pre-wording-change model labels; it is regenerated from code and now tested.
+- Install instructions use `requirements-lock.txt` (a `requirements.txt` install pulled a pre-release dependency).
+- The PBIP step in REPRODUCIBILITY and BI_BUILD_GUIDE now reflects the placeholder path / `--local-path`.
+- `run_modelling` draws figures from the saved outputs, so reruns are pixel-identical.
+- The minimum Python version (≥ 3.12) is documented.
+
 ### Changed — dashboard wording (2026-10-12)
 - All Power BI labels were rewritten in plain business language for non-technical managers. The audit and glossary are in `docs/DASHBOARD_GLOSSARY.md` (DEC-030). Calculations are unchanged.
 - Plain-language label columns were added to the curated tables (floor-level labels, model and grouping names, readable dates, finding sentences generated from the results).

@@ -218,8 +218,10 @@ def main(argv: list[str] | None = None) -> int:
             cfg.processed_dir / "model_test_predictions.parquet", index=False)
         (cfg.outputs_dir / "models").mkdir(parents=True, exist_ok=True)
         joblib.dump(final_models[sel_fam], cfg.outputs_dir / "models" / "selected_model.joblib")
+        # Figures are always drawn from the saved outputs (one code path), so a rerun and
+        # `python -m src.reporting.model_figures` give pixel-identical PNGs (Phase 5 finding).
         from src.reporting import model_figures as MF
-        MF.make_all(val_table, test_table, by_month, seg, preds, fig_dir)
+        MF.regenerate()
 
     log.info("Done in %.0fs", time.time() - t0)
     print(test_table.to_string())

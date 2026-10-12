@@ -312,3 +312,13 @@ Owner: "Project" unless stated otherwise.
 - **Terminology choice:** MAE is shown as **"Average prediction error"**, not "typical", because it is a mean. MdAPE is shown as **"Typical error (%)"** (a median). This keeps the labels accurate and the two KPIs distinct. See the glossary, §3.
 - **Validation:** The DAX checks (13 values, 37 measures, 17 row counts) were re-run after the change, and every visual field reference was tested. The text-length fit was confirmed with screenshots of the real report.
 - **Revision criteria:** User feedback shows a term is still unclear.
+
+### DEC-031 — Exact reproduction installs from the lock file; documentation figures are tested
+- **Date / Owner / Status:** 2026-10-12 / Project / Accepted
+- **Decision:**
+  - The documented install command is `pip install -r requirements-lock.txt`. `requirements.txt` remains the list of direct dependencies.
+  - Key figures quoted in the README and docs are checked against the outputs by `tests/test_docs_consistency.py`.
+  - The DAX catalogue in BI_BUILD_GUIDE is checked against the code.
+- **Reason:** The Phase 5 clean-room install from `requirements.txt` resolved a pre-release transitive dependency (`wrapt 2.5.1rc1`). The documentation audit found the DAX catalogue stale after the Phase 4 wording change. Both are drift risks that tests can catch automatically.
+- **Trade-offs:** After a refresh to a newer snapshot, the documentation tests skip (with a reason) until the narrative is reviewed and `DOCUMENTED_SNAPSHOT` is updated.
+- **Validation:** The lock install gave a `pip freeze` identical to the lock. Mutation check: changing two README figures caused 2 failures.
