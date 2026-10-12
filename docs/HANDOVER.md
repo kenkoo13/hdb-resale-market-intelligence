@@ -135,13 +135,13 @@ python -m venv .venv
 
 ## I. GitHub status
 
-- **Local only.** 11 commits on `main` (10 for Phases 0–5 plus the Phase 6 commit). **Nothing has been pushed.**
-- **Remote:** `origin` = `https://github.com/kenkoo13/hdb-resale-market-intelligence.git`. It was verified to exist, it is **public**, and it is empty.
+- **Published.** `main` was pushed on 2026-10-12, with the owner's approval, to the public repository https://github.com/kenkoo13/hdb-resale-market-intelligence. The published head was verified identical to the local head; there are 11 commits.
+- **Remote:** `origin` = `https://github.com/kenkoo13/hdb-resale-market-intelligence.git` (public). It was empty before the first push, so nothing was overwritten.
 - **Privacy:** before the first push, at the owner's request, the commit history was rewritten so that every commit uses the owner's GitHub no-reply address. Content was verified identical before and after the rewrite.
 
 ## J. Outstanding issues and next steps
 
-1. **Push to GitHub** once the owner approves, after the commit-email decision.
+1. **Optional:** add a short repository description and topics on GitHub (for example: data-analytics, power-bi, python, singapore, housing).
 2. **DEC-013 (2017 duplicates):** ask HDB or data.gov.sg to confirm. Watch `Q07` in future snapshots.
 3. **DEC-008 (partial month):** compare month counts across snapshots to see whether late registrations affect the month before the latest.
 4. **Model:**
