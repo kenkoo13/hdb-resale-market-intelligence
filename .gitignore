@@ -1,0 +1,34 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Secrets / local configuration
+.env
+config/project_config.yaml
+
+# Data: raw and processed snapshots are re-downloadable from the official source
+# and are not committed (see docs/DECISION_LOG.md DEC-004).
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Model binaries are reproducible from code + seed and are not committed.
+outputs/models/
+
+# Power BI local caches
+powerbi/**/.pbi/cache.abf
+powerbi/**/.pbi/localSettings.json
+*.pbix.bak
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
