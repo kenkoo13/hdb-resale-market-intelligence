@@ -1,10 +1,7 @@
 model_label,mode,family,config,n,mae,rmse,r2,medae,mdape_pct,bias_median_pct
-Baseline B0: global median,static,B0,B0,24658,206703,275499,-0.635176,150000,25.8573,-22.2222
-"Baseline B1: town x type median, all history",static,B1,B1,24658,160130,200347,0.135248,132000,21.4385,-21.2963
-"Baseline B2: town x type median, last 12 months",static,B2,B2,24658,84509.4,128658,0.643387,54056,8.78378,-0.148148
-Gradient boosting,static,G-A,"G-A max_leaf_nodes=31, min_samples_leaf=20",24658,30438,43487,0.959258,21975.4,3.53947,0.806064
-Selected: gradient boosting (trained once),static,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,27578.3,39436.5,0.966494,20036.1,3.24321,0.754633
-Ridge regression,static,L-A,"L-A alpha=10.0, time_extrapolation=linear",24658,48635.9,68109.2,0.900061,35525,5.86748,-1.68299
-Ridge regression + street,static,L-B,"L-B alpha=10.0, time_extrapolation=linear",24658,46280.4,65265.4,0.908232,33621.2,5.51519,-1.06107
-Selected: gradient boosting (retrained monthly),monthly refit,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,25387,36040.2,0.972017,18554,2.98368,0.0401915
-Baseline B2 (retrained monthly),monthly refit,B2,B2,24658,84093,127199,0.651429,54294,8.8,0.427974
+Simple benchmark (recent typical price),static,B2,B2,24658,84509.4,128658,0.643387,54056,8.78378,-0.148148
+"Advanced model, no street detail",static,G-A,"G-A max_leaf_nodes=31, min_samples_leaf=20",24658,30438,43487,0.959258,21975.4,3.53947,0.806064
+Chosen model (not updated),static,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,27578.3,39436.5,0.966494,20036.1,3.24321,0.754633
+Simple formula model,static,L-A,"L-A alpha=10.0, time_extrapolation=linear",24658,48635.9,68109.2,0.900061,35525,5.86748,-1.68299
+Simple formula model + street,static,L-B,"L-B alpha=10.0, time_extrapolation=linear",24658,46280.4,65265.4,0.908232,33621.2,5.51519,-1.06107
+Chosen model (updated monthly),monthly refit,G-B,"G-B max_leaf_nodes=31, min_samples_leaf=20",24658,25387,36040.2,0.972017,18554,2.98368,0.0401915

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p3_evidence_v05",
   "position": {
-    "x": 840,
-    "y": 285,
+    "x": 959,
+    "y": 294,
     "z": 5,
-    "height": 355,
-    "width": 420,
+    "height": 302,
+    "width": 301,
     "tabOrder": 5
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "town_effects_adjusted.level",
-              "nativeQueryRef": "level"
+              "nativeQueryRef": "level",
+              "displayName": "Town"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "town_effects_adjusted.Town Effect vs Ang Mo Kio",
-              "nativeQueryRef": "Town Effect vs Ang Mo Kio"
+              "nativeQueryRef": "Town Effect vs Ang Mo Kio",
+              "displayName": "Price level"
             }
           ]
         }
@@ -69,6 +71,34 @@
         "isDefaultSort": true
       }
     },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "labels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -83,7 +113,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Adjusted town effect vs Ang Mo Kio (like-for-like)'"
+                  "Value": "'Town price level vs Ang Mo Kio (similar flats)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

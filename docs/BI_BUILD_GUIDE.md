@@ -14,7 +14,7 @@ The report is a **Power BI Project (PBIP)** in text form. Python generates it fr
 | DAX measures vs Python/SQL expected values | **Verified**: 13 / 13 match (relative tolerance 1e-9) | Same script → `data/curated/dax_validation_results.csv` |
 | All 37 measures evaluate without error | **Verified** | Same script |
 | Every visual field exists in the model | **Verified**: automated check of all visual field references | `tests/test_bi.py::test_every_visual_field_exists_in_model` |
-| Visuals render as intended (layout, formatting, readability) | **Requires visual check in Desktop** (see §8) | Not machine-verifiable here |
+| Visuals render as intended (layout, formatting, readability) | **Verified by manual visual review**: 5 review rounds, all issues fixed (§9) | Screenshots of the real report in `docs/screenshots/` |
 | A `.pbix` file | **Not produced by code**. Save it from Desktop (*File → Save as → .pbix*) if a single file is needed. | — |
 
 ## 2. How to open and refresh
@@ -121,13 +121,15 @@ This catalogue is generated from `build_pbip.MEASURES`. Validation values come f
 
 ## 5. Pages
 
-| Page | Purpose (brief §9) | Visuals | Slicers |
+All visible wording follows [DASHBOARD_GLOSSARY.md](DASHBOARD_GLOSSARY.md), which maps each plain-language label to its technical term (DEC-030).
+
+| Page (as shown) | Business question | Visuals (plain-language labels) | Filters |
 |---|---|---|---|
-| 1 Market overview | Q1: volumes and price trend | 4 KPI cards (latest-12-month median, YoY %, transactions, price/sqm); monthly median line (full months); monthly transactions column (full months); median by flat type bar (n in tooltip); latest vs prior table by flat type; coverage and refresh line | Town, flat type |
-| 2 Town & property | Q2: fair comparisons | Town table (n, median, P25, P75, price/sqm, low-sample flag), sorted by median; median by storey range; median by remaining-lease band (tooltips show n) | Flat type, town, floor-area band |
-| 3 Price drivers & evidence | Q3: association, not causation | Hypothesis results table; raw vs mix-adjusted index; adjusted storey and lease premium curves; adjusted town effects; caveat text | None. The tables are pre-computed and the page text says so. |
-| 4 Model performance | Q4: accuracy and reliability | 5 KPI cards (selected MAE static and monthly-refit, typical % error, baseline MAE, error reduction); MAE by model; MAE by test month (3 lines); segment error table; feature reliance; text on intervals withheld | Segment (flat type, town, flat model, storey, price quintile, month) |
-| 5 Indicative estimates | Optional page (§8.7), implemented with pre-computed profiles | Profile table with estimate, typical % and SGD error, reliability label and segment median; disclaimer text | Town, flat type |
+| 1 Market overview | How are HDB resale prices and sales changing? | 4 KPI cards (typical price, price change vs previous 12 months, flats sold, typical price per sqm); typical price each month; flats sold each month; typical price by flat type; this year vs last year table; data coverage line | Town, flat type |
+| 2 Compare towns & flats | What do similar flats sell for? | Prices by town table (flats sold, typical price, low end, high end, price per sqm, enough sales?); typical price by floor level; typical price by years of lease left | Flat type, town, flat size |
+| 3 What drives prices | What drives price differences between otherwise similar flats? | Key findings table (question, what the data shows, size of effect, likely range, evidence); headline vs like-for-like price trend; extra paid for higher floors; extra paid for more lease left; town price level vs Ang Mo Kio; how-to-read note | None. The results are fixed calculations and the page says so. |
+| 4 Estimate accuracy | How accurate are the estimates, and where are they less reliable? | 5 KPI cards (average prediction error, typical error %, average error with monthly updates, error using a simple benchmark, reduction in prediction error); accuracy by approach; does accuracy worsen over time; where predictions are less accurate (table); which factors influence predictions; how-we-tested note | Break down by (flat type, town, flat model, floor level, price level, month) |
+| 5 Estimated prices | What might a typical flat cost? | Estimated price of a typical flat per town and flat type at three floor levels, with typical error, recent typical price and reliability; how-to-read note | Town, flat type |
 
 All pages are 1280 × 720. Each visual title states the population and window, and the coverage card at the bottom of pages 1–2 shows the data period and retrieval time.
 
@@ -144,7 +146,7 @@ All pages are 1280 × 720. Each visual title states the population and window, a
 - **What it isn't:** live inference. Changing a slicer only filters the table, and the page text says so explicitly.
 - **Known weakness:** when a segment mixes very different designs, the "most common model" can be atypical.
   - Example: Central Area 4-ROOM's modal model is Type S1, a premium design, which gives estimates 31–34% above the segment median.
-  - These rows are labelled less reliable because their storey band rarely sells in that segment.
+  - These rows are labelled "Lower: this floor level is rarely sold here", because their floor level rarely sells in that segment.
   - Overall, profile estimates vs segment medians have a median gap of −0.2%. By storey variant: low −5.2%, middle +0.5%, high +3.9%.
 
 ## 7. Validation procedure (repeat after any change)
@@ -169,7 +171,15 @@ The results of this checklist are recorded in §9.
 
 ## 9. Visual review results
 
-*Pending the manual review in Power BI Desktop.*
+| Review | Date | Findings | Action |
+|---|---|---|---|
+| 1 (layout) | 2026-10-12 | All 44 visuals rendered with data, but: KPI values clipped; slicers too short (no dropdown); coverage text oversized; wide tables hid columns, including page 5's reliability column; raw number formats; missing reference bands on the effect curves; similar series colours | Fixed in the generator: card, slicer and table sizing; display names and formats; reference rows; explicit series colours |
+| 2 (layout) | 2026-10-12 | Layout correct: values, dropdowns, columns and coverage line fully visible | None |
+| 3 (wording) | 2026-10-12 | About 120 text elements audited for a non-technical business audience | All labels rewritten in plain language (DASHBOARD_GLOSSARY.md §2); calculations unchanged; DAX re-validated |
+| 4 (business-reader check) | 2026-10-12 | Page 3: only 4 of 5 findings visible; floor and lease curves needed sideways scrolling; town axis truncated. Page 4: simple benchmark bar hidden; reliability column clipped | Auto-generated chart subtitles switched off; findings ordered by question; floor and lease curves on a numeric axis; town bars labelled directly; page 4 rows rebalanced |
+| 5 (final) | 2026-10-12 | All content visible. One ambiguity remained: flat model "2-room" vs flat type "2 ROOM" in the same list | Redundant "Grouping" column removed; flat-model groups prefixed "Model:". The prefix was verified by querying the refreshed report's engine, so the page 4 screenshot predates it. All 67 engine checks passed. |
+
+Screenshots of the real report are in `docs/screenshots/`.
 
 ## 10. Manual fallback (if a future Desktop version rejects the generated report)
 

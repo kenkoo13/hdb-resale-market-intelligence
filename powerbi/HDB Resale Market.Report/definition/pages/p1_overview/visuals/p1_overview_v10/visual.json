@@ -3,9 +3,9 @@
   "name": "p1_overview_v10",
   "position": {
     "x": 650,
-    "y": 410,
+    "y": 465,
     "z": 10,
-    "height": 230,
+    "height": 197,
     "width": 610,
     "tabOrder": 10
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_flat_type.flat_type",
-              "nativeQueryRef": "flat_type"
+              "nativeQueryRef": "flat_type",
+              "displayName": "Flat type"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions Latest 12M",
-              "nativeQueryRef": "Transactions Latest 12M"
+              "nativeQueryRef": "Transactions Latest 12M",
+              "displayName": "Flats sold"
             },
             {
               "field": {
@@ -55,21 +57,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price Latest 12M",
-              "nativeQueryRef": "Median Price Latest 12M"
-            },
-            {
-              "field": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_transactions"
-                    }
-                  },
-                  "Property": "Median Price Prior 12M"
-                }
-              },
-              "queryRef": "fact_transactions.Median Price Prior 12M",
-              "nativeQueryRef": "Median Price Prior 12M"
+              "nativeQueryRef": "Median Price Latest 12M",
+              "displayName": "Typical price"
             },
             {
               "field": {
@@ -83,7 +72,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price YoY %",
-              "nativeQueryRef": "Median Price YoY %"
+              "nativeQueryRef": "Median Price YoY %",
+              "displayName": "Change vs last year"
             }
           ]
         }
@@ -103,7 +93,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Latest vs prior 12 months by flat type (raw medians include mix changes)'"
+                  "Value": "'This year vs last year (changes also reflect which flats were sold)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

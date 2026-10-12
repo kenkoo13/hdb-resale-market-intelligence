@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p3_evidence_v03",
   "position": {
-    "x": 20,
-    "y": 285,
+    "x": 333,
+    "y": 294,
     "z": 3,
-    "height": 355,
-    "width": 400,
+    "height": 302,
+    "width": 305,
     "tabOrder": 3
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "storey_effects_adjusted"
                     }
                   },
-                  "Property": "level"
+                  "Property": "level_order"
                 }
               },
-              "queryRef": "storey_effects_adjusted.level",
-              "nativeQueryRef": "level"
+              "queryRef": "storey_effects_adjusted.level_order",
+              "nativeQueryRef": "level_order",
+              "displayName": "Floor (lowest floor of band)"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "storey_effects_adjusted.Storey Premium vs Lowest Band",
-              "nativeQueryRef": "Storey Premium vs Lowest Band"
+              "nativeQueryRef": "Storey Premium vs Lowest Band",
+              "displayName": "Extra paid"
             }
           ]
         }
@@ -65,7 +67,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Adjusted storey premium vs floors 01-03'"
+                  "Value": "'Extra paid for higher floors (vs floors 1-3)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

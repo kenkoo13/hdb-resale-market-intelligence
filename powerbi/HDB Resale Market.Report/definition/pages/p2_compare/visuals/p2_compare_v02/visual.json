@@ -3,9 +3,9 @@
   "name": "p2_compare_v02",
   "position": {
     "x": 280,
-    "y": 55,
+    "y": 46,
     "z": 2,
-    "height": 55,
+    "height": 72,
     "width": 250,
     "tabOrder": 2
   },
@@ -46,6 +46,19 @@
             }
           }
         }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -63,6 +76,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Town'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

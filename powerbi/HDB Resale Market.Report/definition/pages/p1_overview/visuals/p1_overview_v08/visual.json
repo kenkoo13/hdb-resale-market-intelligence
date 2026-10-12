@@ -3,9 +3,9 @@
   "name": "p1_overview_v08",
   "position": {
     "x": 650,
-    "y": 165,
+    "y": 252,
     "z": 8,
-    "height": 235,
+    "height": 205,
     "width": 610,
     "tabOrder": 8
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_month.month",
-              "nativeQueryRef": "month"
+              "nativeQueryRef": "month",
+              "displayName": "Month"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions (Full Months)",
-              "nativeQueryRef": "Transactions (Full Months)"
+              "nativeQueryRef": "Transactions (Full Months)",
+              "displayName": "Flats sold"
             }
           ]
         }
@@ -65,7 +67,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Transactions per month (full months; partial month excluded)'"
+                  "Value": "'Flats sold each month'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

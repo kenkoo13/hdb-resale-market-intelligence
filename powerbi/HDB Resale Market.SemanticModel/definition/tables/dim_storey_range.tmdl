@@ -15,13 +15,20 @@ table dim_storey_range
 		sourceColumn: storey_order
 		isHidden
 
+	column storey_label
+		dataType: string
+		lineageTag: 7ba94d66-5b62-5069-906b-561b9ff02581
+		summarizeBy: none
+		sourceColumn: storey_label
+		sortByColumn: storey_order
+
 	partition dim_storey_range = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "dim_storey_range.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"storey_range", type text}, {"storey_order", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"storey_range", type text}, {"storey_order", Int64.Type}, {"storey_label", type text}}, "en-US")
 				in
 				    Typed
 

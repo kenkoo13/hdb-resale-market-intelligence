@@ -1,6 +1,6 @@
 # HDB Resale Market Intelligence & Price Prediction
 
-> **Project status: in progress (Phases 0–3 of 6 complete: source verified, data-quality pipeline, exploratory analysis, pre-registered hypothesis tests, price model).** The Power BI report (Phase 4) is not yet built. This README is rewritten as each phase completes.
+> **Project status: in progress (Phases 0–4 of 6 complete: source verified, data-quality pipeline, exploratory analysis, pre-registered hypothesis tests, price model, Power BI report).** End-to-end verification and the final portfolio write-up (Phases 5–6) are pending.
 
 An end-to-end data analytics capstone that turns Singapore HDB resale transaction records into explainable price intelligence. It covers market trends, fair comparisons between flats, the evidence on which characteristics are associated with price differences, and an honestly evaluated price-estimation model, all delivered through a reproducible Python/SQL pipeline and a Power BI report.
 
@@ -45,3 +45,21 @@ See the [model card](docs/MODEL_CARD.md) for full results, limitations and prohi
 
 ![Model comparison](outputs/figures/10_model_comparison_test_mae.png)
 ![Accuracy over time](outputs/figures/11_error_by_month_static_vs_refit.png)
+
+## Power BI report (Phase 4)
+
+A five-page report for **Power BI Desktop (free)**, written in plain business language for managers. It is generated as a Power BI Project from code (`src/reporting/build_pbip.py`). It was verified in Power BI Desktop: the project opens and refreshes, 13/13 DAX values match the Python results, and all 37 measures evaluate. Setup and validation are in [docs/BI_BUILD_GUIDE.md](docs/BI_BUILD_GUIDE.md), and every term is defined in [docs/DASHBOARD_GLOSSARY.md](docs/DASHBOARD_GLOSSARY.md).
+
+| Page | Business question |
+|---|---|
+| 1 Market overview | How are HDB resale prices and sales changing? |
+| 2 Compare towns & flats | What do similar flats sell for? |
+| 3 What drives prices | Which features are linked to higher prices, comparing otherwise similar flats? |
+| 4 Estimate accuracy | How accurate are the price estimates, and where are they less reliable? |
+| 5 Estimated prices | What might a typical flat cost? (pre-calculated, for guidance only) |
+
+![Market overview](docs/screenshots/page1.png)
+![What drives prices](docs/screenshots/page3.png)
+![Estimate accuracy](docs/screenshots/page4.png)
+
+Screenshots are of the real report (snapshot of 12 Oct 2026). To open it yourself, set the `CuratedFolder` parameter to your `data/curated/` folder (see the BI guide, §2).

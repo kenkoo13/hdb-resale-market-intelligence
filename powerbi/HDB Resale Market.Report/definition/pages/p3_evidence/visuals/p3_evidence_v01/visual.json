@@ -3,10 +3,10 @@
   "name": "p3_evidence_v01",
   "position": {
     "x": 20,
-    "y": 55,
+    "y": 46,
     "z": 1,
-    "height": 220,
-    "width": 760,
+    "height": 240,
+    "width": 1240,
     "tabOrder": 1
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "hypothesis_results"
                     }
                   },
-                  "Property": "hypothesis"
+                  "Property": "question"
                 }
               },
-              "queryRef": "hypothesis_results.hypothesis",
-              "nativeQueryRef": "hypothesis"
+              "queryRef": "hypothesis_results.question",
+              "nativeQueryRef": "question",
+              "displayName": "Question"
             },
             {
               "field": {
@@ -37,11 +38,12 @@
                       "Entity": "hypothesis_results"
                     }
                   },
-                  "Property": "plain_english"
+                  "Property": "finding"
                 }
               },
-              "queryRef": "hypothesis_results.plain_english",
-              "nativeQueryRef": "plain_english"
+              "queryRef": "hypothesis_results.finding",
+              "nativeQueryRef": "finding",
+              "displayName": "What the data shows"
             },
             {
               "field": {
@@ -51,11 +53,12 @@
                       "Entity": "hypothesis_results"
                     }
                   },
-                  "Property": "contrast"
+                  "Property": "size_of_effect"
                 }
               },
-              "queryRef": "hypothesis_results.contrast",
-              "nativeQueryRef": "contrast"
+              "queryRef": "hypothesis_results.size_of_effect",
+              "nativeQueryRef": "size_of_effect",
+              "displayName": "Size of effect"
             },
             {
               "field": {
@@ -65,11 +68,12 @@
                       "Entity": "hypothesis_results"
                     }
                   },
-                  "Property": "estimate_pct"
+                  "Property": "likely_range"
                 }
               },
-              "queryRef": "hypothesis_results.estimate_pct",
-              "nativeQueryRef": "estimate_pct"
+              "queryRef": "hypothesis_results.likely_range",
+              "nativeQueryRef": "likely_range",
+              "displayName": "Likely range"
             },
             {
               "field": {
@@ -79,39 +83,12 @@
                       "Entity": "hypothesis_results"
                     }
                   },
-                  "Property": "ci_low_pct"
+                  "Property": "evidence"
                 }
               },
-              "queryRef": "hypothesis_results.ci_low_pct",
-              "nativeQueryRef": "ci_low_pct"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "hypothesis_results"
-                    }
-                  },
-                  "Property": "ci_high_pct"
-                }
-              },
-              "queryRef": "hypothesis_results.ci_high_pct",
-              "nativeQueryRef": "ci_high_pct"
-            },
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "hypothesis_results"
-                    }
-                  },
-                  "Property": "status"
-                }
-              },
-              "queryRef": "hypothesis_results.status",
-              "nativeQueryRef": "status"
+              "queryRef": "hypothesis_results.evidence",
+              "nativeQueryRef": "evidence",
+              "displayName": "Evidence"
             }
           ]
         }
@@ -131,7 +108,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Pre-registered hypotheses (estimate % per stated contrast; H5 in percentage points)'"
+                  "Value": "'Key findings: price differences between flats that are otherwise alike'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

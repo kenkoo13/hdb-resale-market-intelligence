@@ -3,9 +3,9 @@
   "name": "p2_compare_v03",
   "position": {
     "x": 540,
-    "y": 55,
+    "y": 46,
     "z": 3,
-    "height": 55,
+    "height": 72,
     "width": 250,
     "tabOrder": 3
   },
@@ -46,6 +46,19 @@
             }
           }
         }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -62,7 +75,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Floor area band (sqm)'"
+                  "Value": "'Flat size (sqm)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

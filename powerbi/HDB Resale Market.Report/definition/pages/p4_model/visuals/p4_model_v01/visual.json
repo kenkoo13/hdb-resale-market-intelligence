@@ -3,10 +3,10 @@
   "name": "p4_model_v01",
   "position": {
     "x": 20,
-    "y": 55,
+    "y": 46,
     "z": 1,
-    "height": 100,
-    "width": 230,
+    "height": 120,
+    "width": 240,
     "tabOrder": 1
   },
   "visual": {
@@ -33,6 +33,41 @@
         }
       }
     },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "22D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -47,7 +82,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Selected model MAE (trained once)'"
+                  "Value": "'Average prediction error (SGD)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

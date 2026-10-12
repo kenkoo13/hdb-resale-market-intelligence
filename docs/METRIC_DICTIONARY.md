@@ -1,5 +1,7 @@
 # Metric Dictionary
 
+> **Dashboard wording:** plain-language names for these metrics, as shown in the Power BI report, are listed in [DASHBOARD_GLOSSARY.md](DASHBOARD_GLOSSARY.md).
+
 Definitions of every engineered field, business metric, statistical measure and model metric.
 **Layer** says where each one is calculated. A metric computed in more than one layer (for example, Python and DAX) must give the same result, and its validation entry says how that was checked.
 

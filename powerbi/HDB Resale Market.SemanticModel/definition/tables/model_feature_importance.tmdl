@@ -25,13 +25,19 @@ table model_feature_importance
 		summarizeBy: none
 		sourceColumn: std
 
+	column feature_label
+		dataType: string
+		lineageTag: 6b219055-6327-53a1-b97d-c76e34a52fae
+		summarizeBy: none
+		sourceColumn: feature_label
+
 	partition model_feature_importance = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "model_feature_importance.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"feature", type text}, {"mae_increase_sgd", type number}, {"std", type number}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"feature", type text}, {"mae_increase_sgd", type number}, {"std", type number}, {"feature_label", type text}}, "en-US")
 				in
 				    Typed
 

@@ -3,10 +3,10 @@
   "name": "p4_model_v08",
   "position": {
     "x": 20,
-    "y": 415,
+    "y": 444,
     "z": 8,
-    "height": 55,
-    "width": 200,
+    "height": 72,
+    "width": 170,
     "tabOrder": 8
   },
   "visual": {
@@ -23,11 +23,11 @@
                       "Entity": "model_segment_errors"
                     }
                   },
-                  "Property": "segment"
+                  "Property": "segment_label"
                 }
               },
-              "queryRef": "model_segment_errors.segment",
-              "nativeQueryRef": "segment"
+              "queryRef": "model_segment_errors.segment_label",
+              "nativeQueryRef": "segment_label"
             }
           ]
         }
@@ -41,6 +41,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -62,7 +75,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Segment'"
+                  "Value": "'Break down by'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p2_compare_v06",
   "position": {
-    "x": 670,
-    "y": 385,
+    "x": 810,
+    "y": 397,
     "z": 6,
-    "height": 255,
-    "width": 590,
+    "height": 265,
+    "width": 450,
     "tabOrder": 6
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_transactions.lease_band",
-              "nativeQueryRef": "lease_band"
+              "nativeQueryRef": "lease_band",
+              "displayName": "Years of lease left"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price Latest 12M",
-              "nativeQueryRef": "Median Price Latest 12M"
+              "nativeQueryRef": "Median Price Latest 12M",
+              "displayName": "Typical price"
             }
           ]
         },
@@ -63,7 +65,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions Latest 12M",
-              "nativeQueryRef": "Transactions Latest 12M"
+              "nativeQueryRef": "Transactions Latest 12M",
+              "displayName": "Flats sold"
             }
           ]
         }
@@ -83,7 +86,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median price by remaining lease (years, raw)'"
+                  "Value": "'Typical price by years of lease left'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -153,3 +153,16 @@ def test_relationship_endpoints_are_declared_tables():
     tables = {t for t, _, _ in P.TABLES}
     for a, b in P.RELATIONSHIPS:
         assert a.split(".")[0] in tables and b.split(".")[0] in tables
+
+
+def test_placeholder_path_contains_no_personal_folder():
+    assert str(Path.home()).lower() not in P.PLACEHOLDER_FOLDER.lower()
+
+
+@pytest.mark.skipif(pbip_missing, reason="PBIP not generated")
+def test_generated_pbip_has_no_personal_path():
+    """Guard before committing: the PBIP must carry the placeholder, not this machine's path (DEC-029).
+    Fails (by design) after `build_pbip --local-path`; regenerate without the flag before committing."""
+    expr = (PBIP_ROOT / f"{P.PROJECT}.SemanticModel" / "definition" / "expressions.tmdl").read_text(encoding="utf-8")
+    assert str(Path.home()).lower() not in expr.lower()
+    assert P.PLACEHOLDER_FOLDER in expr

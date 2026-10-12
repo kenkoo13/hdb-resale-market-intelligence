@@ -1,10 +1,10 @@
-feature,mae_increase_sgd,std
-floor_area_sqm_num,83750.3,1364.23
-town,73457.2,648.16
-lease_commence_year,45188.1,712.101
-flat_type,30722.7,667.158
-street_name,25921,429.574
-storey_mid,15094.1,406.735
-flat_model,12862.8,130.309
-remaining_lease_years,5486.29,233.208
-months_since_start,0,0
+feature,mae_increase_sgd,std,feature_label
+floor_area_sqm_num,83750.3,1364.23,Floor area
+town,73457.2,648.16,Town
+lease_commence_year,45188.1,712.101,Lease start year
+flat_type,30722.7,667.158,Flat type
+street_name,25921,429.574,Street
+storey_mid,15094.1,406.735,Storey
+flat_model,12862.8,130.309,Flat model
+remaining_lease_years,5486.29,233.208,Remaining lease
+months_since_start,0,0,Month (time)

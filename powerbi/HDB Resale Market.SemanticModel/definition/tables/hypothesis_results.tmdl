@@ -97,13 +97,51 @@ table hypothesis_results
 		summarizeBy: none
 		sourceColumn: plain_english
 
+	column question
+		dataType: string
+		lineageTag: 75ee0800-9797-5a1c-904d-3e9e8fe16514
+		summarizeBy: none
+		sourceColumn: question
+		sortByColumn: hypothesis_order
+
+	column finding
+		dataType: string
+		lineageTag: bdbfe927-2621-5cfd-9c13-51510c8bd6d3
+		summarizeBy: none
+		sourceColumn: finding
+
+	column size_of_effect
+		dataType: string
+		lineageTag: 1e9dcaf4-3aa0-527d-8282-676d4d6b72a2
+		summarizeBy: none
+		sourceColumn: size_of_effect
+
+	column likely_range
+		dataType: string
+		lineageTag: 2978c476-9901-57e0-9a7f-d813d15318c6
+		summarizeBy: none
+		sourceColumn: likely_range
+
+	column evidence
+		dataType: string
+		lineageTag: 8d4d2acf-68e5-5ddc-8a69-75d0970a3b62
+		summarizeBy: none
+		sourceColumn: evidence
+
+	column hypothesis_order
+		dataType: int64
+		lineageTag: 3c96a72f-a13d-5573-b1b0-1327a2554ee2
+		summarizeBy: none
+		sourceColumn: hypothesis_order
+		isHidden
+
 	partition hypothesis_results = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "hypothesis_results.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"hypothesis", type text}, {"contrast", type text}, {"method", type text}, {"population", type text}, {"n", Int64.Type}, {"estimate_pct", type number}, {"ci_low_pct", type number}, {"ci_high_pct", type number}, {"p_raw", type number}, {"effect_size_metric", type text}, {"practical_threshold", type number}, {"p_holm", type number}, {"status", type text}, {"robust", type text}, {"effect_size", type number}, {"plain_english", type text}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"hypothesis", type text}, {"contrast", type text}, {"method", type text}, {"population", type text}, {"n", Int64.Type}, {"estimate_pct", type number}, {"ci_low_pct", type number}, {"ci_high_pct", type number}, {"p_raw", type number}, {"effect_size_metric", type text}, {"practical_threshold", type number}, {"p_holm", type number}, {"status", type text}, {"robust", type text}, {"effect_size", type number}, {"plain_english", type text}, {"question", type text}, {"finding", type text}, {"size_of_effect", type text}, {"likely_range", type text}, {"evidence", type text}, {"hypothesis_order", Int64.Type}}, "en-US")
 				in
 				    Typed
 

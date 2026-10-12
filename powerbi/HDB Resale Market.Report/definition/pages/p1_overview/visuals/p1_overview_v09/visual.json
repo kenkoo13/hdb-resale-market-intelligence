@@ -3,14 +3,14 @@
   "name": "p1_overview_v09",
   "position": {
     "x": 20,
-    "y": 410,
+    "y": 465,
     "z": 9,
-    "height": 230,
+    "height": 197,
     "width": 620,
     "tabOrder": 9
   },
   "visual": {
-    "visualType": "clusteredBarChart",
+    "visualType": "clusteredColumnChart",
     "query": {
       "queryState": {
         "Category": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_flat_type.flat_type",
-              "nativeQueryRef": "flat_type"
+              "nativeQueryRef": "flat_type",
+              "displayName": "Flat type"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price Latest 12M",
-              "nativeQueryRef": "Median Price Latest 12M"
+              "nativeQueryRef": "Median Price Latest 12M",
+              "displayName": "Typical price"
             }
           ]
         },
@@ -63,7 +65,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions Latest 12M",
-              "nativeQueryRef": "Transactions Latest 12M"
+              "nativeQueryRef": "Transactions Latest 12M",
+              "displayName": "Flats sold"
             }
           ]
         }
@@ -83,7 +86,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median price by flat type, latest 12 months (hover for n)'"
+                  "Value": "'Typical price by flat type, last 12 months (hover for number sold)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

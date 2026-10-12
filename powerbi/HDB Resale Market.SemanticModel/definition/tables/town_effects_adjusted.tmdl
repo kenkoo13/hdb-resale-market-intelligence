@@ -3,7 +3,7 @@ table town_effects_adjusted
 
 	/// Adjusted price difference vs Ang Mo Kio (model M1, recent window).
 	measure 'Town Effect vs Ang Mo Kio' = MAX ( town_effects_adjusted[pct_vs_reference] ) / 100
-		formatString: 0.0%
+		formatString: 0%
 		displayFolder: Evidence
 		lineageTag: 116e3fc1-4893-5466-88e0-5729db1cbac0
 

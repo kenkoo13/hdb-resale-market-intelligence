@@ -294,3 +294,21 @@ Owner: "Project" unless stated otherwise.
 - **Reason:** It demonstrates SQL proficiency, and an independent implementation catches logic errors.
 - **Evidence:** 118 monthly rows and 127 town × type cells match. A unit test showed that the original `np.allclose` default tolerance (relative 1e-5) let a SGD 1 tamper pass; the tolerance was tightened.
 - **Trade-offs:** SQLite has no `MEDIAN()`, so the median is implemented with a documented `ROW_NUMBER` pattern. SQL band edges must stay in sync with Python, which a test enforces.
+
+### DEC-029 — Placeholder data-folder path in the committed Power BI project
+- **Date / Owner / Status:** 2026-10-12 / Repository owner / Accepted
+- **Decision:** The committed PBIP sets `CuratedFolder` to `C:\path\to\hdb-resale-market-intelligence\data\curated\`. Local validation uses `build_pbip --local-path`. A test (`test_generated_pbip_has_no_personal_path`) fails while a personal path is present, which acts as a guard before committing.
+- **Reason:** Power Query needs an absolute path, but committing this machine's path would expose a personal Windows folder name on a public repository.
+- **Trade-offs:** Each user sets the parameter once (BI_BUILD_GUIDE §2), or regenerates with `--local-path`.
+
+### DEC-030 — Plain business language for every dashboard label
+- **Date / Owner / Status:** 2026-10-12 / Repository owner / Accepted
+- **Decision:**
+  - All report text is rewritten for non-technical managers: page names, headers, KPI and chart titles, table headers, legends, filters, data values shown in visuals and notes.
+  - Every plain term is defined once in `docs/DASHBOARD_GLOSSARY.md`, mapped to its technical term.
+  - Plain-language label columns are generated from the same data (for example, "10 floors higher: about 7.8% more" is built from the H1 estimate), so they stay correct after a refresh.
+  - Calculations, DAX measure definitions, data and model logic are unchanged.
+- **Reason:** The report's audience is business owners. Statistical and modelling terms (MAE, P25, confidence interval, ε², hypothesis IDs, "gradient boosting") were barriers to using the findings.
+- **Terminology choice:** MAE is shown as **"Average prediction error"**, not "typical", because it is a mean. MdAPE is shown as **"Typical error (%)"** (a median). This keeps the labels accurate and the two KPIs distinct. See the glossary, §3.
+- **Validation:** The DAX checks (13 values, 37 measures, 17 row counts) were re-run after the change, and every visual field reference was tested. The text-length fit was confirmed with screenshots of the real report.
+- **Revision criteria:** User feedback shows a term is still unclear.

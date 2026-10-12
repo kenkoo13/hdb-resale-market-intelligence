@@ -3,9 +3,9 @@
   "name": "p2_compare_v07",
   "position": {
     "x": 20,
-    "y": 650,
+    "y": 668,
     "z": 7,
-    "height": 60,
+    "height": 46,
     "width": 1240,
     "tabOrder": 7
   },
@@ -32,6 +32,34 @@
           ]
         }
       }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "drillFilterOtherVisuals": true
   }

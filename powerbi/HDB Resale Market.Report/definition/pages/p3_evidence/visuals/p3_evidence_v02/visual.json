@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p3_evidence_v02",
   "position": {
-    "x": 790,
-    "y": 55,
+    "x": 20,
+    "y": 294,
     "z": 2,
-    "height": 220,
-    "width": 470,
+    "height": 302,
+    "width": 305,
     "tabOrder": 2
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "price_index_monthly.month",
-              "nativeQueryRef": "month"
+              "nativeQueryRef": "month",
+              "displayName": "Month"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "price_index_monthly.Raw Median Index",
-              "nativeQueryRef": "Raw Median Index"
+              "nativeQueryRef": "Raw Median Index",
+              "displayName": "Headline (all sales)"
             },
             {
               "field": {
@@ -59,11 +61,52 @@
                 }
               },
               "queryRef": "price_index_monthly.Mix-Adjusted Index",
-              "nativeQueryRef": "Mix-Adjusted Index"
+              "nativeQueryRef": "Mix-Adjusted Index",
+              "displayName": "Like-for-like flats"
             }
           ]
         }
       }
+    },
+    "objects": {
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#eb6834'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "price_index_monthly.Raw Median Index"
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#2a78d6'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "price_index_monthly.Mix-Adjusted Index"
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
@@ -79,7 +122,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Raw median vs mix-adjusted index (2017 = 100, all flats)'"
+                  "Value": "'Headline vs like-for-like price trend (2017 = 100)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

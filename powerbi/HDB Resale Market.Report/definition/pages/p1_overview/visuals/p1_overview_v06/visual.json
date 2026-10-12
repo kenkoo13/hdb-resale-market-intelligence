@@ -2,45 +2,65 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p1_overview_v06",
   "position": {
-    "x": 990,
-    "y": 105,
+    "x": 950,
+    "y": 124,
     "z": 6,
-    "height": 48,
-    "width": 270,
+    "height": 120,
+    "width": 310,
     "tabOrder": 6
   },
   "visual": {
-    "visualType": "slicer",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_flat_type"
+                      "Entity": "fact_transactions"
                     }
                   },
-                  "Property": "flat_type"
+                  "Property": "Median Price per sqm Latest 12M"
                 }
               },
-              "queryRef": "dim_flat_type.flat_type",
-              "nativeQueryRef": "flat_type"
+              "queryRef": "fact_transactions.Median Price per sqm Latest 12M",
+              "nativeQueryRef": "Median Price per sqm Latest 12M"
             }
           ]
         }
       }
     },
     "objects": {
-      "data": [
+      "labels": [
         {
           "properties": {
-            "mode": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "'Dropdown'"
+                  "Value": "22D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -62,7 +82,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Flat type'"
+                  "Value": "'Typical price per sqm, last 12 months'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

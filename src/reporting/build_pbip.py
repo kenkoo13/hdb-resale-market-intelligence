@@ -14,9 +14,9 @@ Why generate instead of hand-building in Desktop
     * Every DAX measure is defined once here and documented in docs/BI_BUILD_GUIDE.md.
 
 Data connection
-    Tables import CSVs from the Power Query parameter ``CuratedFolder``. It is set to
-    this repository's data/curated folder at generation time; another user changes it
-    in Desktop (Transform data > Edit parameters) or re-runs this script.
+    Tables import CSVs from the Power Query parameter ``CuratedFolder``. By default it is a
+    placeholder (no personal path is committed, DEC-029): set it once in Desktop
+    (Transform data > Edit parameters) or regenerate with ``--local-path``.
 
 Formats follow Microsoft's published JSON schemas (PBIR report 3.0.0, page 2.0.0,
 visualContainer 2.4.0) and TMDL. Validity is checked by (1) parsing the TMDL with
@@ -44,6 +44,9 @@ THEME_SRC = Path(r"C:\Program Files\Microsoft Power BI Desktop\bin\WebView2Resou
                  r"\sharedresources\BaseThemes") / f"{BASE_THEME}.json"
 VERSIONS = {"visual": "2.4.0", "page": "2.0.0", "report": "3.0.0"}
 PAGE_W, PAGE_H = 1280, 720
+# Committed default (DEC-029): no personal path in the public repository. Users set the
+# CuratedFolder parameter once in Desktop, or regenerate with --local-path.
+PLACEHOLDER_FOLDER = "C:\\path\\to\\hdb-resale-market-intelligence\\data\\curated\\"
 
 
 def tag(*parts: str) -> str:
@@ -73,8 +76,12 @@ TABLES = [  # (table name, csv file, columns forced to date)
     ("refresh_info", "refresh_info.csv", []),
 ]
 
-SORT_BY = {("dim_flat_type", "flat_type"): "flat_type_order", ("dim_storey_range", "storey_range"): "storey_order"}
-HIDDEN = {("dim_flat_type", "flat_type_order"), ("dim_storey_range", "storey_order")}
+SORT_BY = {("dim_flat_type", "flat_type"): "flat_type_order", ("dim_storey_range", "storey_range"): "storey_order",
+           ("dim_storey_range", "storey_label"): "storey_order",
+           ("storey_effects_adjusted", "level_label"): "level_order",
+           ("hypothesis_results", "question"): "hypothesis_order"}
+HIDDEN = {("dim_flat_type", "flat_type_order"), ("dim_storey_range", "storey_order"),
+          ("storey_effects_adjusted", "level_order"), ("hypothesis_results", "hypothesis_order")}
 
 RELATIONSHIPS = [  # (from table.column, to table.column)  many-to-one, single direction
     ("fact_transactions.month", "dim_month.month"),
@@ -148,14 +155,14 @@ MEASURES = [
             "CALCULATE ( [Median Price per sqm], dim_month[is_latest_12m] = 1 )", SGD, "Latest 12 months",
             "Median SGD per sqm."),
     Measure("fact_transactions", "Sample Size Flag Latest 12M",
-            "IF ( [Transactions Latest 12M] < 30, \"Low sample (n<30)\", \"OK\" )", "", "Latest 12 months",
-            "Warns when a comparison rests on fewer than 30 sales."),
+            "IF ( [Transactions Latest 12M] < 30, \"Too few (under 30)\", \"Yes\" )", "", "Latest 12 months",
+            "Warns when a comparison rests on fewer than 30 sales (shown as 'Enough sales?')."),
     # --- Context ---
     Measure("refresh_info", "Data Coverage Text",
-            "\"Data: \" & SELECTEDVALUE ( refresh_info[first_month] ) & \" to \" & "
-            "SELECTEDVALUE ( refresh_info[last_full_month] ) & \" (full months). Partial month excluded from "
-            "trends: \" & SELECTEDVALUE ( refresh_info[partial_month] ) & \". Retrieved \" & "
-            "SELECTEDVALUE ( refresh_info[retrieved_at_local] ) & \" SGT.\"", "", "Context",
+            "\"Data covers \" & SELECTEDVALUE ( refresh_info[first_month_label] ) & \" to \" & "
+            "SELECTEDVALUE ( refresh_info[last_full_month_label] ) & \" (complete months). \" & "
+            "SELECTEDVALUE ( refresh_info[partial_month_label] ) & \" is still being recorded and is left out of "
+            "trends. Data downloaded \" & SELECTEDVALUE ( refresh_info[retrieved_label] ) & \".\"", "", "Context",
             "Coverage and refresh timestamp for report headers."),
     Measure("refresh_info", "Attribution Text", "SELECTEDVALUE ( refresh_info[attribution] )", "", "Context",
             "Data licence attribution (Singapore Open Data Licence v1.0)."),
@@ -171,25 +178,25 @@ MEASURES = [
             "MAX ( lease_effects_adjusted[pct_vs_reference] ) / 100", PCT1, "Evidence",
             "Adjusted price difference vs the shortest remaining-lease band (model M2)."),
     Measure("town_effects_adjusted", "Town Effect vs Ang Mo Kio",
-            "MAX ( town_effects_adjusted[pct_vs_reference] ) / 100", PCT1, "Evidence",
+            "MAX ( town_effects_adjusted[pct_vs_reference] ) / 100", "0%", "Evidence",
             "Adjusted price difference vs Ang Mo Kio (model M1, recent window)."),
     # --- Model ---
     Measure("model_comparison", "Test MAE", "MAX ( model_comparison[mae] )", SGD, "Model",
             "Mean absolute error on the test year (SGD)."),
     Measure("model_comparison", "Selected Model MAE (Static)",
-            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Selected: gradient boosting (trained once)\" )",
+            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Chosen model (not updated)\" )",
             SGD, "Model", "Test MAE of the selected model trained once before the test year."),
     Measure("model_comparison", "Selected Model MAE (Monthly Refit)",
-            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Selected: gradient boosting (retrained monthly)\" )",
+            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Chosen model (updated monthly)\" )",
             SGD, "Model", "Test MAE when retrained before each month."),
     Measure("model_comparison", "Selected Model Typical % Error",
             "CALCULATE ( MAX ( model_comparison[mdape_pct] ), model_comparison[model_label] = "
-            "\"Selected: gradient boosting (trained once)\" ) / 100", PCT1, "Model", "Median absolute % error."),
+            "\"Chosen model (not updated)\" ) / 100", PCT1, "Model", "Median absolute % error."),
     Measure("model_comparison", "Selected Model R2",
             "CALCULATE ( MAX ( model_comparison[r2] ), model_comparison[model_label] = "
-            "\"Selected: gradient boosting (trained once)\" )", "0.000", "Model", "R-squared on the test year."),
+            "\"Chosen model (not updated)\" )", "0.000", "Model", "R-squared on the test year."),
     Measure("model_comparison", "Baseline B2 MAE",
-            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Baseline B2: town x type median, last 12 months\" )",
+            "CALCULATE ( [Test MAE], model_comparison[model_label] = \"Simple benchmark (recent typical price)\" )",
             SGD, "Model", "Realistic baseline MAE."),
     Measure("model_comparison", "Error Reduction vs Baseline",
             "DIVIDE ( [Baseline B2 MAE] - [Selected Model MAE (Static)], [Baseline B2 MAE] )", PCT1, "Model",
@@ -303,18 +310,30 @@ def write_semantic_model(root: Path, curated: Path, folder_param: str) -> list[s
 # --------------------------------------------------------------------------------------
 # PBIR report writer
 # --------------------------------------------------------------------------------------
-def col(entity: str, prop: str) -> dict:
-    return {"field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}}, "Property": prop}},
-            "queryRef": f"{entity}.{prop}", "nativeQueryRef": prop}
+def col(entity: str, prop: str, label: str | None = None, fmt: str | None = None) -> dict:
+    p = {"field": {"Column": {"Expression": {"SourceRef": {"Entity": entity}}, "Property": prop}},
+         "queryRef": f"{entity}.{prop}", "nativeQueryRef": prop}
+    if label:
+        p["displayName"] = label
+    if fmt:
+        p["format"] = fmt
+    return p
 
 
-def meas(entity: str, prop: str) -> dict:
-    return {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": entity}}, "Property": prop}},
-            "queryRef": f"{entity}.{prop}", "nativeQueryRef": prop}
+def meas(entity: str, prop: str, label: str | None = None) -> dict:
+    p = {"field": {"Measure": {"Expression": {"SourceRef": {"Entity": entity}}, "Property": prop}},
+         "queryRef": f"{entity}.{prop}", "nativeQueryRef": prop}
+    if label:
+        p["displayName"] = label
+    return p
 
 
 def lit(v: str) -> dict:
     return {"expr": {"Literal": {"Value": v}}}
+
+
+def color(hex_: str) -> dict:
+    return {"solid": {"color": lit(f"'{hex_}'")}}
 
 
 @dataclass
@@ -329,6 +348,8 @@ class Visual:
     sort: tuple[dict, str] | None = None  # (projection, "Ascending"/"Descending")
     objects: dict | None = None
     text: str | None = None  # for textboxes
+    text_size: str = "10pt"
+    bold: bool = False
 
 
 def visual_json(v: Visual, name: str, z: int) -> dict:
@@ -341,171 +362,216 @@ def visual_json(v: Visual, name: str, z: int) -> dict:
     if v.objects:
         visual["objects"] = v.objects
     if v.vtype == "textbox":
+        style = {"fontSize": v.text_size, **({"fontWeight": "bold"} if v.bold else {})}
         visual["objects"] = {"general": [{"properties": {"paragraphs": [
-            {"textRuns": [{"value": line, "textStyle": {"fontSize": "10pt"}}]} for line in v.text.split("\n")]}}]}
+            {"textRuns": [{"value": line, "textStyle": style}]} for line in v.text.split("\n")]}}]}
     if v.title:
-        visual["visualContainerObjects"] = {"title": [{"properties": {"show": lit("true"),
-                                                                       "text": lit("'" + v.title.replace("'", "''") + "'")}}]}
+        visual["visualContainerObjects"] = {
+            "title": [{"properties": {"show": lit("true"), "text": lit("'" + v.title.replace("'", "''") + "'")}}],
+            # Auto-generated subtitles ("X by Y") repeat the title and take space from the chart (review 3).
+            "subTitle": [{"properties": {"show": lit("false")}}]}
     visual["drillFilterOtherVisuals"] = True
     return {"$schema": f"{SCHEMA}/item/report/definition/visualContainer/{VERSIONS['visual']}/schema.json",
             "name": name, "position": {"x": v.x, "y": v.y, "z": z, "height": v.h, "width": v.w, "tabOrder": z},
             "visual": visual}
 
 
-def slicer(entity: str, prop: str, x: int, y: int, w: int = 200, h: int = 60, title: str | None = None) -> Visual:
+# Visual-review fixes (BI_BUILD_GUIDE §9, review 1): slicers need ~75 px for title + dropdown box with
+# the field header hidden; cards need ~120 px with an explicit value font size and no display-unit
+# abbreviation; long text goes in a smaller-font card; tables use short display names and formats.
+def slicer(entity: str, prop: str, x: int, y: int, w: int = 250, h: int = 75, title: str | None = None) -> Visual:
     return Visual("slicer", x, y, w, h, {"Values": [col(entity, prop)]}, title=title,
-                  objects={"data": [{"properties": {"mode": lit("'Dropdown'")}}]})
+                  objects={"data": [{"properties": {"mode": lit("'Dropdown'")}}],
+                           "header": [{"properties": {"show": lit("false")}}]})
 
 
-def card(entity: str, measure: str, x: int, y: int, title: str, w: int = 230, h: int = 100) -> Visual:
-    return Visual("card", x, y, w, h, {"Values": [meas(entity, measure)]}, title=title)
+def card(entity: str, measure: str, x: int, y: int, title: str, w: int = 300, h: int = 120) -> Visual:
+    return Visual("card", x, y, w, h, {"Values": [meas(entity, measure)]}, title=title,
+                  objects={"labels": [{"properties": {"fontSize": lit("22D"), "labelDisplayUnits": lit("1D")}}],
+                           "categoryLabels": [{"properties": {"show": lit("false")}}]})
+
+
+def text_card(entity: str, measure: str, x: int, y: int, w: int, h: int) -> Visual:
+    return Visual("card", x, y, w, h, {"Values": [meas(entity, measure)]},
+                  objects={"labels": [{"properties": {"fontSize": lit("10D")}}],
+                           "categoryLabels": [{"properties": {"show": lit("false")}}]})
+
+
+def series_colors(entity: str, colors: dict[str, str]) -> dict:
+    """Per-measure series colours (selector by queryRef)."""
+    return {"dataPoint": [{"properties": {"fill": color(c)}, "selector": {"metadata": f"{entity}.{m}"}}
+                          for m, c in colors.items()]}
 
 
 F = "fact_transactions"
+ORANGE, BLUE, AQUA = "#eb6834", "#2a78d6", "#1baf7a"
+SGD_FMT = r"\$#,0"
+
+
+def _interval_coverage_pct() -> str:
+    """Measured coverage of the withheld price ranges, read from the model results (never hard-coded)."""
+    res = json.loads((REPO_ROOT / "outputs" / "model_metrics" / "model_results.json").read_text(encoding="utf-8"))
+    return f"{100 * res['conformal_80']['coverage_test_static']:.0f}%"
 
 
 def pages() -> list[tuple[str, str, list[Visual]]]:
-    header = lambda t: Visual("textbox", 20, 8, 1240, 40, text=t)  # noqa: E731
-    cov = Visual("card", 20, 650, 1240, 60, {"Values": [meas("refresh_info", "Data Coverage Text")]})
+    """Report pages. All wording follows docs/DASHBOARD_GLOSSARY.md (plain business language, DEC-030)."""
+    header = lambda t: Visual("textbox", 20, 6, 1240, 40, text=t, text_size="14pt", bold=True)  # noqa: E731
+    cov = text_card("refresh_info", "Data Coverage Text", 20, 668, 1240, 46)
     p1 = [
-        header("Executive market overview - HDB resale prices and volumes (indicative, not official valuations)"),
-        card(F, "Median Price Latest 12M", 20, 55, "Median price, latest 12 full months"),
-        card(F, "Median Price YoY %", 260, 55, "Change vs prior 12 months (raw median)"),
-        card(F, "Transactions Latest 12M", 500, 55, "Transactions, latest 12 full months"),
-        card(F, "Median Price per sqm Latest 12M", 740, 55, "Median SGD per sqm, latest 12 months"),
-        slicer("dim_town", "town", 990, 55, 270, 48, "Town"),
-        slicer("dim_flat_type", "flat_type", 990, 105, 270, 48, "Flat type"),
-        Visual("lineChart", 20, 165, 620, 235, {"Category": [col("dim_month", "month")],
-                                                "Y": [meas(F, "Median Price (Full Months)")]},
-               title="Median resale price by month (full months)"),
-        Visual("clusteredColumnChart", 650, 165, 610, 235, {"Category": [col("dim_month", "month")],
-                                                            "Y": [meas(F, "Transactions (Full Months)")]},
-               title="Transactions per month (full months; partial month excluded)"),
-        Visual("clusteredBarChart", 20, 410, 620, 230, {"Category": [col("dim_flat_type", "flat_type")],
-                                                        "Y": [meas(F, "Median Price Latest 12M")],
-                                                        "Tooltips": [meas(F, "Transactions Latest 12M")]},
-               title="Median price by flat type, latest 12 months (hover for n)"),
-        Visual("tableEx", 650, 410, 610, 230, {"Values": [col("dim_flat_type", "flat_type"),
-                                                          meas(F, "Transactions Latest 12M"),
-                                                          meas(F, "Median Price Latest 12M"),
-                                                          meas(F, "Median Price Prior 12M"),
-                                                          meas(F, "Median Price YoY %")]},
-               title="Latest vs prior 12 months by flat type (raw medians include mix changes)"),
+        header("Market overview: how are HDB resale prices and sales changing?"),
+        slicer("dim_town", "town", 20, 46, 300, 72, "Town"),
+        slicer("dim_flat_type", "flat_type", 330, 46, 300, 72, "Flat type"),
+        card(F, "Median Price Latest 12M", 20, 124, "Typical price (median), last 12 months"),
+        card(F, "Median Price YoY %", 330, 124, "Price change vs previous 12 months"),
+        card(F, "Transactions Latest 12M", 640, 124, "Flats sold, last 12 months"),
+        card(F, "Median Price per sqm Latest 12M", 950, 124, "Typical price per sqm, last 12 months", w=310),
+        Visual("lineChart", 20, 252, 620, 205, {"Category": [col("dim_month", "month", "Month")],
+                                                "Y": [meas(F, "Median Price (Full Months)", "Typical price")]},
+               title="Typical resale price each month"),
+        Visual("clusteredColumnChart", 650, 252, 610, 205, {"Category": [col("dim_month", "month", "Month")],
+                                                            "Y": [meas(F, "Transactions (Full Months)", "Flats sold")]},
+               title="Flats sold each month"),
+        Visual("clusteredColumnChart", 20, 465, 620, 197, {"Category": [col("dim_flat_type", "flat_type", "Flat type")],
+                                                           "Y": [meas(F, "Median Price Latest 12M", "Typical price")],
+                                                           "Tooltips": [meas(F, "Transactions Latest 12M", "Flats sold")]},
+               title="Typical price by flat type, last 12 months (hover for number sold)"),
+        Visual("tableEx", 650, 465, 610, 197, {"Values": [col("dim_flat_type", "flat_type", "Flat type"),
+                                                          meas(F, "Transactions Latest 12M", "Flats sold"),
+                                                          meas(F, "Median Price Latest 12M", "Typical price"),
+                                                          meas(F, "Median Price YoY %", "Change vs last year")]},
+               title="This year vs last year (changes also reflect which flats were sold)"),
         cov,
     ]
     p2 = [
-        header("Town and property comparison - compare like with like, always check the sample size"),
-        slicer("dim_flat_type", "flat_type", 20, 55, 250, 55, "Flat type"),
-        slicer("dim_town", "town", 280, 55, 250, 55, "Town"),
-        slicer("fact_transactions", "floor_area_band", 540, 55, 250, 55, "Floor area band (sqm)"),
-        Visual("tableEx", 20, 120, 640, 520, {"Values": [col("dim_town", "town"), meas(F, "Transactions Latest 12M"),
-                                                          meas(F, "Median Price Latest 12M"),
-                                                          meas(F, "P25 Price Latest 12M"),
-                                                          meas(F, "P75 Price Latest 12M"),
-                                                          meas(F, "Median Price per sqm Latest 12M"),
-                                                          meas(F, "Sample Size Flag Latest 12M")]},
-               title="By town, latest 12 full months (P25-P75 = middle half of prices)",
+        header("Compare towns and flats: what do similar flats sell for?"),
+        slicer("dim_flat_type", "flat_type", 20, 46, 250, 72, "Flat type"),
+        slicer("dim_town", "town", 280, 46, 250, 72, "Town"),
+        slicer(F, "floor_area_band", 540, 46, 250, 72, "Flat size (sqm)"),
+        Visual("tableEx", 20, 124, 780, 538, {"Values": [col("dim_town", "town", "Town"),
+                                                          meas(F, "Transactions Latest 12M", "Flats sold"),
+                                                          meas(F, "Median Price Latest 12M", "Typical price"),
+                                                          meas(F, "P25 Price Latest 12M", "Low end"),
+                                                          meas(F, "P75 Price Latest 12M", "High end"),
+                                                          meas(F, "Median Price per sqm Latest 12M", "Price per sqm"),
+                                                          meas(F, "Sample Size Flag Latest 12M", "Enough sales?")]},
+               title="Prices by town, last 12 months (half of all sales fall between Low end and High end)",
                sort=(meas(F, "Median Price Latest 12M"), "Descending")),
-        Visual("clusteredColumnChart", 670, 120, 590, 255, {"Category": [col("dim_storey_range", "storey_range")],
-                                                            "Y": [meas(F, "Median Price Latest 12M")],
-                                                            "Tooltips": [meas(F, "Transactions Latest 12M")]},
-               title="Median price by storey range (raw; mixes towns - see Evidence page)"),
-        Visual("clusteredColumnChart", 670, 385, 590, 255, {"Category": [col(F, "lease_band")],
-                                                            "Y": [meas(F, "Median Price Latest 12M")],
-                                                            "Tooltips": [meas(F, "Transactions Latest 12M")]},
-               title="Median price by remaining lease (years, raw)"),
+        Visual("clusteredColumnChart", 810, 124, 450, 265, {"Category": [col("dim_storey_range", "storey_label", "Floor level")],
+                                                            "Y": [meas(F, "Median Price Latest 12M", "Typical price")],
+                                                            "Tooltips": [meas(F, "Transactions Latest 12M", "Flats sold")]},
+               title="Typical price by floor level (all towns combined)"),
+        Visual("clusteredColumnChart", 810, 397, 450, 265, {"Category": [col(F, "lease_band", "Years of lease left")],
+                                                            "Y": [meas(F, "Median Price Latest 12M", "Typical price")],
+                                                            "Tooltips": [meas(F, "Transactions Latest 12M", "Flats sold")]},
+               title="Typical price by years of lease left"),
         cov,
     ]
+    H = "hypothesis_results"
     p3 = [
-        header("Price drivers and statistical evidence - associations in observational data, not causes"),
-        Visual("tableEx", 20, 55, 760, 220, {"Values": [col("hypothesis_results", "hypothesis"),
-                                                         col("hypothesis_results", "plain_english"),
-                                                         col("hypothesis_results", "contrast"),
-                                                         col("hypothesis_results", "estimate_pct"),
-                                                         col("hypothesis_results", "ci_low_pct"),
-                                                         col("hypothesis_results", "ci_high_pct"),
-                                                         col("hypothesis_results", "status")]},
-               title="Pre-registered hypotheses (estimate % per stated contrast; H5 in percentage points)"),
-        Visual("lineChart", 790, 55, 470, 220, {"Category": [col("price_index_monthly", "month")],
-                                                "Y": [meas("price_index_monthly", "Raw Median Index"),
-                                                      meas("price_index_monthly", "Mix-Adjusted Index")]},
-               title="Raw median vs mix-adjusted index (2017 = 100, all flats)"),
-        Visual("lineChart", 20, 285, 400, 355, {"Category": [col("storey_effects_adjusted", "level")],
-                                                "Y": [meas("storey_effects_adjusted", "Storey Premium vs Lowest Band")]},
-               title="Adjusted storey premium vs floors 01-03"),
-        Visual("lineChart", 430, 285, 400, 355, {"Category": [col("lease_effects_adjusted", "level")],
-                                                 "Y": [meas("lease_effects_adjusted", "Lease Premium vs Shortest Band")]},
-               title="Adjusted lease premium vs 35-39 years left"),
-        Visual("clusteredBarChart", 840, 285, 420, 355, {"Category": [col("town_effects_adjusted", "level")],
-                                                         "Y": [meas("town_effects_adjusted", "Town Effect vs Ang Mo Kio")]},
-               title="Adjusted town effect vs Ang Mo Kio (like-for-like)",
-               sort=(meas("town_effects_adjusted", "Town Effect vs Ang Mo Kio"), "Descending")),
-        Visual("textbox", 20, 650, 1240, 60, text=(
-            "Adjusted = hedonic regression holding month, town, flat type, model, floor area, storey and lease fixed. "
-            "These tables are pre-computed for the recent window and are not affected by slicers.\n"
-            "Unobserved factors (exact location, condition, view) can confound every estimate. "
-            "Details: docs/HYPOTHESIS_REGISTER.md.")),
+        header("What drives price differences? Comparing otherwise similar flats"),
+        Visual("tableEx", 20, 46, 1240, 240, {"Values": [col(H, "question", "Question"),
+                                                          col(H, "finding", "What the data shows"),
+                                                          col(H, "size_of_effect", "Size of effect"),
+                                                          col(H, "likely_range", "Likely range"),
+                                                          col(H, "evidence", "Evidence")]},
+               title="Key findings: price differences between flats that are otherwise alike"),
+        Visual("lineChart", 20, 294, 305, 302, {"Category": [col("price_index_monthly", "month", "Month")],
+                                                "Y": [meas("price_index_monthly", "Raw Median Index", "Headline (all sales)"),
+                                                      meas("price_index_monthly", "Mix-Adjusted Index", "Like-for-like flats")]},
+               title="Headline vs like-for-like price trend (2017 = 100)",
+               objects=series_colors("price_index_monthly", {"Raw Median Index": ORANGE,
+                                                             "Mix-Adjusted Index": BLUE})),
+        Visual("lineChart", 333, 294, 305, 302, {"Category": [col("storey_effects_adjusted", "level_order", "Floor (lowest floor of band)")],
+                                                 "Y": [meas("storey_effects_adjusted", "Storey Premium vs Lowest Band", "Extra paid")]},
+               title="Extra paid for higher floors (vs floors 1-3)"),
+        Visual("lineChart", 646, 294, 305, 302, {"Category": [col("lease_effects_adjusted", "level_order", "Years of lease left")],
+                                                 "Y": [meas("lease_effects_adjusted", "Lease Premium vs Shortest Band", "Extra paid")]},
+               title="Extra paid for more lease left (vs 35-39 years)"),
+        Visual("clusteredBarChart", 959, 294, 301, 302, {"Category": [col("town_effects_adjusted", "level", "Town")],
+                                                         "Y": [meas("town_effects_adjusted", "Town Effect vs Ang Mo Kio", "Price level")]},
+               title="Town price level vs Ang Mo Kio (similar flats)",
+               sort=(meas("town_effects_adjusted", "Town Effect vs Ang Mo Kio"), "Descending"),
+               objects={"valueAxis": [{"properties": {"show": lit("false")}}],
+                        "labels": [{"properties": {"show": lit("true")}}]}),
+        Visual("textbox", 20, 604, 1240, 66, text=(
+            "How to read: each result compares flats that are alike in size, type, design, floor, lease and month of "
+            "sale, so the difference shows the effect of the one factor named. Like-for-like trend = price change for "
+            "the same kind of flat; the headline trend also moves when a different mix of flats is sold.\n"
+            "These are patterns in past sales, not proof of cause: exact location, condition and views also matter. "
+            "Results are fixed calculations and do not change with filters. Details: docs/HYPOTHESIS_REGISTER.md.")),
     ]
+    MC, ME = "model_comparison", "model_errors_by_month"
+    S = "model_segment_errors"
     p4 = [
-        header("Model performance and reliability - test year evaluated once; estimates are indicative"),
-        card("model_comparison", "Selected Model MAE (Static)", 20, 55, "Selected model MAE (trained once)"),
-        card("model_comparison", "Selected Model Typical % Error", 260, 55, "Typical % error (median)"),
-        card("model_comparison", "Selected Model MAE (Monthly Refit)", 500, 55, "MAE if retrained monthly"),
-        card("model_comparison", "Baseline B2 MAE", 740, 55, "Baseline MAE (town x type, 12 months)"),
-        card("model_comparison", "Error Reduction vs Baseline", 980, 55, "Error removed vs baseline", w=280),
-        Visual("clusteredBarChart", 20, 165, 620, 240, {"Category": [col("model_comparison", "model_label")],
-                                                        "Y": [meas("model_comparison", "Test MAE")]},
-               title="Test-year MAE by model (SGD, lower is better)",
-               sort=(meas("model_comparison", "Test MAE"), "Ascending")),
-        Visual("lineChart", 650, 165, 610, 240, {"Category": [col("model_errors_by_month", "month")],
-                                                 "Y": [meas("model_errors_by_month", "MAE Trained Once"),
-                                                       meas("model_errors_by_month", "MAE Retrained Monthly"),
-                                                       meas("model_errors_by_month", "MAE Baseline B2")]},
-               title="Does accuracy fade? Test MAE by month"),
-        slicer("model_segment_errors", "segment", 20, 415, 200, 55, "Segment"),
-        Visual("tableEx", 230, 415, 640, 225, {"Values": [col("model_segment_errors", "level"),
-                                                           col("model_segment_errors", "n"),
-                                                           col("model_segment_errors", "mae"),
-                                                           col("model_segment_errors", "mdape_pct"),
-                                                           col("model_segment_errors", "bias_median_pct"),
-                                                           col("model_segment_errors", "reliability")]},
-               title="Errors by segment (mdape = typical % error; bias + = over-estimate)"),
-        Visual("clusteredBarChart", 880, 415, 380, 225, {"Category": [col("model_feature_importance", "feature")],
-                                                         "Y": [meas("model_feature_importance", "MAE Increase When Shuffled")]},
-               title="What the model relies on (not causes)",
+        header("How accurate are the price estimates, and where are they less reliable?"),
+        card(MC, "Selected Model MAE (Static)", 20, 46, "Average prediction error (SGD)", w=240),
+        card(MC, "Selected Model Typical % Error", 270, 46, "Typical error (%)", w=240),
+        card(MC, "Selected Model MAE (Monthly Refit)", 520, 46, "Average error with monthly updates", w=240),
+        card(MC, "Baseline B2 MAE", 770, 46, "Error using a simple benchmark", w=240),
+        card(MC, "Error Reduction vs Baseline", 1020, 46, "Reduction in prediction error", w=240),
+        Visual("clusteredBarChart", 20, 174, 620, 262, {"Category": [col(MC, "model_label", "Approach")],
+                                                        "Y": [meas(MC, "Test MAE", "Average error (SGD)")]},
+               title="Prediction accuracy by approach (lower error is better)",
+               sort=(meas(MC, "Test MAE"), "Ascending")),
+        Visual("lineChart", 650, 174, 610, 262, {"Category": [col(ME, "month", "Month")],
+                                                 "Y": [meas(ME, "MAE Trained Once", "Model not updated"),
+                                                       meas(ME, "MAE Retrained Monthly", "Model updated monthly"),
+                                                       meas(ME, "MAE Baseline B2", "Simple benchmark")]},
+               title="Does prediction accuracy worsen over time? (average error by month)",
+               objects=series_colors(ME, {"MAE Trained Once": BLUE, "MAE Retrained Monthly": AQUA,
+                                          "MAE Baseline B2": ORANGE})),
+        slicer(S, "segment_label", 20, 444, 170, 72, "Break down by"),
+        # No "Grouping" column: the filter on the left names it, and group names are self-explanatory
+        # (review 4: removing it lets the "Reliable?" column fit).
+        Visual("tableEx", 198, 444, 722, 218, {"Values": [col(S, "level_label", "Group"),
+                                                           col(S, "n", "Sales tested", "#,0"),
+                                                           col(S, "mae", "Average error", SGD_FMT),
+                                                           col(S, "mdape_pct", "Typical error (%)", "0.0"),
+                                                           col(S, "bias_median_pct", "Over/under (%)", "0.0"),
+                                                           col(S, "reliability_label", "Reliable?")]},
+               title="Where are predictions less accurate? (Over/under: + means estimates too high)"),
+        Visual("clusteredBarChart", 928, 444, 332, 218, {"Category": [col("model_feature_importance", "feature_label", "Factor")],
+                                                         "Y": [meas("model_feature_importance", "MAE Increase When Shuffled",
+                                                                    "Accuracy lost without it")]},
+               title="Which factors influence predictions (not necessarily causes)",
                sort=(meas("model_feature_importance", "MAE Increase When Shuffled"), "Descending")),
-        Visual("textbox", 20, 650, 1240, 60, text=(
-            "Test year: the last 12 full months, never used for model choices. 80% prediction intervals failed their "
-            "coverage check (65% actual) and are deliberately not shown.\n"
-            "Rare flat types/models, central mature towns and new streets are less reliable. See docs/MODEL_CARD.md.")),
+        Visual("textbox", 20, 668, 1240, 48, text=(
+            "How we tested: the model estimated the latest 12 months of sales without seeing them. Average error = the "
+            "average gap between estimated and actual price. Typical error (%) = half of all estimates were closer than "
+            "this. Price ranges are not shown: in testing they captured only "
+            f"{_interval_coverage_pct()} of actual prices instead of the intended 80%. Details: docs/MODEL_CARD.md."),
+            text_size="9pt"),
     ]
+    PR = "indicative_profiles"
     p5 = [
-        header("Indicative price estimates for typical flat profiles - pre-computed, not a valuation"),
-        slicer("dim_town", "town", 20, 55, 300, 55, "Town"),
-        slicer("dim_flat_type", "flat_type", 330, 55, 300, 55, "Flat type"),
-        Visual("tableEx", 20, 120, 1240, 470, {"Values": [col("indicative_profiles", "town"),
-                                                           col("indicative_profiles", "flat_type"),
-                                                           col("indicative_profiles", "storey_variant"),
-                                                           col("indicative_profiles", "flat_model"),
-                                                           col("indicative_profiles", "floor_area_sqm"),
-                                                           col("indicative_profiles", "remaining_lease_years"),
-                                                           col("indicative_profiles", "estimated_price_rounded"),
-                                                           col("indicative_profiles", "typical_error_pct"),
-                                                           col("indicative_profiles", "typical_error_sgd"),
-                                                           col("indicative_profiles", "segment_median_price_latest_12m"),
-                                                           col("indicative_profiles", "reliability")]},
-               title="Profiles: segment-typical area, lease, model and street; three storey levels"),
-        Visual("textbox", 20, 600, 1240, 110, text=(
-            "How to read: each row is a typical flat for that town and flat type, estimated by the selected model "
-            "for the last full month. Estimates were computed in Python in advance - changing a slicer filters the "
-            "table, it does not re-run the model.\n"
-            "Typical error = the larger of the town and flat-type median % error measured on the test year. "
-            "Indicative only: not a valuation, not the price of any specific unit, and not suitable for loan "
-            "or negotiation decisions.")),
+        header("Estimated prices for typical flats (for guidance only, not a valuation)"),
+        slicer("dim_town", "town", 20, 46, 300, 72, "Town"),
+        slicer("dim_flat_type", "flat_type", 330, 46, 300, 72, "Flat type"),
+        Visual("tableEx", 20, 124, 1240, 470, {"Values": [col(PR, "town", "Town"),
+                                                           col(PR, "flat_type", "Flat type"),
+                                                           col(PR, "storey_variant", "Floor level"),
+                                                           col(PR, "flat_model", "Flat model"),
+                                                           col(PR, "floor_area_sqm", "Size (sqm)", "0"),
+                                                           col(PR, "remaining_lease_years", "Lease left (years)", "0.0"),
+                                                           col(PR, "estimated_price_rounded", "Estimated price", SGD_FMT),
+                                                           col(PR, "typical_error_pct", "Typical error (%)", "0.0"),
+                                                           col(PR, "typical_error_sgd", "Typical error (SGD)", SGD_FMT),
+                                                           col(PR, "segment_median_price_latest_12m", "Recent typical price", SGD_FMT),
+                                                           col(PR, "reliability", "Reliability")]},
+               title="Estimated price of a typical flat in each town and flat type, at three floor levels"),
+        Visual("textbox", 20, 602, 1240, 110, text=(
+            "How to read: each row describes a typical flat sold in that town (usual size, lease, design and street). "
+            "Estimated price = the model's estimate for the latest complete month. Typical error = how far off estimates "
+            "usually were for this town and flat type when tested. Recent typical price = the actual median price of "
+            "all such flats sold in the last 12 months.\n"
+            "Estimates were calculated in advance: filters only narrow the list, they do not recalculate prices. "
+            "For guidance only: not a valuation, not the price of a specific flat, and not for loan or negotiation "
+            "decisions.")),
     ]
-    return [("p1_overview", "1 Market overview", p1), ("p2_compare", "2 Town & property", p2),
-            ("p3_evidence", "3 Price drivers & evidence", p3), ("p4_model", "4 Model performance", p4),
-            ("p5_estimates", "5 Indicative estimates", p5)]
+    return [("p1_overview", "1 Market overview", p1), ("p2_compare", "2 Compare towns & flats", p2),
+            ("p3_evidence", "3 What drives prices", p3), ("p4_model", "4 Estimate accuracy", p4),
+            ("p5_estimates", "5 Estimated prices", p5)]
 
 
 def write_report(root: Path) -> int:
@@ -553,14 +619,31 @@ def write_report(root: Path) -> int:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--curated-folder", default=None, help="absolute folder with the curated CSVs (trailing slash)")
+    ap.add_argument("--local-path", action="store_true",
+                    help="write this machine's data/curated path (for local validation only; do not commit)")
     args = ap.parse_args(argv)
     cfg = load_config()
     curated = cfg.curated_dir
-    folder = args.curated_folder or (str(curated.resolve()) + "\\")
+    if args.curated_folder:
+        folder = args.curated_folder
+    elif args.local_path:
+        folder = str(curated.resolve()) + "\\"
+    else:
+        folder = PLACEHOLDER_FOLDER
     root = REPO_ROOT / "powerbi"
+    # Remove previously generated files (not folders: Power BI Desktop locks the folders of an
+    # open project, but regenerating while it is open is still useful). Empty folders that are
+    # no longer generated are removed when possible.
     for sub in [f"{PROJECT}.SemanticModel", f"{PROJECT}.Report"]:
         if (root / sub).exists():
-            shutil.rmtree(root / sub)
+            for f in sorted((root / sub).rglob("*"), reverse=True):
+                if f.is_file() and ".pbi" not in f.parts:
+                    f.unlink()
+                elif f.is_dir():
+                    try:
+                        f.rmdir()
+                    except OSError:
+                        pass
     root.mkdir(exist_ok=True)
     (root / f"{PROJECT}.pbip").write_text(json.dumps({
         "$schema": f"{SCHEMA}/pbip/pbipProperties/1.0.0/schema.json", "version": "1.0",

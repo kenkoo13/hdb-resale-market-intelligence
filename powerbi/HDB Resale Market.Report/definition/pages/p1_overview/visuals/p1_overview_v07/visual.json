@@ -3,9 +3,9 @@
   "name": "p1_overview_v07",
   "position": {
     "x": 20,
-    "y": 165,
+    "y": 252,
     "z": 7,
-    "height": 235,
+    "height": 205,
     "width": 620,
     "tabOrder": 7
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_month.month",
-              "nativeQueryRef": "month"
+              "nativeQueryRef": "month",
+              "displayName": "Month"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price (Full Months)",
-              "nativeQueryRef": "Median Price (Full Months)"
+              "nativeQueryRef": "Median Price (Full Months)",
+              "displayName": "Typical price"
             }
           ]
         }
@@ -65,7 +67,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median resale price by month (full months)'"
+                  "Value": "'Typical resale price each month'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

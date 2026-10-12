@@ -32,10 +32,24 @@ table storey_effects_adjusted
 		sourceColumn: ci_high
 
 	column mid
-		dataType: int64
+		dataType: double
 		lineageTag: 4760e40e-4ae9-59a3-8531-823aec63d5b7
 		summarizeBy: none
 		sourceColumn: mid
+
+	column level_label
+		dataType: string
+		lineageTag: 295fd508-cf33-5d66-94df-62cfda0d01cc
+		summarizeBy: none
+		sourceColumn: level_label
+		sortByColumn: level_order
+
+	column level_order
+		dataType: int64
+		lineageTag: a6bf7b98-e977-5746-b3cb-e489ef359f78
+		summarizeBy: none
+		sourceColumn: level_order
+		isHidden
 
 	partition storey_effects_adjusted = m
 		mode: import
@@ -43,7 +57,7 @@ table storey_effects_adjusted
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "storey_effects_adjusted.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", Int64.Type}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", type number}, {"level_label", type text}, {"level_order", Int64.Type}}, "en-US")
 				in
 				    Typed
 

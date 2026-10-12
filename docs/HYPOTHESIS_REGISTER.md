@@ -1,5 +1,7 @@
 # Hypothesis Register
 
+> **Dashboard wording:** the Power BI report shows these results as "Key findings". "Supported" is shown as "Strong evidence", the 95% confidence interval as "Likely range", and the mix-adjusted index as the "like-for-like price trend". Full mapping: [DASHBOARD_GLOSSARY.md](DASHBOARD_GLOSSARY.md).
+
 ## 0. Pre-registration statement
 
 The hypotheses, methods, thresholds and decision rules in §1–§2 were written and **committed to Git before any of the tests below were run** (see the commit history of this file). Results are added in §3 only after execution.

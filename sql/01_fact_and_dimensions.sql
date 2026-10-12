@@ -70,7 +70,11 @@ FROM clean;
 
 DROP TABLE IF EXISTS dim_storey_range;
 CREATE TABLE dim_storey_range AS
-SELECT DISTINCT storey_range, storey_lower AS storey_order FROM clean;
+SELECT DISTINCT storey_range, storey_lower AS storey_order,
+       -- display label, e.g. '01 TO 03' -> 'Floors 1-3'
+       'Floors ' || CAST(substr(storey_range, 1, 2) AS INTEGER) || '-' ||
+       CAST(substr(storey_range, 7, 2) AS INTEGER) AS storey_label
+FROM clean;
 
 DROP TABLE IF EXISTS dim_flat_model;
 CREATE TABLE dim_flat_model AS SELECT DISTINCT flat_model FROM clean ORDER BY flat_model;

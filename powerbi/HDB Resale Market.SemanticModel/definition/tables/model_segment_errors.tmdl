@@ -67,13 +67,31 @@ table model_segment_errors
 		summarizeBy: none
 		sourceColumn: reliability
 
+	column segment_label
+		dataType: string
+		lineageTag: e3751450-490d-5224-85a9-274355bf6cd6
+		summarizeBy: none
+		sourceColumn: segment_label
+
+	column level_label
+		dataType: string
+		lineageTag: 63483348-982f-59d4-8aec-514357d71160
+		summarizeBy: none
+		sourceColumn: level_label
+
+	column reliability_label
+		dataType: string
+		lineageTag: 98c965db-d62c-5e28-9b02-aa3d54fc1182
+		summarizeBy: none
+		sourceColumn: reliability_label
+
 	partition model_segment_errors = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "model_segment_errors.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"segment", type text}, {"level", type text}, {"n", Int64.Type}, {"mae", type number}, {"rmse", type number}, {"r2", type number}, {"medae", type number}, {"mdape_pct", type number}, {"bias_median_pct", type number}, {"median_actual", type number}, {"reliability", type text}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"segment", type text}, {"level", type text}, {"n", Int64.Type}, {"mae", type number}, {"rmse", type number}, {"r2", type number}, {"medae", type number}, {"mdape_pct", type number}, {"bias_median_pct", type number}, {"median_actual", type number}, {"reliability", type text}, {"segment_label", type text}, {"level_label", type text}, {"reliability_label", type text}}, "en-US")
 				in
 				    Typed
 

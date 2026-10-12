@@ -3,9 +3,9 @@
   "name": "p4_model_v06",
   "position": {
     "x": 20,
-    "y": 165,
+    "y": 174,
     "z": 6,
-    "height": 240,
+    "height": 262,
     "width": 620,
     "tabOrder": 6
   },
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "model_comparison.model_label",
-              "nativeQueryRef": "model_label"
+              "nativeQueryRef": "model_label",
+              "displayName": "Approach"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "model_comparison.Test MAE",
-              "nativeQueryRef": "Test MAE"
+              "nativeQueryRef": "Test MAE",
+              "displayName": "Average error (SGD)"
             }
           ]
         }
@@ -83,7 +85,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Test-year MAE by model (SGD, lower is better)'"
+                  "Value": "'Prediction accuracy by approach (lower error is better)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p4_model_v10",
   "position": {
-    "x": 880,
-    "y": 415,
+    "x": 928,
+    "y": 444,
     "z": 10,
-    "height": 225,
-    "width": 380,
+    "height": 218,
+    "width": 332,
     "tabOrder": 10
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "model_feature_importance"
                     }
                   },
-                  "Property": "feature"
+                  "Property": "feature_label"
                 }
               },
-              "queryRef": "model_feature_importance.feature",
-              "nativeQueryRef": "feature"
+              "queryRef": "model_feature_importance.feature_label",
+              "nativeQueryRef": "feature_label",
+              "displayName": "Factor"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "model_feature_importance.MAE Increase When Shuffled",
-              "nativeQueryRef": "MAE Increase When Shuffled"
+              "nativeQueryRef": "MAE Increase When Shuffled",
+              "displayName": "Accuracy lost without it"
             }
           ]
         }
@@ -83,7 +85,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'What the model relies on (not causes)'"
+                  "Value": "'Which factors influence predictions (not necessarily causes)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -3,9 +3,9 @@
   "name": "p5_estimates_v01",
   "position": {
     "x": 20,
-    "y": 55,
+    "y": 46,
     "z": 1,
-    "height": 55,
+    "height": 72,
     "width": 300,
     "tabOrder": 1
   },
@@ -46,6 +46,19 @@
             }
           }
         }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -63,6 +76,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Town'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

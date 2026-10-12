@@ -4,6 +4,12 @@ All notable changes to this project. Entries record work that was actually compl
 
 ## [Unreleased]
 
+### Changed — dashboard wording (2026-10-12)
+- All Power BI labels were rewritten in plain business language for non-technical managers. The audit and glossary are in `docs/DASHBOARD_GLOSSARY.md` (DEC-030). Calculations are unchanged.
+- Plain-language label columns were added to the curated tables (floor-level labels, model and grouping names, readable dates, finding sentences generated from the results).
+- The committed Power BI project uses a placeholder data path (DEC-029).
+- Layout fixes from visual review 1: card, slicer and table sizing; formats; reference bands; series colours.
+
 ### Added — Phase 4 (2026-10-12)
 - `sql/01_fact_and_dimensions.sql`, `sql/02_aggregates.sql`: SQLite star schema and window-function medians.
 - `src/reporting/build_bi_tables.py`: curated Power BI tables, with an exact SQL-vs-pandas cross-check, DAX expected values and refresh metadata.

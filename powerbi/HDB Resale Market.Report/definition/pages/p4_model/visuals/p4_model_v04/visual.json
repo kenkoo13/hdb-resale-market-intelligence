@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p4_model_v04",
   "position": {
-    "x": 740,
-    "y": 55,
+    "x": 770,
+    "y": 46,
     "z": 4,
-    "height": 100,
-    "width": 230,
+    "height": 120,
+    "width": 240,
     "tabOrder": 4
   },
   "visual": {
@@ -33,6 +33,41 @@
         }
       }
     },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "22D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -47,7 +82,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Baseline MAE (town x type, 12 months)'"
+                  "Value": "'Error using a simple benchmark'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

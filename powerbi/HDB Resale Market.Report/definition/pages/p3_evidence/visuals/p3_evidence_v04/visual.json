@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p3_evidence_v04",
   "position": {
-    "x": 430,
-    "y": 285,
+    "x": 646,
+    "y": 294,
     "z": 4,
-    "height": 355,
-    "width": 400,
+    "height": 302,
+    "width": 305,
     "tabOrder": 4
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "lease_effects_adjusted"
                     }
                   },
-                  "Property": "level"
+                  "Property": "level_order"
                 }
               },
-              "queryRef": "lease_effects_adjusted.level",
-              "nativeQueryRef": "level"
+              "queryRef": "lease_effects_adjusted.level_order",
+              "nativeQueryRef": "level_order",
+              "displayName": "Years of lease left"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "lease_effects_adjusted.Lease Premium vs Shortest Band",
-              "nativeQueryRef": "Lease Premium vs Shortest Band"
+              "nativeQueryRef": "Lease Premium vs Shortest Band",
+              "displayName": "Extra paid"
             }
           ]
         }
@@ -65,7 +67,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Adjusted lease premium vs 35-39 years left'"
+                  "Value": "'Extra paid for more lease left (vs 35-39 years)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

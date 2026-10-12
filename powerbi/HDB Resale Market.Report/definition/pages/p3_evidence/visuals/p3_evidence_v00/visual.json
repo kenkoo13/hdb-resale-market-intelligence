@@ -3,7 +3,7 @@
   "name": "p3_evidence_v00",
   "position": {
     "x": 20,
-    "y": 8,
+    "y": 6,
     "z": 0,
     "height": 40,
     "width": 1240,
@@ -19,9 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Price drivers and statistical evidence - associations in observational data, not causes",
+                    "value": "What drives price differences? Comparing otherwise similar flats",
                     "textStyle": {
-                      "fontSize": "10pt"
+                      "fontSize": "14pt",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

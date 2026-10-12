@@ -29,8 +29,8 @@ from src.modelling import models as M
 from src.modelling.features import TARGET, build_features
 
 MIN_SEGMENT_N = 30
-STOREY_VARIANTS = {"Low (01 TO 03)": ("01 TO 03", 2.0), "Middle (07 TO 09)": ("07 TO 09", 8.0),
-                   "High (13 TO 15)": ("13 TO 15", 14.0)}
+STOREY_VARIANTS = {"Low floor (1-3)": ("01 TO 03", 2.0), "Middle floor (7-9)": ("07 TO 09", 8.0),
+                   "High floor (13-15)": ("13 TO 15", 14.0)}
 SELECTED_CONFIG = {"family": "G-B", "model": "hgb", "feature_set": "B",
                    "params": {"max_leaf_nodes": 31, "min_samples_leaf": 20}}
 
@@ -85,8 +85,8 @@ def estimate_profiles(df: pd.DataFrame, seg_errors: pd.DataFrame) -> pd.DataFram
     profiles["reliability"] = np.select(
         [profiles["flat_type_test_n"].fillna(0) < MIN_SEGMENT_N,
          profiles["storey_band_sales_in_segment"] < 10],
-        ["Less reliable: flat type rarely sold", "Less reliable: storey band rarely sold in this segment"],
-        default="Typical")
+        ["Lower: this flat type is rarely sold", "Lower: this floor level is rarely sold here"],
+        default="Normal")
     profiles["estimate_month"] = profiles["month_date"].dt.strftime("%Y-%m")
     cols = ["town", "flat_type", "storey_variant", "storey_range", "flat_model", "street_name",
             "floor_area_sqm_num", "remaining_lease_years", "lease_commence_year", "estimate_month",

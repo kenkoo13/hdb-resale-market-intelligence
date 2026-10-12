@@ -3,10 +3,10 @@
   "name": "p2_compare_v04",
   "position": {
     "x": 20,
-    "y": 120,
+    "y": 124,
     "z": 4,
-    "height": 520,
-    "width": 640,
+    "height": 538,
+    "width": 780,
     "tabOrder": 4
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_town.town",
-              "nativeQueryRef": "town"
+              "nativeQueryRef": "town",
+              "displayName": "Town"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions Latest 12M",
-              "nativeQueryRef": "Transactions Latest 12M"
+              "nativeQueryRef": "Transactions Latest 12M",
+              "displayName": "Flats sold"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price Latest 12M",
-              "nativeQueryRef": "Median Price Latest 12M"
+              "nativeQueryRef": "Median Price Latest 12M",
+              "displayName": "Typical price"
             },
             {
               "field": {
@@ -69,7 +72,8 @@
                 }
               },
               "queryRef": "fact_transactions.P25 Price Latest 12M",
-              "nativeQueryRef": "P25 Price Latest 12M"
+              "nativeQueryRef": "P25 Price Latest 12M",
+              "displayName": "Low end"
             },
             {
               "field": {
@@ -83,7 +87,8 @@
                 }
               },
               "queryRef": "fact_transactions.P75 Price Latest 12M",
-              "nativeQueryRef": "P75 Price Latest 12M"
+              "nativeQueryRef": "P75 Price Latest 12M",
+              "displayName": "High end"
             },
             {
               "field": {
@@ -97,7 +102,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price per sqm Latest 12M",
-              "nativeQueryRef": "Median Price per sqm Latest 12M"
+              "nativeQueryRef": "Median Price per sqm Latest 12M",
+              "displayName": "Price per sqm"
             },
             {
               "field": {
@@ -111,7 +117,8 @@
                 }
               },
               "queryRef": "fact_transactions.Sample Size Flag Latest 12M",
-              "nativeQueryRef": "Sample Size Flag Latest 12M"
+              "nativeQueryRef": "Sample Size Flag Latest 12M",
+              "displayName": "Enough sales?"
             }
           ]
         }
@@ -149,7 +156,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'By town, latest 12 full months (P25-P75 = middle half of prices)'"
+                  "Value": "'Prices by town, last 12 months (half of all sales fall between Low end and High end)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

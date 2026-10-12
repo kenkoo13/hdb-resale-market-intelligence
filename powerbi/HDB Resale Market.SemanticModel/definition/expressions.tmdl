@@ -1,4 +1,4 @@
-expression CuratedFolder = "C:\Users\Kenny\OneDrive\Project\hdb-resale-market\data\curated\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+expression CuratedFolder = "C:\path\to\hdb-resale-market-intelligence\data\curated\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
 	lineageTag: 31d12c15-918a-56f4-b78b-48a02f79253b
 
 	annotation PBI_ResultType = Text

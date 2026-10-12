@@ -40,8 +40,69 @@ SQL_DIR = REPO_ROOT / "sql"
 STAR_TABLES = ["fact_transactions", "dim_month", "dim_town", "dim_flat_type", "dim_storey_range", "dim_flat_model"]
 
 
+# Plain-language labels shown in the report (docs/DASHBOARD_GLOSSARY.md). Wording only.
+MODEL_LABELS = {("static", "B0"): "Overall typical price (benchmark)",
+                ("static", "B1"): "Long-run town and flat-type price (benchmark)",
+                ("static", "B2"): "Simple benchmark (recent typical price)",
+                ("static", "L-A"): "Simple formula model",
+                ("static", "L-B"): "Simple formula model + street",
+                ("static", "G-A"): "Advanced model, no street detail",
+                ("static", "G-B"): "Chosen model (not updated)",
+                ("monthly refit", "G-B"): "Chosen model (updated monthly)",
+                ("monthly refit", "B2"): "Simple benchmark (updated monthly)"}
+SEGMENT_LABELS = {"flat_type": "Flat type", "town": "Town", "flat_model": "Flat model",
+                  "storey_range": "Floor level", "price_quintile": "Price level", "month": "Month"}
+QUINTILE_LABELS = {"Q1 (lowest)": "Cheapest 20%", "Q2": "Lower-middle 20%", "Q3": "Middle 20%",
+                   "Q4": "Upper-middle 20%", "Q5 (highest)": "Most expensive 20%"}
+RELIABILITY_LABELS = {"ok": "Yes", "less reliable (n<30)": "Few sales"}
+EVIDENCE_LABELS = {"Supported": "Strong evidence", "Material composition effect": "Strong evidence",
+                   "No material composition effect": "No clear effect", "Inconclusive": "Unclear"}
+
+
+def floors_label(storey_range: str) -> str:
+    """'01 TO 03' -> 'Floors 1-3'."""
+    lo, hi = storey_range.split(" TO ")
+    return f"Floors {int(lo)}-{int(hi)}"
+
+
+def month_label(yyyy_mm: str) -> str:
+    """'2026-09' -> 'Sep 2026'."""
+    return pd.Timestamp(yyyy_mm[:7] + "-01").strftime("%b %Y")
+
+
+def hypothesis_plain(row: pd.Series) -> tuple[str, str, str, str]:
+    """(question, what the data shows, size of effect, likely range) in plain words, from the numbers."""
+    h, est, lo, hi = row["hypothesis"], row["estimate_pct"], row["ci_low_pct"], row["ci_high_pct"]
+    rng = f"{lo:.1f}% to {hi:.1f}%" if pd.notna(lo) else "-"
+    if h == "H1":
+        return "Do higher floors sell for more?", f"10 floors higher: about {est:.1f}% more", f"+{est:.1f}%", rng
+    if h == "H2":
+        return "Does more lease left add value?", f"10 more years of lease: about {est:.1f}% more", f"+{est:.1f}%", rng
+    if h == "H3":
+        return "Do bigger flats of the same type sell for more?", f"10 sqm more space: about {est:.1f}% more", f"+{est:.1f}%", rng
+    if h == "H4":
+        share = 100 * row["effect_size"]
+        return ("Does the town matter for 4-room flats?",
+                f"Town accounts for about {share:.0f}% of 4-room price differences", f"{share:.0f}% of differences", "-")
+    return ("Does the headline price trend tell the full story?",
+            f"Headline understates like-for-like growth by {abs(est):.1f} points", f"{est:.1f} points", "-")
+
+
+FEATURE_LABELS = {"floor_area_sqm_num": "Floor area", "town": "Town", "lease_commence_year": "Lease start year",
+                  "flat_type": "Flat type", "street_name": "Street", "storey_mid": "Storey",
+                  "flat_model": "Flat model", "remaining_lease_years": "Remaining lease",
+                  "months_since_start": "Month (time)"}
+
+
 class CrossCheckError(RuntimeError):
     pass
+
+
+def _lease_reference_band(effects: pd.DataFrame) -> str:
+    """The M2 reference lease band is the 5-year band just below the lowest band with a coefficient."""
+    lowest = min(int(level[:2]) for level in effects["level"])
+    lo = lowest - 5
+    return f"{lo:02d}-{lo + 4:02d}"
 
 
 def build_sqlite(clean: pd.DataFrame) -> sqlite3.Connection:
@@ -131,25 +192,43 @@ def main() -> int:
         "model_segment_errors.csv": mm / "test_segment_errors_static.csv",
         "model_feature_importance.csv": mm / "permutation_importance.csv",
     }
+    # Reference level of each adjusted-effect curve (0% by definition), so charts start at the baseline.
     for name, src in copies.items():
         df = pd.read_csv(src)
-        if name == "price_index_monthly.csv":
+        if name in ("price_index_monthly.csv", "model_errors_by_month.csv"):
             df["month"] = df["month"] + "-01"
-        if name == "model_errors_by_month.csv":
-            df["month"] = df["month"] + "-01"
+        if name == "storey_effects_adjusted.csv":
+            df = pd.concat([pd.DataFrame([{"level": "01 TO 03", "pct_vs_reference": 0.0, "ci_low": 0.0,
+                                           "ci_high": 0.0}]), df], ignore_index=True)
+            df["level_label"] = df["level"].map(floors_label)
+            df["level_order"] = df["level"].str[:2].astype(int)
+        if name == "lease_effects_adjusted.csv":
+            ref_band = _lease_reference_band(df)
+            df = pd.concat([pd.DataFrame([{"level": ref_band, "pct_vs_reference": 0.0, "ci_low": 0.0,
+                                           "ci_high": 0.0}]), df], ignore_index=True)
+            df["level_order"] = df["level"].str[:2].astype(int)  # numeric axis: years of lease left
+        if name == "model_segment_errors.csv":
+            df["segment_label"] = df["segment"].map(SEGMENT_LABELS)
+            df["level_label"] = df["level"].map(QUINTILE_LABELS).fillna(df["level"])
+            is_storey, is_month = df["segment"] == "storey_range", df["segment"] == "month"
+            df.loc[is_storey, "level_label"] = df.loc[is_storey, "level"].map(floors_label)
+            df.loc[is_month, "level_label"] = df.loc[is_month, "level"].map(month_label)
+            # Flat-model names can look like flat types ("2-room" vs "2 ROOM"); prefix them (review 4).
+            is_model = df["segment"] == "flat_model"
+            df.loc[is_model, "level_label"] = "Model: " + df.loc[is_model, "level"]
+            df["reliability_label"] = df["reliability"].map(RELIABILITY_LABELS)
+        if name == "model_feature_importance.csv":
+            df["feature_label"] = df["feature"].map(FEATURE_LABELS).fillna(df["feature"])
         df.to_csv(cur / name, index=False, float_format="%.6g")
 
     # Model comparison with plain-English labels (static rows + monthly-refit rows)
-    labels = {("static", "B0"): "Baseline B0: global median",
-              ("static", "B1"): "Baseline B1: town x type median, all history",
-              ("static", "B2"): "Baseline B2: town x type median, last 12 months",
-              ("static", "L-A"): "Ridge regression", ("static", "L-B"): "Ridge regression + street",
-              ("static", "G-A"): "Gradient boosting",
-              ("static", "G-B"): "Selected: gradient boosting (trained once)",
-              ("monthly refit", "G-B"): "Selected: gradient boosting (retrained monthly)",
-              ("monthly refit", "B2"): "Baseline B2 (retrained monthly)"}
+    labels = MODEL_LABELS
     ts = pd.read_csv(mm / "test_scores.csv")
     ts["model_label"] = [labels[(m, f)] for m, f in zip(ts["mode"], ts["family"])]
+    # The report compares the realistic baseline with the candidate models; B0/B1 (naive baselines)
+    # and the B2 monthly-refit row stay in the model card and outputs/model_metrics/test_scores.csv.
+    ts = ts[~ts["model_label"].isin([labels[("static", "B0")], labels[("static", "B1")],
+                                     labels[("monthly refit", "B2")]])]
     ts[["model_label", "mode", "family", "config", "n", "mae", "rmse", "r2", "medae", "mdape_pct",
         "bias_median_pct"]].to_csv(cur / "model_comparison.csv", index=False, float_format="%.6g")
 
@@ -163,6 +242,10 @@ def main() -> int:
         "method": "Hedonic time-dummy index vs raw median", "population": "full period", "n": h5["n_comparison"],
         "estimate_pct": h5["difference_pp"], "ci_low_pct": np.nan, "ci_high_pct": np.nan,
         "status": h5["status"], "plain_english": "How much of the headline change is mix (percentage points)"}])])
+    plain = hyp.apply(hypothesis_plain, axis=1, result_type="expand")
+    hyp["question"], hyp["finding"], hyp["size_of_effect"], hyp["likely_range"] = (plain[i] for i in range(4))
+    hyp["evidence"] = hyp["status"].map(EVIDENCE_LABELS).fillna(hyp["status"])
+    hyp["hypothesis_order"] = hyp["hypothesis"].str[1:].astype(int)  # show findings in question order
     hyp.to_csv(cur / "hypothesis_results.csv", index=False, float_format="%.6g")
 
     # Indicative profiles (refit selected model on all full months)
@@ -182,6 +265,10 @@ def main() -> int:
         "source_last_updated_at": run["source_last_updated_at"][:16].replace("T", " "),
         "first_month": run["first_month"], "last_full_month": dm.loc[dm["is_partial_month"] == 0, "month"].max()[:7],
         "partial_month": ", ".join(run["partial_months"]) or "none",
+        "first_month_label": month_label(run["first_month"]),
+        "last_full_month_label": month_label(dm.loc[dm["is_partial_month"] == 0, "month"].max()),
+        "partial_month_label": ", ".join(month_label(m) for m in run["partial_months"]) or "None",
+        "retrieved_label": pd.Timestamp(run["retrieved_at_local"][:16]).strftime("%d %b %Y, %H:%M") + " SGT",
         "clean_rows": run["clean_rows"], "quarantined_rows": run["quarantined_rows"],
         "attribution": "Contains information from Resale flat prices based on registration date from Jan-2017 "
                        "onwards (HDB) accessed from data.gov.sg, made available under the Singapore Open Data "

@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
   "name": "p2_compare",
-  "displayName": "2 Town & property",
+  "displayName": "2 Compare towns & flats",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280

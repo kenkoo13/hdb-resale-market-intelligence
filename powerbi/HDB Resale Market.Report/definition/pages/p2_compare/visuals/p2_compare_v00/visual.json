@@ -3,7 +3,7 @@
   "name": "p2_compare_v00",
   "position": {
     "x": 20,
-    "y": 8,
+    "y": 6,
     "z": 0,
     "height": 40,
     "width": 1240,
@@ -19,9 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Town and property comparison - compare like with like, always check the sample size",
+                    "value": "Compare towns and flats: what do similar flats sell for?",
                     "textStyle": {
-                      "fontSize": "10pt"
+                      "fontSize": "14pt",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

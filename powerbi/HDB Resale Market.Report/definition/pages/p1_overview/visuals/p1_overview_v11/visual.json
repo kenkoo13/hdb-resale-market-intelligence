@@ -3,9 +3,9 @@
   "name": "p1_overview_v11",
   "position": {
     "x": 20,
-    "y": 650,
+    "y": 668,
     "z": 11,
-    "height": 60,
+    "height": 46,
     "width": 1240,
     "tabOrder": 11
   },
@@ -32,6 +32,34 @@
           ]
         }
       }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "drillFilterOtherVisuals": true
   }

@@ -3,7 +3,7 @@
   "name": "p1_overview_v00",
   "position": {
     "x": 20,
-    "y": 8,
+    "y": 6,
     "z": 0,
     "height": 40,
     "width": 1240,
@@ -19,9 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Executive market overview - HDB resale prices and volumes (indicative, not official valuations)",
+                    "value": "Market overview: how are HDB resale prices and sales changing?",
                     "textStyle": {
-                      "fontSize": "10pt"
+                      "fontSize": "14pt",
+                      "fontWeight": "bold"
                     }
                   }
                 ]

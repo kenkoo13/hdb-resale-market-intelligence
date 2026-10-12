@@ -3,9 +3,9 @@
   "name": "p3_evidence_v06",
   "position": {
     "x": 20,
-    "y": 650,
+    "y": 604,
     "z": 6,
-    "height": 60,
+    "height": 66,
     "width": 1240,
     "tabOrder": 6
   },
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Adjusted = hedonic regression holding month, town, flat type, model, floor area, storey and lease fixed. These tables are pre-computed for the recent window and are not affected by slicers.",
+                    "value": "How to read: each result compares flats that are alike in size, type, design, floor, lease and month of sale, so the difference shows the effect of the one factor named. Like-for-like trend = price change for the same kind of flat; the headline trend also moves when a different mix of flats is sold.",
                     "textStyle": {
                       "fontSize": "10pt"
                     }
@@ -29,7 +29,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Unobserved factors (exact location, condition, view) can confound every estimate. Details: docs/HYPOTHESIS_REGISTER.md.",
+                    "value": "These are patterns in past sales, not proof of cause: exact location, condition and views also matter. Results are fixed calculations and do not change with filters. Details: docs/HYPOTHESIS_REGISTER.md.",
                     "textStyle": {
                       "fontSize": "10pt"
                     }

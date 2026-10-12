@@ -2,36 +2,64 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p1_overview_v02",
   "position": {
-    "x": 260,
-    "y": 55,
+    "x": 330,
+    "y": 46,
     "z": 2,
-    "height": 100,
-    "width": 230,
+    "height": 72,
+    "width": 300,
     "tabOrder": 2
   },
   "visual": {
-    "visualType": "card",
+    "visualType": "slicer",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
             {
               "field": {
-                "Measure": {
+                "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fact_transactions"
+                      "Entity": "dim_flat_type"
                     }
                   },
-                  "Property": "Median Price YoY %"
+                  "Property": "flat_type"
                 }
               },
-              "queryRef": "fact_transactions.Median Price YoY %",
-              "nativeQueryRef": "Median Price YoY %"
+              "queryRef": "dim_flat_type.flat_type",
+              "nativeQueryRef": "flat_type"
             }
           ]
         }
       }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
@@ -47,7 +75,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Change vs prior 12 months (raw median)'"
+                  "Value": "'Flat type'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

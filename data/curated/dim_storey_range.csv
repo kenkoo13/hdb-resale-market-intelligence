@@ -1,18 +1,18 @@
-storey_range,storey_order
-10 TO 12,10
-01 TO 03,1
-04 TO 06,4
-07 TO 09,7
-13 TO 15,13
-19 TO 21,19
-22 TO 24,22
-16 TO 18,16
-34 TO 36,34
-28 TO 30,28
-37 TO 39,37
-49 TO 51,49
-25 TO 27,25
-40 TO 42,40
-31 TO 33,31
-46 TO 48,46
-43 TO 45,43
+storey_range,storey_order,storey_label
+10 TO 12,10,Floors 10-12
+01 TO 03,1,Floors 1-3
+04 TO 06,4,Floors 4-6
+07 TO 09,7,Floors 7-9
+13 TO 15,13,Floors 13-15
+19 TO 21,19,Floors 19-21
+22 TO 24,22,Floors 22-24
+16 TO 18,16,Floors 16-18
+34 TO 36,34,Floors 34-36
+28 TO 30,28,Floors 28-30
+37 TO 39,37,Floors 37-39
+49 TO 51,49,Floors 49-51
+25 TO 27,25,Floors 25-27
+40 TO 42,40,Floors 40-42
+31 TO 33,31,Floors 31-33
+46 TO 48,46,Floors 46-48
+43 TO 45,43,Floors 43-45

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p4_model_v09",
   "position": {
-    "x": 230,
-    "y": 415,
+    "x": 198,
+    "y": 444,
     "z": 9,
-    "height": 225,
-    "width": 640,
+    "height": 218,
+    "width": 722,
     "tabOrder": 9
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "model_segment_errors"
                     }
                   },
-                  "Property": "level"
+                  "Property": "level_label"
                 }
               },
-              "queryRef": "model_segment_errors.level",
-              "nativeQueryRef": "level"
+              "queryRef": "model_segment_errors.level_label",
+              "nativeQueryRef": "level_label",
+              "displayName": "Group"
             },
             {
               "field": {
@@ -41,7 +42,9 @@
                 }
               },
               "queryRef": "model_segment_errors.n",
-              "nativeQueryRef": "n"
+              "nativeQueryRef": "n",
+              "displayName": "Sales tested",
+              "format": "#,0"
             },
             {
               "field": {
@@ -55,7 +58,9 @@
                 }
               },
               "queryRef": "model_segment_errors.mae",
-              "nativeQueryRef": "mae"
+              "nativeQueryRef": "mae",
+              "displayName": "Average error",
+              "format": "\\$#,0"
             },
             {
               "field": {
@@ -69,7 +74,9 @@
                 }
               },
               "queryRef": "model_segment_errors.mdape_pct",
-              "nativeQueryRef": "mdape_pct"
+              "nativeQueryRef": "mdape_pct",
+              "displayName": "Typical error (%)",
+              "format": "0.0"
             },
             {
               "field": {
@@ -83,7 +90,9 @@
                 }
               },
               "queryRef": "model_segment_errors.bias_median_pct",
-              "nativeQueryRef": "bias_median_pct"
+              "nativeQueryRef": "bias_median_pct",
+              "displayName": "Over/under (%)",
+              "format": "0.0"
             },
             {
               "field": {
@@ -93,11 +102,12 @@
                       "Entity": "model_segment_errors"
                     }
                   },
-                  "Property": "reliability"
+                  "Property": "reliability_label"
                 }
               },
-              "queryRef": "model_segment_errors.reliability",
-              "nativeQueryRef": "reliability"
+              "queryRef": "model_segment_errors.reliability_label",
+              "nativeQueryRef": "reliability_label",
+              "displayName": "Reliable?"
             }
           ]
         }
@@ -117,7 +127,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Errors by segment (mdape = typical % error; bias + = over-estimate)'"
+                  "Value": "'Where are predictions less accurate? (Over/under: + means estimates too high)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

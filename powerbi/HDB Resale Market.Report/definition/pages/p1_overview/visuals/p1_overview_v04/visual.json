@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p1_overview_v04",
   "position": {
-    "x": 740,
-    "y": 55,
+    "x": 330,
+    "y": 124,
     "z": 4,
-    "height": 100,
-    "width": 230,
+    "height": 120,
+    "width": 300,
     "tabOrder": 4
   },
   "visual": {
@@ -23,15 +23,50 @@
                       "Entity": "fact_transactions"
                     }
                   },
-                  "Property": "Median Price per sqm Latest 12M"
+                  "Property": "Median Price YoY %"
                 }
               },
-              "queryRef": "fact_transactions.Median Price per sqm Latest 12M",
-              "nativeQueryRef": "Median Price per sqm Latest 12M"
+              "queryRef": "fact_transactions.Median Price YoY %",
+              "nativeQueryRef": "Median Price YoY %"
             }
           ]
         }
       }
+    },
+    "objects": {
+      "labels": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "22D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [
@@ -47,7 +82,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median SGD per sqm, latest 12 months'"
+                  "Value": "'Price change vs previous 12 months'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

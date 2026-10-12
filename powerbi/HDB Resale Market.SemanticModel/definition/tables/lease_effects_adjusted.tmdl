@@ -37,13 +37,19 @@ table lease_effects_adjusted
 		summarizeBy: none
 		sourceColumn: mid
 
+	column level_order
+		dataType: int64
+		lineageTag: 78d9ff94-c449-5f8a-9b87-c3672f7dfa91
+		summarizeBy: none
+		sourceColumn: level_order
+
 	partition lease_effects_adjusted = m
 		mode: import
 		source =
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "lease_effects_adjusted.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", type number}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"level", type text}, {"pct_vs_reference", type number}, {"ci_low", type number}, {"ci_high", type number}, {"mid", type number}, {"level_order", Int64.Type}}, "en-US")
 				in
 				    Typed
 

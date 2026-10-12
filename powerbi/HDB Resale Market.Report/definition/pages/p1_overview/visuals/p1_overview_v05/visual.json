@@ -2,45 +2,65 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p1_overview_v05",
   "position": {
-    "x": 990,
-    "y": 55,
+    "x": 640,
+    "y": 124,
     "z": 5,
-    "height": 48,
-    "width": 270,
+    "height": 120,
+    "width": 300,
     "tabOrder": 5
   },
   "visual": {
-    "visualType": "slicer",
+    "visualType": "card",
     "query": {
       "queryState": {
         "Values": {
           "projections": [
             {
               "field": {
-                "Column": {
+                "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "dim_town"
+                      "Entity": "fact_transactions"
                     }
                   },
-                  "Property": "town"
+                  "Property": "Transactions Latest 12M"
                 }
               },
-              "queryRef": "dim_town.town",
-              "nativeQueryRef": "town"
+              "queryRef": "fact_transactions.Transactions Latest 12M",
+              "nativeQueryRef": "Transactions Latest 12M"
             }
           ]
         }
       }
     },
     "objects": {
-      "data": [
+      "labels": [
         {
           "properties": {
-            "mode": {
+            "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "'Dropdown'"
+                  "Value": "22D"
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
@@ -62,7 +82,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Town'"
+                  "Value": "'Flats sold, last 12 months'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

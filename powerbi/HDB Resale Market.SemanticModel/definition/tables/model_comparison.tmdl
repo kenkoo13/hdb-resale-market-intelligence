@@ -8,31 +8,31 @@ table model_comparison
 		lineageTag: 1e66a3f8-01eb-528f-8d2f-c0bb71939eb1
 
 	/// Test MAE of the selected model trained once before the test year.
-	measure 'Selected Model MAE (Static)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Selected: gradient boosting (trained once)" )
+	measure 'Selected Model MAE (Static)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Chosen model (not updated)" )
 		formatString: \$#,0
 		displayFolder: Model
 		lineageTag: a9770d38-be57-532c-ab24-4d3686e3c443
 
 	/// Test MAE when retrained before each month.
-	measure 'Selected Model MAE (Monthly Refit)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Selected: gradient boosting (retrained monthly)" )
+	measure 'Selected Model MAE (Monthly Refit)' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Chosen model (updated monthly)" )
 		formatString: \$#,0
 		displayFolder: Model
 		lineageTag: f75944be-c0db-5825-9b80-99c5a1f40217
 
 	/// Median absolute % error.
-	measure 'Selected Model Typical % Error' = CALCULATE ( MAX ( model_comparison[mdape_pct] ), model_comparison[model_label] = "Selected: gradient boosting (trained once)" ) / 100
+	measure 'Selected Model Typical % Error' = CALCULATE ( MAX ( model_comparison[mdape_pct] ), model_comparison[model_label] = "Chosen model (not updated)" ) / 100
 		formatString: 0.0%
 		displayFolder: Model
 		lineageTag: c8f65e71-6cd8-5e2e-a6aa-93ebace49ef3
 
 	/// R-squared on the test year.
-	measure 'Selected Model R2' = CALCULATE ( MAX ( model_comparison[r2] ), model_comparison[model_label] = "Selected: gradient boosting (trained once)" )
+	measure 'Selected Model R2' = CALCULATE ( MAX ( model_comparison[r2] ), model_comparison[model_label] = "Chosen model (not updated)" )
 		formatString: 0.000
 		displayFolder: Model
 		lineageTag: 943ce78d-6853-5466-aac6-0479d4dd07a0
 
 	/// Realistic baseline MAE.
-	measure 'Baseline B2 MAE' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Baseline B2: town x type median, last 12 months" )
+	measure 'Baseline B2 MAE' = CALCULATE ( [Test MAE], model_comparison[model_label] = "Simple benchmark (recent typical price)" )
 		formatString: \$#,0
 		displayFolder: Model
 		lineageTag: 36d3fed4-1486-5ac3-a6d0-03e84b79c716

@@ -1,5 +1,7 @@
 # Model Card — Indicative HDB Resale Price Estimator
 
+> **Dashboard wording:** the Power BI report presents these results in plain language. For example, MAE appears as "Average prediction error", MdAPE as "Typical error (%)", baseline B2 as "Simple benchmark", and static vs monthly refit as "Model not updated" vs "Model updated monthly". Full mapping: [DASHBOARD_GLOSSARY.md](DASHBOARD_GLOSSARY.md).
+
 > Sections 1–6 were written and committed **before any model was trained** (Phase 3 plan). Sections 7 onward contain executed results only.
 
 ## 1. Intended use

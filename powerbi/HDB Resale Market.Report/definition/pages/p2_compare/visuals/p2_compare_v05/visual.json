@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "p2_compare_v05",
   "position": {
-    "x": 670,
-    "y": 120,
+    "x": 810,
+    "y": 124,
     "z": 5,
-    "height": 255,
-    "width": 590,
+    "height": 265,
+    "width": 450,
     "tabOrder": 5
   },
   "visual": {
@@ -23,11 +23,12 @@
                       "Entity": "dim_storey_range"
                     }
                   },
-                  "Property": "storey_range"
+                  "Property": "storey_label"
                 }
               },
-              "queryRef": "dim_storey_range.storey_range",
-              "nativeQueryRef": "storey_range"
+              "queryRef": "dim_storey_range.storey_label",
+              "nativeQueryRef": "storey_label",
+              "displayName": "Floor level"
             }
           ]
         },
@@ -45,7 +46,8 @@
                 }
               },
               "queryRef": "fact_transactions.Median Price Latest 12M",
-              "nativeQueryRef": "Median Price Latest 12M"
+              "nativeQueryRef": "Median Price Latest 12M",
+              "displayName": "Typical price"
             }
           ]
         },
@@ -63,7 +65,8 @@
                 }
               },
               "queryRef": "fact_transactions.Transactions Latest 12M",
-              "nativeQueryRef": "Transactions Latest 12M"
+              "nativeQueryRef": "Transactions Latest 12M",
+              "displayName": "Flats sold"
             }
           ]
         }
@@ -83,7 +86,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median price by storey range (raw; mixes towns - see Evidence page)'"
+                  "Value": "'Typical price by floor level (all towns combined)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

@@ -3,7 +3,7 @@
   "name": "p5_estimates_v03",
   "position": {
     "x": 20,
-    "y": 120,
+    "y": 124,
     "z": 3,
     "height": 470,
     "width": 1240,
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "indicative_profiles.town",
-              "nativeQueryRef": "town"
+              "nativeQueryRef": "town",
+              "displayName": "Town"
             },
             {
               "field": {
@@ -41,7 +42,8 @@
                 }
               },
               "queryRef": "indicative_profiles.flat_type",
-              "nativeQueryRef": "flat_type"
+              "nativeQueryRef": "flat_type",
+              "displayName": "Flat type"
             },
             {
               "field": {
@@ -55,7 +57,8 @@
                 }
               },
               "queryRef": "indicative_profiles.storey_variant",
-              "nativeQueryRef": "storey_variant"
+              "nativeQueryRef": "storey_variant",
+              "displayName": "Floor level"
             },
             {
               "field": {
@@ -69,7 +72,8 @@
                 }
               },
               "queryRef": "indicative_profiles.flat_model",
-              "nativeQueryRef": "flat_model"
+              "nativeQueryRef": "flat_model",
+              "displayName": "Flat model"
             },
             {
               "field": {
@@ -83,7 +87,9 @@
                 }
               },
               "queryRef": "indicative_profiles.floor_area_sqm",
-              "nativeQueryRef": "floor_area_sqm"
+              "nativeQueryRef": "floor_area_sqm",
+              "displayName": "Size (sqm)",
+              "format": "0"
             },
             {
               "field": {
@@ -97,7 +103,9 @@
                 }
               },
               "queryRef": "indicative_profiles.remaining_lease_years",
-              "nativeQueryRef": "remaining_lease_years"
+              "nativeQueryRef": "remaining_lease_years",
+              "displayName": "Lease left (years)",
+              "format": "0.0"
             },
             {
               "field": {
@@ -111,7 +119,9 @@
                 }
               },
               "queryRef": "indicative_profiles.estimated_price_rounded",
-              "nativeQueryRef": "estimated_price_rounded"
+              "nativeQueryRef": "estimated_price_rounded",
+              "displayName": "Estimated price",
+              "format": "\\$#,0"
             },
             {
               "field": {
@@ -125,7 +135,9 @@
                 }
               },
               "queryRef": "indicative_profiles.typical_error_pct",
-              "nativeQueryRef": "typical_error_pct"
+              "nativeQueryRef": "typical_error_pct",
+              "displayName": "Typical error (%)",
+              "format": "0.0"
             },
             {
               "field": {
@@ -139,7 +151,9 @@
                 }
               },
               "queryRef": "indicative_profiles.typical_error_sgd",
-              "nativeQueryRef": "typical_error_sgd"
+              "nativeQueryRef": "typical_error_sgd",
+              "displayName": "Typical error (SGD)",
+              "format": "\\$#,0"
             },
             {
               "field": {
@@ -153,7 +167,9 @@
                 }
               },
               "queryRef": "indicative_profiles.segment_median_price_latest_12m",
-              "nativeQueryRef": "segment_median_price_latest_12m"
+              "nativeQueryRef": "segment_median_price_latest_12m",
+              "displayName": "Recent typical price",
+              "format": "\\$#,0"
             },
             {
               "field": {
@@ -167,7 +183,8 @@
                 }
               },
               "queryRef": "indicative_profiles.reliability",
-              "nativeQueryRef": "reliability"
+              "nativeQueryRef": "reliability",
+              "displayName": "Reliability"
             }
           ]
         }
@@ -187,7 +204,20 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profiles: segment-typical area, lease, model and street; three storey levels'"
+                  "Value": "'Estimated price of a typical flat in each town and flat type, at three floor levels'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

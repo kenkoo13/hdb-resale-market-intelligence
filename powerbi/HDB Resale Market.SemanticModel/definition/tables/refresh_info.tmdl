@@ -2,7 +2,7 @@ table refresh_info
 	lineageTag: 9c93af2f-4cd9-5c71-98fb-a12b0782e1fc
 
 	/// Coverage and refresh timestamp for report headers.
-	measure 'Data Coverage Text' = "Data: " & SELECTEDVALUE ( refresh_info[first_month] ) & " to " & SELECTEDVALUE ( refresh_info[last_full_month] ) & " (full months). Partial month excluded from trends: " & SELECTEDVALUE ( refresh_info[partial_month] ) & ". Retrieved " & SELECTEDVALUE ( refresh_info[retrieved_at_local] ) & " SGT."
+	measure 'Data Coverage Text' = "Data covers " & SELECTEDVALUE ( refresh_info[first_month_label] ) & " to " & SELECTEDVALUE ( refresh_info[last_full_month_label] ) & " (complete months). " & SELECTEDVALUE ( refresh_info[partial_month_label] ) & " is still being recorded and is left out of trends. Data downloaded " & SELECTEDVALUE ( refresh_info[retrieved_label] ) & "."
 		displayFolder: Context
 		lineageTag: 0424b584-8ccf-5027-a8ce-078a4b5a60cb
 
@@ -53,6 +53,30 @@ table refresh_info
 		summarizeBy: none
 		sourceColumn: partial_month
 
+	column first_month_label
+		dataType: string
+		lineageTag: 5413ffb1-53e9-5099-8314-591d32c27626
+		summarizeBy: none
+		sourceColumn: first_month_label
+
+	column last_full_month_label
+		dataType: string
+		lineageTag: e429a425-6937-596a-ac29-91fcd77fc89a
+		summarizeBy: none
+		sourceColumn: last_full_month_label
+
+	column partial_month_label
+		dataType: string
+		lineageTag: 547500ed-d258-5779-b2d4-1f72c11964f2
+		summarizeBy: none
+		sourceColumn: partial_month_label
+
+	column retrieved_label
+		dataType: string
+		lineageTag: 8bf0fcac-697e-5e9e-804b-c0cb69b5880f
+		summarizeBy: none
+		sourceColumn: retrieved_label
+
 	column clean_rows
 		dataType: int64
 		lineageTag: e6bc5472-c2f0-5179-807a-39d7dcd221ee
@@ -77,7 +101,7 @@ table refresh_info
 				let
 				    Source = Csv.Document(File.Contents(CuratedFolder & "refresh_info.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
 				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"snapshot_id", type text}, {"dataset_id", type text}, {"retrieved_at_local", type text}, {"source_last_updated_at", type text}, {"first_month", type text}, {"last_full_month", type text}, {"partial_month", type text}, {"clean_rows", Int64.Type}, {"quarantined_rows", Int64.Type}, {"attribution", type text}}, "en-US")
+				    Typed = Table.TransformColumnTypes(Promoted, {{"snapshot_id", type text}, {"dataset_id", type text}, {"retrieved_at_local", type text}, {"source_last_updated_at", type text}, {"first_month", type text}, {"last_full_month", type text}, {"partial_month", type text}, {"first_month_label", type text}, {"last_full_month_label", type text}, {"partial_month_label", type text}, {"retrieved_label", type text}, {"clean_rows", Int64.Type}, {"quarantined_rows", Int64.Type}, {"attribution", type text}}, "en-US")
 				in
 				    Typed
 
